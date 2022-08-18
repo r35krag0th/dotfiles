@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+{{ if eq .chezmoi.os "darwin" }}
+  brew install \
+    pyenv \
+    pyenv-virtualenv \
+{{ end -}}

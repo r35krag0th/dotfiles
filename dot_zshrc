@@ -419,7 +419,9 @@ if [ -x "/usr/local/bin/nvim" ]; then
   export EDITOR="/usr/local/bin/nvim"
 fi
 
-export KREW_ROOT=$(asdf where krew)
+if [ $HAS_ASDF -eq 1 ]; then
+  export KREW_ROOT=$(asdf where krew)
+fi
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
