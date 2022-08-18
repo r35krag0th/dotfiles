@@ -1,0 +1,15 @@
+# vim: ft=gitconfig
+[user]
+  name = Bob Saska
+  email = bob.saska@nutrien.com
+  signingkey = 87FB0C9A9BDCD83433B5D02C58BD034942B9F1B6
+
+[credential]
+  helper = osxkeychain
+
+; [gpg]
+;     program = /usr/local/MacGPG2/bin/gpg2
+
+[commit]
+  gpgsign = true
+
