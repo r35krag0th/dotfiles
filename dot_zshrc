@@ -439,3 +439,5 @@ function who-is-using-tcp-port() {
   lsof -P -iTCP:${1} -sTCP:LISTEN
 }
 
+
+export PATH="$HOME/.poetry/bin:$PATH"

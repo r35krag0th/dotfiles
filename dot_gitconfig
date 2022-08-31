@@ -283,8 +283,17 @@
 [includeIf "hasconfig:remote.*.url:https://github.com/Agrium/**"]
   path = ~/.gitconfig.nutrien
 
+[includeIf "hasconfig:remote.*.url:https://github.com/agrium/**"]
+  path = ~/.gitconfig.nutrien
+
 [includeIf "hasconfig:remote.*.url:git@github.com:aginfo/**"]
   path = ~/.gitconfig.nutrien
 
 [includeIf "hasconfig:remote.*.url:git@github.com:Agrium/**"]
   path = ~/.gitconfig.nutrien
+
+[includeIf "hasconfig:remote.*.url:git@github.com:agrium/**"]
+  path = ~/.gitconfig.nutrien
+
+[remote "origin"]
+	prune = true
