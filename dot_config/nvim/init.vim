@@ -78,8 +78,23 @@ Plug 'chr4/nginx.vim'               " Nginx
 Plug 'evanleck/vim-svelte', {'branch': 'main'} " Svelte
 Plug 'fladson/vim-kitty'            " kitty.conf (Terminal)
 
+" TreeSitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" UI goodies
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
+
+" Debugger
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+
+" Python Goodies
+Plug 'mfussenegger/nvim-dap-python'
+
 " Go Goodies
 Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
+Plug 'leoluz/nvim-dap-go'
 
 call plug#end()
 
@@ -512,3 +527,46 @@ let airline#extensions#coc#warning_symbol = 'Warning:'
 let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
 " Change warning format:
 let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+
+" Register Go DAP
+lua require('dap-go').setup()
+
+" barbar configuration
+" [Movement]
+nnoremap <silent> <A-,> <Cmd>BufferPrevious<CR>
+nnoremap <silent> <A-.> <Cmd>BufferNext<CR>
+
+" [Re-Ordering]
+nnoremap <silent> <A-<> <Cmd>BufferMovePrevious<CR>
+nnoremap <silent> <A->> <Cmd>BufferMoveNext<CR>
+
+" [Go to Buffer in position]
+nnoremap <silent> <A-1> <Cmd>BufferGoto 1<CR>
+nnoremap <silent> <A-2> <Cmd>BufferGoto 2<CR>
+nnoremap <silent> <A-3> <Cmd>BufferGoto 3<CR>
+nnoremap <silent> <A-4> <Cmd>BufferGoto 4<CR>
+nnoremap <silent> <A-5> <Cmd>BufferGoto 5<CR>
+nnoremap <silent> <A-6> <Cmd>BufferGoto 6<CR>
+nnoremap <silent> <A-7> <Cmd>BufferGoto 7<CR>
+nnoremap <silent> <A-8> <Cmd>BufferGoto 8<CR>
+nnoremap <silent> <A-9> <Cmd>BufferGoto 9<CR>
+nnoremap <silent> <A-0> <Cmd>BufferLast<CR>
+
+" [Pin/Un-Pin]
+nnoremap <silent> <A-p> <Cmd>BufferPin<CR>
+nnoremap <silent> <A-c> <Cmd>BufferClose<CR>
+" Additional Things
+" :BufferCloseAllButCurrent
+" :BufferCloseAllButPinned
+" :BufferCloseAllButCurrentOrPinned
+" :BufferCloseBuffersLeft
+" :BufferCloseBuffersRight
+
+" [Magic Buffer-picker]
+nnoremap <silent> <C-p> <Cmd>BufferPick<CR>
+
+" [Sorting]
+nnoremap <silent> <Space>bb <Cmd>BufferOrderByBufferNumber<CR>
+nnoremap <silent> <Space>bd <Cmd>BufferOrderByDirectory<CR>
+nnoremap <silent> <Space>bl <Cmd>BufferOrderByLanguage<CR>
+nnoremap <silent> <Space>bw <Cmd>BufferOrderByWindowNumber<CR>
