@@ -47,7 +47,10 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-commentary'
 Plug 'chentoast/marks.nvim'
-Plug 'MattesGroeger/vim-bookmarks'
+Plug 'MattesGroeger/vim-bookmarks'  " FzfPreviewBookmarks
+Plug 'glidenote/memolist.vim'       " FzfPreviewMemoList, FzfPreviewMemoListGrep
+Plug 'nvim-lua/plenary.nvim'        " (dependency for todo-comments)
+Plug 'folke/todo-comments.nvim'     " FzfPreviewTodoComments
 
 " [STATUS LINE]
 Plug 'vim-airline/vim-airline'
@@ -594,3 +597,12 @@ xnoremap          [fzf-p]gr    "sy:CocCommand   fzf-preview.ProjectGrep<Space>-F
 nnoremap <silent> [fzf-p]t     :<C-u>CocCommand fzf-preview.BufferTags<CR>
 nnoremap <silent> [fzf-p]q     :<C-u>CocCommand fzf-preview.QuickFix<CR>
 nnoremap <silent> [fzf-p]l     :<C-u>CocCommand fzf-preview.LocationList<CR>
+
+" todo-comments loading & configuration
+lua << EOF
+  require("todo-comments").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
