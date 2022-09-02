@@ -136,13 +136,13 @@ fpath+=($ZSH_COMPLETION_DIR)
 # 0      if all specified commands are found and executable
 # 1      if one or more specified commands is nonexistent or not executable
 # 2      if an invalid option is specified
-which autojump 2>&1 >/dev/null
-if [ $? -eq 0 ]; then
+# which autojump 2>&1 >/dev/null
+if [ -x "/usr/local/bin/autojump" ]; then
     plugins+=(autojump)
 fi
 
-which aws 2>&1 >/dev/null
-if [ $? -eq 0 ]; then
+# which aws 2>&1 >/dev/null
+if [ -x "/usr/local/bin/aws" ]; then
     plugins+=(aws)
 fi
 
@@ -153,8 +153,8 @@ if [ -x "$HOME/.asdf/bin/asdf" ]; then
     export FZF_BASE=${FZF_BASE:-$($HOME/.asdf/bin/asdf where fzf)}
 fi
 
-which fzf 2>&1 >/dev/null
-if [ $? -eq 0 ]; then
+# which fzf 2>&1 >/dev/null
+if [ -x "/usr/local/bin/fzf" ]; then
     plugins+=(fzf)
 fi
 
@@ -239,8 +239,8 @@ if [ -f "$HOME/.zshrc.env" ]; then
 fi
 
 # DirEnv Hooks
-which direnv 2>&1 >/dev/null
-if [ $? -eq 0 ]; then
+# which direnv 2>&1 >/dev/null
+if [ -x "/usr/local/bin/direnv" ]; then
     eval "$(direnv hook zsh)"
 fi
 
@@ -281,10 +281,18 @@ function wrap_r35_update_completion_cache() {
     return;
   fi
 
+  # if /usr/local/share/zsh/site-functions has been populated, then stop
+  local site_functions_path="/usr/local/share/zsh/site-functions/_${in_name}"
+  echo "Checking for ${site_functions_path}..."
+  if [ -f /usr/local/share/zsh/site-functions/_${in_name} ]; then
+    echo -e "\033[1;36m[update-completion-cache]\033[0m \033[1;36mInfo:\033[0m Using ${site_functions_path}";
+    return;
+  fi
+
 
   local destination_path="${ZSH_COMPLETION_DIR}/_${in_name}"
   if [ -f "${destination_path}" ]; then
-    case $3 in
+    case $is_use_force in
       y*)
         echo -e "\033[1;36m[update-completion-cache]\033[0m \033[1;31mForce\033[0m is being used for \033[1;33m${in_name}\033[0m \033[32m->\033[0m \033[1;34m${destination_path}\033[0m"
         rm ${destination_path}
@@ -354,23 +362,29 @@ function r35_update_completion_cache() {
   local use_force=${1:-no}
   wrap_r35_update_completion_cache "argo" "argo completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "argocd" "argocd completion zsh" "${use_force}"
+  wrap_r35_update_completion_cache "chezmoi" "chezmoi completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "clusterctl" "clusterctl completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "eksctl" "eksctl completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "gh" "gh completion -s zsh" "${use_force}"
   wrap_r35_update_completion_cache "helm" "helm completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "kind" "kind completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "ko" "ko completion zsh" "${use_force}"
-  wrap_r35_update_completion_cache "kubectl" "kubectl completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "krew" "kubectl krew completion zsh" "${use_force}"
+  wrap_r35_update_completion_cache "kubectl" "kubectl completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "kustomize" "kustomize completion zsh" "${use_force}"
   wrap_r35_update_completion_cache "linkerd" "linkerd completion zsh" "${use_force}"
+  wrap_r35_update_completion_cache "pack" "pack completion --shell zsh" "${use_force}"
   wrap_r35_update_completion_cache "stern" "stern --completion zsh" "${use_force}"
-  wrap_r35_update_completion_cache "chezmoi" "chezmoi completion zsh" "${use_force}"
 }
 
 # Completions that are provided as a file by the tool
-[ ! -f "$ZSH_COMPLETION_DIR/_asdf" ]    && ln -s $HOME/.asdf/completions/_asdf $ZSH_COMPLETION_DIR/_asdf
-. $(pack completion --shell zsh)
+[ ! -L "$ZSH_COMPLETION_DIR/_asdf" ] \
+  && [ -f $HOME/.asdf/completions/_asdf ] \
+  && ln -s $HOME/.asdf/completions/_asdf $ZSH_COMPLETION_DIR/_asdf
+
+# Pack CLI Completion
+[ -x /usr/local/bin/pack ] && \
+  . $(pack completion --shell zsh)
 
 
 autoload -U compinit
@@ -378,11 +392,15 @@ compinit
 
 # Terraform is an odd ball
 autoload -U +X bashcompinit && bashcompinit
-tf_completion_version="1.0.1"
+tf_completion_version="1.2.8"
+tfswitch_dir="$HOME/.terraform.versions"
+tfswitch_completion_target="${tfswitch_dir}/terraform_${tf_completion_version}"
 
-complete -o nospace -C /home/bobsaska/.terraform.versions/terraform_${tf_completion_version} terraform_${tf_completion_version}
-complete -o nospace -C /home/bobsaska/.terraform.versions/terraform_${tf_completion_version} terraform
-complete -o nospace -C /home/bobsaska/.terraform.versions/terraform_${tf_completion_version} tf
+if [ -x "${tfswitch_completion_target}" ]; then
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} terraform_${tf_completion_version}
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} terraform
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} tf
+fi
 
 # AWS CLI Completion -- https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
 [ -x '/usr/local/bin/aws_completer' ] && complete -C '/usr/local/bin/aws_completer' aws
