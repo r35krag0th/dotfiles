@@ -297,3 +297,7 @@
 
 [remote "origin"]
 	prune = true
+
+[commit]
+  gpgsign = true
+
