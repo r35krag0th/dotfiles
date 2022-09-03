@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
 
+{{ if eq .chezmoi.os "darwin" }}
+  brew install kubectl helm
+{{ end -}}
+
 {{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") }}
 (
   set -x; cd "$(mktemp -d)" &&

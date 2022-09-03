@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+{{ if eq .chezmoi.os "darwin" }}
+  brew tap --quiet hashicorp/tap
+  brew install \
+    btop \
+    coreutils \
+    consul \
+    exa \
+    gitleaks \
+    grepcidr \
+    lnav \
+    pass \
+    pass-otp \
+    vault
+{{ end -}}
