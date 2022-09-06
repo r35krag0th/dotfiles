@@ -200,18 +200,6 @@ if [ -d "${HOME}/.cargo/bin" ]; then
     fi
 fi
 
-# PyEnv detection and supoprt
-if [ -d "$HOME/.pyenv" ]; then
-    # echo -e "\033[32m==>\033[0m Including PyEnv Elements"
-    export PYENV_ROOT="${HOME}/.pyenv"
-    export PATH="${PYENV_ROOT}/bin:${PATH}"
-
-    eval "$(pyenv init --path)"
-fi
-# export PYENV_ROOT="$HOME/.pyenv"
-# export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init -)"
-
 # FZF detection and support
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 if [ -d "${HOME}/.rbenv/bin" ]; then
@@ -332,8 +320,17 @@ done
 # complete -o nospace -C /home/bobsaska/.asdf/installs/kustomize/3.5.5/bin/kustomize kustomize
 function gi() { curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
 
+# PyEnv detection and supoprt
+if [ -d "$HOME/.pyenv" ]; then
+    # echo -e "\033[32m==>\033[0m Including PyEnv Elements"
+    export PYENV_ROOT="${HOME}/.pyenv"
+    export PATH="${PYENV_ROOT}/bin:${PATH}"
+
+    eval "$(pyenv init --path)"
+fi
+
 # Created by `userpath` on 2020-07-23 19:44:51
-export PATH="$PATH:/home/bobsaska/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 # export GOPATH="$HOME/go"
 export GOENV_ROOT="$HOME/.goenv"
 export PATH="$GOENV_ROOT/bin:$PATH"
@@ -459,3 +456,4 @@ function who-is-using-tcp-port() {
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
+alias chez="noglob chezmoi"
