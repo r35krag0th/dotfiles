@@ -409,13 +409,13 @@ export PATH=$PATH:$HOME/.pulumi/bin
 
 # GoEnv
 if [ -d "$HOME/.goenv" ]; then
-    export PATH="${GOPATH}/bin:${PATH}"
 
     export GOENV_ROOT="${HOME}/.goenv"
     export PATH="${GOENV_ROOT}/bin:${PATH}"
 
     eval "$(goenv init -)"
 fi
+
 
 # OhMyZSH Auto Update Control
 # ===========================
@@ -425,6 +425,9 @@ fi
 zstyle ':omz:update' mode auto
 
 export GOPATH=$HOME/go
+if [ -d $GOPATH ]; then
+    export PATH="${GOPATH}/bin:${PATH}"
+fi
 
 alias cdgo="cd $GOPATH/src/github.com"
 alias cdgor35="cd $GOPATH/src/github.com/r35krag0th"
