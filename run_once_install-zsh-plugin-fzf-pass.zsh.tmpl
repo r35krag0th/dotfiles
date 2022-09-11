@@ -1,0 +1,7 @@
+INSTALL_DIR=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-fzf-pass
+
+if [ -d "${INSTALL_DIR}" ]; then
+  git -C $INSTALL_DIR fetch && git -C $INSTALL_DIR pull
+else
+  git clone https://github.com/smeagol74/zsh-fzf-pass ${INSTALL_DIR}
+fi
