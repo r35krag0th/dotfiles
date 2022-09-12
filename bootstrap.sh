@@ -1,30 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 
-# -e: exit on error
-# -u: exit on unset variables
-set -eu
+base_directory=${0:a:h}
+source ${base_directory}/lib/logging.zsh
 
-if ! chezmoi="$(command -v chezmoi)"; then
-  bin_dir="${HOME}/.local/bin"
-  chezmoi="${bin_dir}/chezmoi"
-  echo "Installing chezmoi to '${chezmoi}'" >&2
-  if command -v curl >/dev/null; then
-    chezmoi_install_script="$(curl -fsSL https://chezmoi.io/get)"
-  elif command -v wget >/dev/null; then
-    chezmoi_install_script="$(wget -qO- https://chezmoi.io/get)"
-  else
-    echo "To install chezmoi, you must have curl or wget installed." >&2
-    exit 1
-  fi
-  sh -c "${chezmoi_install_script}" -- -b "${bin_dir}"
-  unset chezmoi_install_script bin_dir
-fi
+install_file() {
+    # $1 = source (without ./files prefix)
+    # $2 = destination
+    # $3 = mode (0600)
+    local target_mode=${3:-0600}
+    step_line "Installing" "${1} --> ${2}"
+    install -m ${target_mode} files/${1} ${2}
+}
 
-# POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
-script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
-
-set -- init --apply --source="${script_dir}"
-
-echo "Running 'chezmoi $*'" >&2
-# exec: replace current process with chezmoi
-exec "$chezmoi" "$@"
+# Install Files
+install_file "gitconfig" "$HOME/.gitconfig"
