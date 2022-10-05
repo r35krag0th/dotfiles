@@ -2,7 +2,7 @@ local M = {}
 
 M.treesitter = require('custom.plugins.settings_treesitter')
 M.mason = {
-  enture_installed = {
+  ensure_installed = {
     "css-lsp",
     "debugpy",
     "delve",
