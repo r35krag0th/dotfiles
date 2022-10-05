@@ -1,0 +1,38 @@
+return {
+  ensure_installed = {
+    "bash",
+    "go",
+    "hcl",
+    "http",
+    "json",
+    "jsonnet",
+    "lua",
+    "make",
+    "markdown",
+    "python",
+    "rust",
+    "svelte",
+    "swift",
+    "toml",
+    "typescript",
+    "vim",
+    "yaml",
+  },
+  sync_install = false,
+  auto_install = true,
+  highlight = true,
+  additional_vim_regex_highlighting = false,
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  -- Indent is an experimental feature
+  indent = {
+    enable = false,
+  },
+}
