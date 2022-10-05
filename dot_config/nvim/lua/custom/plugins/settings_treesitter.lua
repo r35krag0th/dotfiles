@@ -1,7 +1,12 @@
 return {
   ensure_installed = {
     "bash",
+    "dot",
+    "gitignore",
     "go",
+    "gomod",
+    "gowork",
+    "graphql",
     "hcl",
     "http",
     "json",
@@ -10,6 +15,7 @@ return {
     "make",
     "markdown",
     "python",
+    "regex",
     "rust",
     "svelte",
     "swift",

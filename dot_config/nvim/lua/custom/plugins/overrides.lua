@@ -1,6 +1,9 @@
+local ts_config = require "custom.plugins.settings_treesitter"
+
 local M = {}
 
-M.treesitter = require('custom.plugins.settings_treesitter')
+M.treesitter = ts_config
+
 M.mason = {
   ensure_installed = {
     "css-lsp",
@@ -19,10 +22,11 @@ M.mason = {
     "gotests",
     "html-lsp",
     "lua-language-server",
+    "shfmt",
     "stylua",
     "svelte-language-server",
     "typescript-language-server",
-  }
+  },
 }
 M.nvimtree = {
   git = {
