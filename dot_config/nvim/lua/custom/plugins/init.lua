@@ -41,9 +41,23 @@ return {
   },
 
   ["ray-x/go.nvim"] = {
-    requires = { "ray-x/guihua.lua" },
+    requires = { "ray-x/guihua.lua", "theHamsta/nvim-dap-virtual-text" },
     config = function()
       require("go").setup()
+    end,
+  },
+
+  ["theHamsta/nvim-dap-virtual-text"] = {
+    requires = { "mfussenegger/nvim-dap" },
+    config = function()
+      require("nvim-dap-virtual-text").setup()
+    end,
+  },
+
+  ["rcarriga/nvim-dap-ui"] = {
+    requires = { "mfussenegger/nvim-dap" },
+    config = function()
+      require("dapui").setup()
     end,
   },
 }
