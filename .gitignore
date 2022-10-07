@@ -1,2 +1,8 @@
+# For NvChad we need to ...
+# 1) Ignore all of ~/.config/nvim ...
 /dot_config/nvim
+# 2) ... EXCEPT ~/.config/nvim/lua/custom
 !/dot_config/nvim/lua/custom
+
+# Ignore LunarVim's compiled Packer config
+/dot_config/lvim/plugin/packer_compiled.lua
