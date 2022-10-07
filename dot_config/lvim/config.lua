@@ -50,13 +50,13 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings["t"] = {
-	name = "+Trouble",
-	r = { "<cmd>Trouble lsp_references<cr>", "References" },
-	f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-	d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-	q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-	l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-	w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
+  name = "+Trouble",
+  r = { "<cmd>Trouble lsp_references<cr>", "References" },
+  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+  d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
+  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+  w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
 
 -- TODO: User Config for predefined plugins
@@ -70,19 +70,19 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-	"bash",
-	"c",
-	"css",
-	"java",
-	"javascript",
-	"json",
-	"lua",
-	"markdown",
-	"python",
-	"rust",
-	"tsx",
-	"typescript",
-	"yaml",
+  "bash",
+  "c",
+  "css",
+  "java",
+  "javascript",
+  "json",
+  "lua",
+  "markdown",
+  "python",
+  "rust",
+  "tsx",
+  "typescript",
+  "yaml",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
@@ -145,49 +145,75 @@ local formatters = require("lvim.lsp.null-ls.formatters")
 --   },
 -- }
 formatters.setup({
-	{ command = "markdownlint", filetypes = { "markdown " } },
+  { command = "markdownlint", filetypes = { "markdown " } },
 })
 
 -- -- set additional linters
 local linters = require("lvim.lsp.null-ls.linters")
 linters.setup({
-	{ command = "flake8", filetypes = { "python" } },
-	-- {
-	--   -- each linter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
-	--   command = "shellcheck",
-	--   ---@usage arguments to pass to the formatter
-	--   -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
-	--   extra_args = { "--severity", "warning" },
-	-- },
-	-- {
-	--   command = "codespell",
-	--   ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-	--   filetypes = { "javascript", "python" },
-	-- },
+  { command = "flake8", filetypes = { "python" } },
+  -- {
+  --   -- each linter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+  --   command = "shellcheck",
+  --   ---@usage arguments to pass to the formatter
+  --   -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+  --   extra_args = { "--severity", "warning" },
+  -- },
+  -- {
+  --   command = "codespell",
+  --   ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+  --   filetypes = { "javascript", "python" },
+  -- },
 })
 
 -- Additional Plugins
 lvim.plugins = {
-	{ "folke/tokyonight.nvim" },
-	{
-		"folke/trouble.nvim",
-		cmd = "TroubleToggle",
-	},
+  { "folke/tokyonight.nvim" },
+  {
+    "folke/trouble.nvim",
+    cmd = "TroubleToggle",
+  },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.json", "*.jsonc" },
-	-- enable wrap mode for json files only
-	command = "setlocal wrap",
+  pattern = { "*.json", "*.jsonc" },
+  -- enable wrap mode for json files only
+  command = "setlocal wrap",
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = "zsh",
-	callback = function()
-		-- let treesitter use bash highlight for zsh files as well
-		require("nvim-treesitter.highlight").attach(0, "bash")
-	end,
+  pattern = "zsh",
+  callback = function()
+    -- let treesitter use bash highlight for zsh files as well
+    require("nvim-treesitter.highlight").attach(0, "bash")
+  end,
 })
 
 lvim.lsp.automatic_installation = true
+
+-- StatusLine
+lvim.builtin.lualine.style = "lvim"
+-- +-------------------------------------------------+
+-- | A | B | C                             X | Y | Z |
+-- +-------------------------------------------------+
+-- Components:
+-- + mode
+-- + branch
+-- + filename
+-- + diff
+-- + python_env
+-- + diagnostics
+-- + treesitter
+-- + lsp
+-- + location
+-- + progress
+-- + spaces
+-- + encoding
+-- + filetype
+-- + scrollbar
+-- lvim.builtin.lualine.sections.lualine_a = {}
+-- lvim.builtin.lualine.sections.lualine_b = { "diff" }
+-- lvim.builtin.lualine.sections.lualine_c = { "diff" }
+lvim.builtin.lualine.active = true
+lvim.builtin.lualine.options.theme = "tokyonight"
