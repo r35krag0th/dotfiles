@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+# vim: ft=zsh
+
+graph-easy "$@" 2>/dev/null
