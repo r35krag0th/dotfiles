@@ -5,20 +5,6 @@ if not present then
   return
 end
 
-local with_diagnostic_code = function(builtin)
-  return builtin.with {
-    diagnostics_format = "#{m} [#{c}]",
-  }
-end
-
-local with_root_file = function(builtin, file)
-  return builtin.with {
-    condition = function(utils)
-      return utils.root_has_file(file)
-    end,
-  }
-end
-
 local b = null_ls.builtins
 
 local sources = {
@@ -42,16 +28,6 @@ local sources = {
 
   -- cpp
   b.formatting.rustfmt,
-
-  -- code actions
-  b.code_actions.gitsigns,
-  b.code_actions.gitrebase,
-
-  -- diagnostics
-  with_diagnostic_code(b.diagnostics.spellcheck),
-
-  -- hover
-  b.hover.dictionary,
 }
 
 null_ls.setup {
