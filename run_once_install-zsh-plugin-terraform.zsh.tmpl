@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+{{ if eq .chezmoi.os "darwin" }}
+if [ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/terraform ]; then
+  git clone https://github.com/macunha1/zsh-terraform \
+    ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/terraform
+fi
+{{ end -}}
