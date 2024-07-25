@@ -1,0 +1,514 @@
+# Ensure that paths are unique within $PATH
+#   -a      make $PATH an array
+#   -U      make all entries in $PATH unique
+typeset -aU path
+
+# Path to your oh-my-zsh installation.
+export ZSH="${HOME}/.oh-my-zsh"
+
+# Theme is dynamically set above
+# ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+export PATH="/usr/local/bin:${PATH}"
+
+plugins=(
+    bundler         # Adds completion support for ruby's "bundler" tool, and a bunch of aliases -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bundler
+    rust            # Adds completion support for Rust's "cargo" tool                           -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rust
+    direnv          # Adds the hook required to make "direnv" trigger automatically             -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/direnv
+    docker          # Adds completion support for the "docker" tool                             -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
+    doctl           # Adds completion support for the DigitalOcean CLI tool                     -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/doctl
+    dotenv          # Adds support for ".env" files in directories                              -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/dotenv
+    gh              # Adds completion for the "gh" (GitHub CLI) tool                            -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gh
+    git             # Adds completion for the "git" tool, and LOTS of aliases and functions     -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
+    git-auto-fetch  # Automatically "fetches" from remotes when in a Git repository             -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git-auto-fetch
+    git-extras      # Adds completion for the "git-extras" tools                                -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git-extras
+    golang          # Adds completion and aliases for the Go programming language               -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/golang
+    helm            # Adds completion for the "helm" tool                                       -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/helm
+    httpie          # Adds completion and aliases for the "httpie" (http) tool                  -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/httpie
+    iterm2          # Adds a few functions to call the iTerm2 API                               -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/iterm2
+    jsontools       # Adds some useful JSON tools to ZSH                                        -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jsontools
+    kops            # Adds completion for the "kops" (Kubernetes Operations) tool               -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kops
+    kubectl         # Adds completion and aliases for the "Kubectl" tool                        -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl
+    minikube        # Adds completion for the "minikube" tool                                   -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/minikube
+    macos           # Adds a few functions to improve QoL when on OS X                          -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
+    pip             # Adds completion for the Python Package Manager, "pip"                     -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pip
+    pj              # Project Jump
+    rbenv           # Adds prompt support and a few aliases when using "rbenv"                  -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rbenv
+    sudo            # Easily prefix your command with "sudo" by pressing "ESC" twice!           -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo
+    systemd         # Adds a lot of useful aliases for SystemD operational tasks                -- https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/systemd
+    tmux            #
+    vscode          #
+    yarn            #
+    # zsh-256color    #
+)
+[ -d $ZSH_CUSTOM/plugins/terraform ] && plugins+=(terraform)
+
+export PROJECT_PATHS=(~/workspace/r35 ~/workspace/personal ~/workspace/nutrien ~/workspace/agrible $GOPATH/src/github.com/r35krag0th $GOPATH/src/github.com/aginfo $GOPATH/src/github.com/agrium $GOPATH/go/src/github.com/r35krag0th ~/GolandProjects)
+
+# No Duplicates in ZSH history!
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_BEEP
+
+# Additional History settings
+setopt HIST_REDUCE_BLANKS
+
+# Where to find homebrew?
+# export HOMEBREW_PREFIX="/usr/local"
+[ -d "/usr/local/bin" ] && export PATH="/usr/local/bin:$PATH"
+[ -d "/usr/local/sbin" ] && export PATH="/usr/local/sbin:$PATH"
+[ -d "/opt/homebrew/bin/" ] && export PATH="/opt/homebrew/bin:$PATH"
+[ -d "/opt/homebrew/sbin/" ] && export PATH="/opt/homebrew/sbin:$PATH"
+
+export ZSH_COMPLETION_DIR="${HOME}/.zsh.completions"
+fpath+=($ZSH_COMPLETION_DIR)
+[ ! -d "${ZSH_COMPLETION_DIR}" ] && mkdir $ZSH_COMPLETION_DIR
+
+# which exit codes
+# ================
+# 0      if all specified commands are found and executable
+# 1      if one or more specified commands is nonexistent or not executable
+# 2      if an invalid option is specified
+# which autojump 2>&1 >/dev/null
+if command -v autojump >/dev/null; then
+    plugins+=(autojump)
+fi
+
+# which aws 2>&1 >/dev/null
+if command -v aws >/dev/null; then
+    plugins+=(aws)
+fi
+
+export HAS_ASDF=0
+if command -v asdf >/dev/null; then
+    export HAS_ASDF=1
+    plugins+=(asdf)
+    if [ -f "${HOME}/.asdf/shims/krew" ]; then
+      export FZF_BASE=${FZF_BASE:-$($HOME/.asdf/bin/asdf where fzf)}
+    fi
+fi
+
+# which fzf 2>&1 >/dev/null
+if command -v fzf >/dev/null; then
+  if [ -L "/usr/local/bin/brew" ]; then
+    export FZF_BASE="$(brew --prefix fzf)"
+  fi
+  plugins+=(fzf)
+fi
+
+# Installed via "chezmoi" dotfiles
+plugins+=(fzf-tab)
+plugins+=(zsh-fzf-pass)
+
+###
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# preview directory's content with eza when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
+###
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8  
+export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/git-auto-fetch
+GIT_AUTO_FETCH_INTERVAL=1200
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+
+alias zshconfig="vim ~/.zshrc"
+alias ohmyzsh="vim ~/.oh-my-zsh"
+alias ccat="bat"
+if command -v eza >/dev/null; then
+  alias ls="eza --icons"
+  alias ll="eza --icons --long --git --header"
+  alias la="eza --icons --long --all --git --header"
+fi
+
+# FZF detection and support
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [ -d "${HOME}/.rbenv/bin" ]; then
+    export PATH="${HOME}/.rbenv/shims:${HOME}/.rbenv/bin:$PATH"
+fi
+
+# Load RbEnv into PATH
+if [[ -x /usr/local/bin/rbenv || -x $HOME/.rbenv/bin/rbenv ]]; then
+    eval "$(rbenv init -)"
+fi
+
+# Add Homebrew directories into PATH
+if [[ -x /usr/local/bin/brew ]]; then
+    export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+fi
+
+# AUTOLOAD ENV FILE
+if [ -f "$HOME/.zshrc.env" ]; then
+    source $HOME/.zshrc.env;
+fi
+
+# DirEnv Hooks
+# which direnv 2>&1 >/dev/null
+if [ -x "/usr/local/bin/direnv" ]; then
+    eval "$(direnv hook zsh)"
+fi
+
+# which chroma 2>&1 >/dev/null
+# if [ $? -eq 0 ]; then
+#     plugins+=(colorize)
+#     export ZSH_COLORIZE_TOOL="chroma"
+#     export ZSH_COLORIZE_STYLE="colorful"
+#     export ZSH_COLORIZE_CHROMA_FORMATTER="terminal256"
+# fi
+
+
+# Better zsh history
+# Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+
+# Aliases
+# =============================================================================
+alias g="git"                           # Shorthand for git cli
+alias tf="terraform"                    # Shorthand for terraform cli
+alias tfs="tfswitch"                    # Shorthand for terraform version switcher
+alias tmux="tmux -u -2"     # Force tmux to usse 256-color
+alias new-tmux="tmux -u new -s"            # Quick tmux creation
+
+# Load the files in ${LOCAL_COPY}/.zshrc.d/...
+for zshrc_d_file in ${HOME}/.zshrc.d/*; do
+    source $zshrc_d_file;
+done
+
+function gi() { curl -sLw https://www.toptal.com/developers/gitignore/api/$@ ;}
+
+# PyEnv detection and supoprt
+if [ -d "$HOME/.pyenv" ]; then
+    # echo -e "\033[32m==>\033[0m Including PyEnv Elements"
+    export PYENV_ROOT="${HOME}/.pyenv"
+    export PATH="${PYENV_ROOT}/bin:${PATH}"
+
+    eval "$(pyenv init --path)"
+fi
+
+# Created by `userpath` on 2020-07-23 19:44:51
+[ -d "${HOME}/.local/bin" ] && export PATH="${HOME}/.local/bin:${PATH}"
+
+# export GOPATH="$HOME/go"
+export GOENV_ROOT="$HOME/.goenv"
+export PATH="$GOENV_ROOT/bin:$PATH"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+if [ -d "/usr/local/opt/openssl@1.1/bin" ]; then
+    export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+fi
+
+[ -d "$HOME/.linkerd2" ] && \
+    [ -d "$HOME/.linkerd2/bin" ] && \
+    export PATH=$PATH:$HOME/.linkerd2/bin
+
+[ -d "$HOME/workspace/personal/dotfiles-v2/bin" ] && \
+  export PATH="$HOME/workspace/personal/dotfiles-v2/bin:$PATH"
+
+[ -d "$HOME/playground/nutrien-eks-connectivity/bin" ] && \
+  export PATH="$HOME/playground/nutrien-eks-connectivity/bin:$PATH"
+
+# Completions that are provided as a file by the tool
+[ ! -L "$ZSH_COMPLETION_DIR/_asdf" ] \
+  && [ -f $HOME/.asdf/completions/_asdf ] \
+  && ln -s $HOME/.asdf/completions/_asdf $ZSH_COMPLETION_DIR/_asdf
+
+# Pack CLI Completion
+[ -x /usr/local/bin/pack ] && \
+  . $(pack completion --shell zsh)
+
+
+autoload -U compinit
+compinit
+
+# Terraform is an odd ball
+autoload -U +X bashcompinit && bashcompinit
+tf_completion_version="1.2.8"
+tfswitch_dir="$HOME/.terraform.versions"
+tfswitch_completion_target="${tfswitch_dir}/terraform_${tf_completion_version}"
+
+if [ -x "${tfswitch_completion_target}" ]; then
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} terraform_${tf_completion_version}
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} terraform
+  complete -o nospace -C $HOME/.terraform.versions/terraform_${tf_completion_version} tf
+fi
+
+# AWS CLI Completion -- https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+[ -x '/usr/local/bin/aws_completer' ] && complete -C '/usr/local/bin/aws_completer' aws
+
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+# add Pulumi to the PATH
+export PATH=$PATH:$HOME/.pulumi/bin
+
+# GoEnv
+if [ -d "$HOME/.goenv" ]; then
+
+    export GOENV_ROOT="${HOME}/.goenv"
+    export PATH="${GOENV_ROOT}/bin:${PATH}"
+
+    eval "$(goenv init -)"
+fi
+
+
+# OhMyZSH Auto Update Control
+# ===========================
+#
+# mode = [ auto, reminder, disabled ]
+# frequency = n (days)
+zstyle ':omz:update' mode auto
+
+export GOPATH=$HOME/go
+if [ -d $GOPATH ]; then
+    export PATH="${GOPATH}/bin:${PATH}"
+fi
+
+alias cdgo="cd $GOPATH/src/github.com"
+alias cdgor35="cd $GOPATH/src/github.com/r35krag0th"
+alias cddf="cd $HOME/workspace/personal/dotfiles-v2"
+
+if [ -x "/usr/local/bin/nvim" ]; then
+  export EDITOR="/usr/local/bin/nvim"
+fi
+
+if [ $HAS_ASDF -eq 1 ]; then
+  export KREW_ROOT=$(asdf where krew)
+fi
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
+autoload -U compinit; compinit
+
+alias show-listening-ports="lsof -P -iTCP -sTCP:LISTEN"
+function who-is-using-tcp-port() {
+  echo ""
+  echo -e "\033[1mWho is using port \033[48;5;202m\033[38;5;231m ${1}/tcp \033[0m\033[1m? \033[0m"
+  echo ""
+  lsof -P -iTCP:${1} -sTCP:LISTEN
+}
+
+
+export PATH="$HOME/.poetry/bin:$PATH"
+alias chez="noglob chezmoi"
+
+# BEGIN_AWS_SSO_CLI
+
+# AWS SSO requires `bashcompinit` which needs to be enabled once and
+# only once in your shell.  Hence we do not include the two lines:
+#
+# autoload -Uz +X compinit && compinit
+# autoload -Uz +X bashcompinit && bashcompinit
+#
+# If you do not already have these lines, you must COPY the lines 
+# above, place it OUTSIDE of the BEGIN/END_AWS_SSO_CLI markers
+# and of course uncomment it
+
+__aws_sso_profile_complete() {
+     local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    _multi_parts : "($(/usr/local/bin/aws-sso list --csv $_args Profile))"
+}
+
+aws-sso-profile() {
+    local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    if [ -n "$AWS_PROFILE" ]; then
+        echo "Unable to assume a role while AWS_PROFILE is set"
+        return 1
+    fi
+    eval $(/usr/local/bin/aws-sso $_args eval -p "$1")
+    if [ "$AWS_SSO_PROFILE" != "$1" ]; then
+        return 1
+    fi
+}
+
+aws-sso-clear() {
+    local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    if [ -z "$AWS_SSO_PROFILE" ]; then
+        echo "AWS_SSO_PROFILE is not set"
+        return 1
+    fi
+    eval $(/usr/local/bin/aws-sso -sso eval $_args -c)
+}
+
+compdef __aws_sso_profile_complete aws-sso-profile
+complete -C /usr/local/bin/aws-sso aws-sso
+
+# END_AWS_SSO_CLI
+
+[[ -d "$HOME/.asdf/shims" ]] && export PATH="$HOME/.asdf/shims:$PATH"
+
+alias jbat="bat -l json"
+alias ybat="bat -l yaml"
+
+# Support for PDM (python) via Alias
+[[ -x "$HOME/.local/bin/pdm" ]] && alias p="pdm"
+
+# ~/.zshrc
+[[ -f $HOME/.config/op/plugins.sh ]] && source ${HOME}/.config/op/plugins.sh
+
+# Automatically load the .nvmrc file to set the local version
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+# BUG: the flux completion line causes the unknown tag "-t" error
+# . <(flux completion bash)
+
+# NOTE: Adds "timoni" and "cue" completions for ZSH
+command -v timoni >/dev/null && . <(timoni completion zsh) && compdef _timoni timoni
+command -v cue >/dev/null && . <(cue completion zsh) && compdef _cue cue
+
+# NOTE: Xcode Paths to provide tooling access to things
+export PATH="/Applications/Xcode.app/Contents/Developer/usr/bin:$PATH"
+export PATH="/Library/Developer/CommandLineTools/usr/bin:$PATH"
+
+# NOTE: This helps deal with the problem where macOS has issues finding
+# libraries when compiling anything that is C or C++ based.
+#
+# >>> This addresses issues need with LazyVim and tree-sitter
+export CC='/usr/bin/clang'
+
+# If you have GCC 11 installed then we will use that.
+# This is primaryily used to unblock the `norg` (Neorg) TreeSitter parser.
+if command -v gcc-1 > /dev/null; then
+  export CC=$(command -v gcc-11)
+fi
+export CFLAGS=''
+
+# Happy little alias
+alias vim="nvim -p"
+
+# Disable auto-title
+# export DISABLE_AUTO_TITLE='true'
+
+# Homebrew's zsh-completions
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
+tmux-git-autofetch() {(${HOME}/.tmux/plugins/tmux-git-autofetch/git-autofetch.tmux --current &)}
+add-zsh-hook chpwd tmux-git-autofetch
+    
+eval "$(zoxide init zsh)"
+
+# Load up starship.rs
+eval "$(starship init zsh)"
+
