@@ -1,0 +1,16 @@
+{
+  "name": "r35krag0th-nvim",
+  "engines": {
+    "vscode": "^1.11.0"
+  },
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "norg"
+        ],
+        "path": "lua/r35/snippets/norg_snippets.json"
+      }
+    ]
+  }
+}
