@@ -1,6 +1,3 @@
-[include]
-  path = ~/.gitconfig.local
-
 [color]
   # turn on color
   diff = auto
@@ -244,9 +241,9 @@
   markEmptyLines = false
 
 [user]
-  name = Bob Saska
-  email = git@r35.net
-  signingkey = 87FB0C9A9BDCD83433B5D02C58BD034942B9F1B6
+  name = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/Name" }}
+  email = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/email" }}
+  signingkey = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/public key" }}
 
 [interactive]
   diffFilter = delta --color-only
@@ -273,19 +270,22 @@
 [init]
   defaultBranch = main
 
-[include]
-  path = ~/.gitconfig.local
-
-# Conditionally include my Nutrien git config for repos with remotes pointing at work orgs
 [remote "origin"]
 	prune = true
 
 [commit]
   gpgsign = true
 
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
