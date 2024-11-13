@@ -6,12 +6,20 @@ packages:
       - age-plugin-yubikey
       - ansible
       - argocd
+      - auto-doc
       - aws-sso-cli
       - bat
+      - cmake
+      - colima
+      - coreutils
+      - cosign
       - dagger
+      - direnv
+      - dive
       - fblog
       - ffmpeg
       - fish
+      - fisher
       - flux
       - gcc@11
       - gh
@@ -25,6 +33,8 @@ packages:
       - golangci-lint
       - grepcidr
       - helm
+      - imagemagick
+      - istioctl
       - k9s
       - krew
       - kubeseal
@@ -37,11 +47,19 @@ packages:
       - mono
       - neovim
       - pinentry
+      - pipx
+      - pre-commit
+      - prettier
       - restish
       - ripgrep
+      - rust
+      - shellcheck
       - terraform-docs
+      - tflint
       - tmux
       - tree-sitter
+      - vhs
+      - watch
       - yamlfmt
       - yamllint
       - zoxide
