@@ -1,0 +1,54 @@
+packages:
+  darwin:
+    brews:
+      - actionlint
+      - age
+      - age-plugin-yubikey
+      - ansible
+      - argocd
+      - aws-sso-cli
+      - bat
+      - dagger
+      - fblog
+      - ffmpeg
+      - fish
+      - flux
+      - gcc@11
+      - gh
+      - git
+      - git-delta
+      - git-flow
+      - git-lfs
+      - gnu-sed
+      - gnutls
+      - go-jsonnet
+      - golangci-lint
+      - grepcidr
+      - helm
+      - k9s
+      - krew
+      - kubeseal
+      - kustomize
+      - lazygit
+      - lua
+      - lua@5.1
+      - luajit
+      - luarocks
+      - mono
+      - neovim
+      - pinentry
+      - restish
+      - ripgrep
+      - terraform-docs
+      - tmux
+      - tree-sitter
+      - yamlfmt
+      - yamllint
+      - zoxide
+      - zsh
+    casks:
+      - 1password-cli
+      - dotnet-sdk
+      - font-hack-nerd-font
+      - font-symbols-only-nerd-font
+      - hammerspoon
