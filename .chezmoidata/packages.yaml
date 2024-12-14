@@ -16,6 +16,7 @@ packages:
       - dagger
       - direnv
       - dive
+      - eza
       - fblog
       - ffmpeg
       - fish
@@ -54,18 +55,24 @@ packages:
       - ripgrep
       - rust
       - shellcheck
+      - starship
+      - step
+      - stern
       - terraform-docs
       - tflint
       - tmux
+      - tmux-sessionizer
       - tree-sitter
       - vhs
       - watch
       - yamlfmt
       - yamllint
+      - yq
       - zoxide
       - zsh
     casks:
       - 1password-cli
+      - copyq
       - dotnet-sdk
       - font-hack-nerd-font
       - font-symbols-only-nerd-font
