@@ -1,0 +1,16 @@
+session_sort_order = "LastAttached"
+
+[[search_dirs]]
+path = "~/workspace"
+depth = 2
+
+[[search_dirs]]
+path = "~/.local/share"
+depth = 1
+
+[picker_colors]
+highlight_color = "#005C53"
+highlight_text_color = "#9FC131"
+border_color = "#042940"
+info_color = "#D6D58E"
+prompt_color = "#005C53"
