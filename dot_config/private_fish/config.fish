@@ -25,6 +25,7 @@ end
 fish_add_path -u --prepend "$HOME/.local/bin"
 fish_add_path -u "$R35_HOMEBREW_BIN"
 fish_add_path -u "$GOPATH/bin"
+fish_add_path -u "$HOME/.cargo/bin"
 
 # Load the "abbr" items
 abbr -a -- ggl 'git checkout main && git fetch -pPt && git pull -p'

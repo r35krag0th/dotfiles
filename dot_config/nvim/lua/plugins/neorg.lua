@@ -10,9 +10,7 @@ return {
         "L3MON4D3/LuaSnip",
       },
     },
-    {
-      dir = "~/workspace/personal/neorg-pathfinder-character",
-    },
+    "opipoy/neorg-colors",
   },
   lazy = false,
   version = "*",
@@ -56,7 +54,6 @@ return {
       ["core.tangle"] = {},
       ["external.context"] = {},
       ["external.templates"] = {},
-      ["external.pathfinder-character"] = {},
     },
   },
 }
