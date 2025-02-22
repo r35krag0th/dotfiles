@@ -23,7 +23,7 @@ M.config = {
 	},
 	paths = {
 		-- Search in the follow standard directories
-		wezterm.home_dir .. "/workspace",
+		wezterm.home_dir .. "/workspace/personal",
 		wezterm.home_dir .. "/.local/share",
 		wezterm.home_dir .. "/notes",
 	},
