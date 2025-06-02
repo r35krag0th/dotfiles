@@ -1,5 +1,6 @@
 return {
   "nvim-neorg/neorg",
+  enabled = false,
   dependencies = {
     "luarocks.nvim",
     "folke/zen-mode.nvim",

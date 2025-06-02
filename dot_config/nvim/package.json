@@ -10,6 +10,12 @@
           "norg"
         ],
         "path": "lua/r35/snippets/norg_snippets.json"
+      },
+      {
+        "language": [
+          "yaml"
+        ],
+        "path": "lua/r35/snippets/k8s_istio.lua"
       }
     ]
   }
