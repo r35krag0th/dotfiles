@@ -20,6 +20,11 @@ fish_add_path -u "$HOME/.cargo/bin"
 # fetch with prune, prune tags, and update tags
 # pull with prune and update tags
 abbr -a -- g-sm 'git switch main && git fetch -pP && git pull'
+
+# Git Fetch Flags:
+# -p => Prune: before fetching removes any remote-tracking references that no longer exist on the remote
+# -P => Prune Tags:  before fetching removes any local tags that no longer exist on the remote
+# -t => Update Tags: after fetching, fetch all tags from the remote
 abbr -a -- g-gl "git fetch -pPt && git pull -pt"
 abbr -a -- g-fgl "git fetch -pPt --force && git pull -pt"
 # Branch switching
@@ -37,7 +42,8 @@ abbr -a -- tg terragrunt
 abbr -a -- ta 'tmux attach -dt'
 abbr -a -- chez chezmoi
 abbr -a -- c chezmoi
-abbr -a -- gp 'git push --tags --prune --'
+# NEVER use --prune (-p) with --tags (-t), EVER
+abbr -a -- gp 'git push --tags --'
 abbr -a dl -- 'curl -fsSL'
 abbr -a grab -- 'curl -fsSL'
 

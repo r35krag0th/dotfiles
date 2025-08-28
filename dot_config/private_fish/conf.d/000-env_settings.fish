@@ -13,7 +13,7 @@ else
 end
 
 # Detect the presence
-if test -n "$R35_HOMBREW_DIR"
+if test -n "$R35_HOMEBREW_DIR"
     set -Ux R35_HOMEBREW_BIN $R35_HOMEBREW_DIR/bin
     set -Ux EDITOR $R35_HOMEBREW_BIN/nvim
     fish_add_path -u "$R35_HOMEBREW_BIN"

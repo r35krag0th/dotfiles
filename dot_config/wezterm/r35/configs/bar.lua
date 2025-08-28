@@ -25,7 +25,7 @@ M.keys = {}
 function M.apply_to_config(c)
 	wezterm.log_info("Loading r35.configs.bar")
 	bar.apply_to_config(c, M.config)
-	utils.append_all(c.keys, M.keys)
+	c.keys = utils.append_all(c.keys, M.keys)
 	return c
 end
 
