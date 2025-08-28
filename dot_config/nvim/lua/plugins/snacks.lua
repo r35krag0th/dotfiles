@@ -36,41 +36,41 @@ return {
         function()
           local in_git = Snacks.git.get_root() ~= nil
           local cmds = {
-            {
-              title = "Notifications",
-              cmd = "gh notify -s -a -n5",
-              action = function()
-                vim.ui.open("https://github.com/notifications")
-              end,
-              key = "n",
-              icon = " ",
-              height = 5,
-              enabled = true,
-            },
-            {
-              title = "Open Issues",
-              cmd = "gh issue list -L 3",
-              key = "i",
-              action = function()
-                vim.fn.jobstart("gh issue list --web", { detach = true })
-              end,
-              icon = " ",
-              height = 7,
-            },
-            {
-              icon = " ",
-              title = "Open PRs",
-              cmd = "gh pr list -L 3",
-              key = "P",
-              action = function()
-                vim.fn.jobstart("gh pr list --web", { detach = true })
-              end,
-              height = 7,
-            },
+            -- {
+            --   title = "Notifications",
+            --   cmd = "gh notify -s -a -n5",
+            --   action = function()
+            --     vim.ui.open("https://github.com/notifications")
+            --   end,
+            --   key = "n",
+            --   icon = " ",
+            --   height = 5,
+            --   enabled = true,
+            -- },
+            -- {
+            --   title = "Open Issues",
+            --   cmd = "gh issue list -L 3",
+            --   key = "i",
+            --   action = function()
+            --     vim.fn.jobstart("gh issue list --web", { detach = true })
+            --   end,
+            --   icon = " ",
+            --   height = 7,
+            -- },
+            -- {
+            --   icon = " ",
+            --   title = "Open PRs",
+            --   cmd = "gh pr list -L 3",
+            --   key = "P",
+            --   action = function()
+            --     vim.fn.jobstart("gh pr list --web", { detach = true })
+            --   end,
+            --   height = 7,
+            -- },
             {
               icon = " ",
               title = "Git Status",
-              cmd = "git --no-pager diff --stat -B -M -C",
+              cmd = "/opt/homebrew/bin/git --no-pager diff --stat -B -M -C",
               height = 10,
             },
           }
@@ -101,12 +101,23 @@ return {
     explorer = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
-    picker = { enabled = true },
+    picker = {
+      enabled = true,
+      -- Show hidden files by default (part 1)
+      hidden = true,
+      sources = {
+        files = {
+          -- Show hidden files by default (part 2)
+          hidden = true,
+        },
+      },
+    },
     notifier = { enabled = true },
     quickfile = { enabled = true },
     scope = { enabled = true },
     scroll = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
+    lazygit = {},
   },
 }

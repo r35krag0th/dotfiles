@@ -16,6 +16,7 @@ return {
     dependencies = {
       { "hrsh7th/cmp-emoji" },
       { "rafamadriz/friendly-snippets" },
+      { "giuxtaposition/blink-cmp-copilot" },
     },
     opts_extend = { "sources.default" },
     opts = {
