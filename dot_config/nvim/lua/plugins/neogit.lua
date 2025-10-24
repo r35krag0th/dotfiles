@@ -5,7 +5,7 @@ return {
     "sindrets/diffview.nvim", -- optional - Diff integration
 
     -- Only one of these is needed.
-    "echasnovski/mini.pick", -- optional
+    "nvim-mini/mini.pick", -- optional
   },
   opts = {
     graph_style = "unicode",
@@ -13,38 +13,6 @@ return {
       mini_pick = true,
     },
   },
-  -- Kind can be one of -- https://github.com/NeogitOrg/neogit?tab=readme-ov-file#usage
-  -- ===================
-  --  - tab (default)
-  --  - replace
-  --  - split
-  --  - split_above
-  --  - split_above_all
-  --  - split_below
-  --  - split_below_all
-  --  - vsplit
-  --  - floating
-  --  - auto (vsplit if >80 cols; split otherwise)
-  --
-  -- Popups can be one of -- https://github.com/NeogitOrg/neogit?tab=readme-ov-file#popups
-  --  - bisect
-  --  - branch_and_bisect
-  --  - cherry_pick
-  --  - commit
-  --  - diff
-  --  - fetch
-  --  - ignore
-  --  - log
-  --  - merge
-  --  - pull
-  --  - push
-  --  - rebase
-  --  - remote_config
-  --  - reset
-  --  - revert
-  --  - stash
-  --  - tag
-  --  - worktree
   keys = {
     {
       "<leader>gg",

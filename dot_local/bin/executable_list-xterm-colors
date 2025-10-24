@@ -1,0 +1,168 @@
+#!/usr/bin/env -S uv run --script
+# vim: ft=python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "rich",
+# ]
+# ///
+
+import argparse
+from rich.color import Color
+from rich.console import Console
+
+console = Console()
+
+
+def get_contrasting_fg(color_index):
+    """Calculate contrasting foreground color for a given background.
+
+    Uses color 16 (black) and 231 (white) to avoid theme mutations.
+    """
+    color = Color.from_ansi(color_index)
+    triplet = color.get_truecolor()
+    luminance = (
+        0.299 * triplet.red + 0.587 * triplet.green + 0.114 * triplet.blue
+    ) / 255
+    return "color(16)" if luminance > 0.5 else "color(231)"
+
+
+def print_color_group(title, color_indices, mode="fg"):
+    """Print a group of colors."""
+    console.print(f"\n[bold]{title}[/bold]\n")
+    for idx, i in enumerate(color_indices):
+        if mode == "fg":
+            console.print(f"[color({i})]{i:3d}[/]", end=" ")
+        else:
+            fg = get_contrasting_fg(i)
+            console.print(f"[{fg} on color({i})] {i:3d} [/]", end="  ")
+
+        if (idx + 1) % 16 == 0:
+            console.print()
+    console.print()
+
+
+def classify_color(color_index):
+    """Classify a color into a family based on RGB values."""
+    if color_index < 16:
+        return "Standard"
+    elif color_index >= 232:
+        return "Grayscale"
+
+    # RGB cube colors (16-231)
+    color = Color.from_ansi(color_index)
+    triplet = color.get_truecolor()
+    r, g, b = triplet.red, triplet.green, triplet.blue
+
+    # Find the dominant channel(s)
+    max_val = max(r, g, b)
+    min_val = min(r, g, b)
+
+    # If all channels are similar, it's grayscale-ish (shouldn't happen in cube, but just in case)
+    if max_val - min_val < 30:
+        return "Grayscale"
+
+    # Check which channels are dominant
+    threshold = max_val - 50
+    is_red = r >= threshold
+    is_green = g >= threshold
+    is_blue = b >= threshold
+
+    # Classify based on dominant channels
+    if is_red and is_green and not is_blue:
+        return "Yellow"
+    elif is_red and is_blue and not is_green:
+        return "Magenta"
+    elif is_green and is_blue and not is_red:
+        return "Cyan"
+    elif is_red and not is_green and not is_blue:
+        return "Red"
+    elif is_green and not is_red and not is_blue:
+        return "Green"
+    elif is_blue and not is_red and not is_green:
+        # Special case: if there's any significant red component, it's probably purple/magenta
+        if r > 50 and r > g:
+            return "Magenta"
+        return "Blue"
+    else:
+        # Fallback for edge cases
+        return "Mixed"
+
+
+def get_color_groups():
+    """Organize colors into groups based on color family."""
+    groups = {
+        "Standard": [],
+        "Red": [],
+        "Green": [],
+        "Blue": [],
+        "Yellow": [],
+        "Cyan": [],
+        "Magenta": [],
+        "Grayscale": [],
+        "Mixed": [],
+    }
+
+    for i in range(256):
+        family = classify_color(i)
+        groups[family].append(i)
+
+    # Remove empty groups and return in a sensible order
+    ordered_groups = {}
+    for name in ["Standard", "Red", "Yellow", "Green", "Cyan", "Blue", "Magenta", "Grayscale", "Mixed"]:
+        if groups[name]:
+            ordered_groups[name] = groups[name]
+
+    return ordered_groups
+
+
+def display_sequential(mode="fg"):
+    """Display all colors sequentially."""
+    title = "Foreground Colors" if mode == "fg" else "Background Colors"
+    console.print(f"\n[bold]{title}:[/bold]\n")
+
+    for i in range(256):
+        if mode == "fg":
+            console.print(f"[color({i})]{i:3d}[/]", end=" ")
+        else:
+            fg = get_contrasting_fg(i)
+            console.print(f"[{fg} on color({i})] {i:3d} [/]", end="  ")
+
+        if (i + 1) % 16 == 0:
+            console.print()
+
+
+def display_grouped(mode="fg"):
+    """Display colors grouped by hue."""
+    groups = get_color_groups()
+    title_prefix = "Foreground" if mode == "fg" else "Background"
+
+    for group_name, indices in groups.items():
+        print_color_group(f"{title_prefix} - {group_name}", indices, mode)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Display xterm 256 color palette"
+    )
+    parser.add_argument(
+        "--grouped",
+        action="store_true",
+        help="Group colors by primary/secondary colors and grayscale"
+    )
+    args = parser.parse_args()
+
+    if args.grouped:
+        display_grouped("fg")
+        console.print("=" * 80)
+        display_grouped("bg")
+    else:
+        display_sequential("fg")
+        console.print("\n" + "=" * 80 + "\n")
+        display_sequential("bg")
+
+    console.print()
+
+
+if __name__ == "__main__":
+    main()
