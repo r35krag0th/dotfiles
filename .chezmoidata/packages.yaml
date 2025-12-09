@@ -50,7 +50,6 @@ packages:
       - font-symbols-only-nerd-font
       - hammerspoon
       - kitty
-      - wezterm
 
   # Tools managed by mise (cross-platform)
   # See ~/.config/mise/config.toml for versions
