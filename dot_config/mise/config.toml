@@ -13,6 +13,8 @@ kustomize = "latest"
 helm = "latest"
 helmfile = "latest"
 k9s = "latest"
+krew = "latest"
+minikube = "latest"
 stern = "latest"
 istioctl = "1.27"
 

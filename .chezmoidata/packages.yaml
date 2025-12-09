@@ -33,7 +33,6 @@ packages:
       - colima
       - docker
       - flux
-      - krew
       - kubecolor
       - kubeseal
       - talosctl
@@ -96,8 +95,10 @@ packages:
     - istioctl
     - jq
     - k9s
+    - krew
     - kubectl
     - kustomize
+    - minikube
     - pre-commit
     - stern
     - terraform
