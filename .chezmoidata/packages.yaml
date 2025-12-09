@@ -1,21 +1,16 @@
 packages:
   darwin:
     brews:
-      # Essential CLI tools
-      - bat
+      # Essential CLI tools (not in mise or better from brew)
       - coreutils
       - curl
-      - eza
-      - fd
       - gnu-sed
-      - ripgrep
       - watch
       - wget
 
       # Shell & Terminal
       - fish
       - fisher
-      - starship
       - tmux
       - tmux-sessionizer
       - zsh
@@ -25,36 +20,16 @@ packages:
       - git
       - git-delta
       - git-lfs
-      - glab
-      - lazygit
 
-      # Kubernetes & Cloud Native
-      - argocd
-      - colima
+      # Kubernetes & Cloud Native (brew-only)
       - docker
       - flux
-      - kubecolor
-      - kubeseal
-      - talosctl
-      - timoni
 
-      # Infrastructure & DevOps
-      - ansible
+      # Infrastructure & DevOps (brew-only)
       - aws-sso-cli
-      - granted
-      - infisical
-      - step
 
-      # Development Tools
-      - dagger
-      - direnv
-      - imagemagick
+      # Neovim and dependencies (keep as brew for compile flags)
       - neovim
-      - pipx
-      - prettier
-      - restish
-
-      # Neovim dependencies (keep as brew)
       - lua
       - lua@5.1
       - luajit
@@ -68,10 +43,6 @@ packages:
       - sketchybar
       - yabai
 
-      # Media
-      - viddy
-      - yt-dlp
-
     casks:
       - 1password-cli
       - copyq
@@ -84,25 +55,57 @@ packages:
   # Tools managed by mise (cross-platform)
   # See ~/.config/mise/config.toml for versions
   mise_managed:
-    - actionlint
-    - cosign
-    - fzf
-    - gh
-    - go
-    - golangci-lint
+    # Infrastructure
+    - ansible
+    - dagger
+    - infisical
+    - step
+    - terraform
+    - terragrunt
+
+    # Kubernetes
+    - argocd
+    - colima
     - helm
     - helmfile
     - istioctl
-    - jq
     - k9s
     - krew
+    - kubecolor
+    - kubeseal
     - kubectl
     - kustomize
     - minikube
-    - pre-commit
     - stern
-    - terraform
+    - talosctl
+    - timoni
+
+    # Development
+    - actionlint
+    - direnv
+    - golangci-lint
+    - lazygit
+    - pipx
+    - pre-commit
+    - prettier
+    - restish
     - terraform-docs
-    - terragrunt
     - tflint
+
+    # CLI Tools
+    - bat
+    - cosign
+    - copier
+    - dapr
+    - eza
+    - fd
+    - fzf
+    - gh
+    - glab
+    - granted
+    - jq
+    - ripgrep
+    - starship
+    - viddy
     - yq
+    - yt-dlp
