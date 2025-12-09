@@ -1,0 +1,13 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Keep mise up to date
+
+MISE="${HOME}/.local/bin/mise"
+
+if [ ! -x "$MISE" ]; then
+    exit 0
+fi
+
+echo ">>> Updating mise..."
+"$MISE" self-update --yes
+{{ end -}}
