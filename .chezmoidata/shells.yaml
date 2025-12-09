@@ -1,0 +1,14 @@
+shells:
+  darwin:
+    fish: /opt/homebrew/bin/fish
+    zsh: /bin/zsh
+    bash: /bin/bash
+  linux:
+    fish: /usr/bin/fish
+    zsh: /usr/bin/zsh
+    bash: /bin/bash
+  # Host-specific overrides (add entries as needed)
+  # Example:
+  #   my-server:
+  #     fish: /usr/local/bin/fish
+  hosts: {}

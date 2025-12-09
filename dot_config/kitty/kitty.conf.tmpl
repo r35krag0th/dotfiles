@@ -27,7 +27,11 @@ hide_window_decorations titlebar-only
 tab_bar_style             hidden
 
 # Shell Settings
-shell /opt/homebrew/bin/fish --login -c "zellij -l welcome"
+{{- $fish := index .shells .chezmoi.os "fish" -}}
+{{- if and (hasKey .shells "hosts") (hasKey .shells.hosts .chezmoi.hostname) -}}
+  {{- $fish = index .shells.hosts .chezmoi.hostname "fish" | default $fish -}}
+{{- end }}
+shell {{ $fish }} --login -c "zellij -l welcome"
 editor /opt/homebrew/bin/nvim
 allow_remote_control yes
 shell_integration enabled

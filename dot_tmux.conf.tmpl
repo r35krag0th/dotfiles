@@ -10,16 +10,12 @@
 # General Settings
 # ==============================================================================
 
-# Use fish shell (fallback to zsh if not available)
-if-shell '[ -x /opt/homebrew/bin/fish ]' {
-    set -g default-shell /opt/homebrew/bin/fish
-} {
-    if-shell '[ -x /usr/local/bin/fish ]' {
-        set -g default-shell /usr/local/bin/fish
-    } {
-        set -g default-shell /bin/zsh
-    }
-}
+# Default shell (configured via chezmoi)
+{{- $fish := index .shells .chezmoi.os "fish" -}}
+{{- if and (hasKey .shells "hosts") (hasKey .shells.hosts .chezmoi.hostname) -}}
+  {{- $fish = index .shells.hosts .chezmoi.hostname "fish" | default $fish -}}
+{{- end }}
+set -g default-shell {{ $fish }}
 
 # Terminal settings for true color support
 set -g default-terminal "tmux-256color"
