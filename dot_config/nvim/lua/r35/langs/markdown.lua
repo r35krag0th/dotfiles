@@ -135,10 +135,19 @@ function M.plugins()
         })
         return opts
       end,
+      keys = {
+        { "<localleader>td", "<cmd>Checkbox toggle<cr>", desc = "Markview: Toggle checkbox" },
+        { "<localleader>th", "<cmd>Checkbox change -1 0<cr>", desc = "Markview: Prev column of symbols" },
+        { "<localleader>tj", "<cmd>Checkbox change 0 -1<cr>", desc = "Markview: Next row of symbols" },
+        { "<localleader>tk", "<cmd>Checkbox change 0 1<cr>", desc = "Markview: Prev row of symbols" },
+        { "<localleader>tl", "<cmd>Checkbox change 1 0<cr>", desc = "Markview: Next column of symbols" },
+      },
     },
     {
       "r35krag0th/yeahnotes.nvim",
       lazy = false,
+      dev = true,
+      dir = "~/workspace/yeahnotes.nvim",
       dependencies = {
         "nvim-mini/mini.pick", -- Required for find/grep functionality
       },

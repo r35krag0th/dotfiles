@@ -109,6 +109,9 @@ M.plugins = function()
       ft = { "yaml", "helm" },
       dir = "~/workspace/kube-schemas.nvim/",
       dev = true,
+      opts = {
+        catalog_url = "https://schemas.r35.io/api/json/catalog.json",
+      },
       keys = {
         { "<localleader>yks", "<cmd>KubeSchemas search<cr>", desc = "Search for k8s Schema" },
         { "<localleader>yka", "<cmd>KubeSchemas auto<cr>", desc = "Auto-detect Kubernetes schema" },
