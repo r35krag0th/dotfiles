@@ -1,249 +1,68 @@
-[color]
-  # turn on color
-  diff = auto
-  status = auto
-  branch = auto
-  interactive = auto
-  ui = true
-
-[color "branch"]
-  # good looking colors i copy/pasted from somewhere
-  current = green bold
-  local = green
-  remote = red bold
-
-[color "diff"]
-  # good looking colors i copy/pasted from somewhere
-  meta = yellow
-  frag = magenta bold
-  old = red bold
-  new = green bold
-  commit = yellow bold
-  whitespace = red reverse
-
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-
-[color "status"]
-  # good looking colors i copy/pasted from somewhere
-  added = green bold
-  changed = yellow bold
-  untracked = red
-
-[color "sh"]
-  branch = yellow
-
-[push]
-  # 'git push' should only do the current branch, not all
-  default = current
-
-[branch]
-  # always setup 'git pull' to rebase instead of merge
-  autosetuprebase = always
-
-[diff]
-  renames = copies
-  mnemonicprefix = true
-  tool = Kaleidoscope
-
-[svn]
-  # push empty directory removals back to svn at directory deletes
-  rmdir = true
-  # set svn:mergeinfo when pushing merge commits
-  pushmergeinfo = true
-
-[alias]
-  gr = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
-
-  # General Lazy Shortcuts
-  b = branch
-  br = branch
-
-  s = status -s
-  st = status
-
-  fm = merge --no-ff
-
-  # Lazy: Checkout
-  co = checkout
-  com = checkout master
-  cod = checkout develop
-  copv = checkout preview
-  cob = checkout staging
-
-  co-master = checkout master
-  co-prod = checkout master
-  co-dev = checkout develop
-  co-preview = checkout preview
-  co-staging = checkout staging
-  co-beta = checkout staging
-
-  # Lazy: Commit
-  ci = commit
-  ca = commit -a
-  cam = commit -am
-
-  # Lazy: Push
-  po = push origin master
-  pt = push --tags
-  push-tags = push --tags
-
-  # Lazy: Fetch
-  ft = fetch --tags
-
-  #
-  up = update
-
-  #
-  who = shortlog -s --
-  panic = !tar cvf ../git_panic.tar *
-  tag-list = tag -l
-  tags = tag -l
-  branches = !legit branches
-  heroku = push heroku master
-
-  # Pull down a PullRequest by ID
-  req = "!f() { git fetch origin refs/pull/$1/head:pr/$1; }; f"
-    # req = "!f() { echo -e \"\033[32m=== Pulling PR ${1}\"; git fetch origin refs/pull/$1/head:pr/$1; echo ''; echo -e \"You can use \033[32mgit co pr/${1}\033[37m to checkout the PR branch\" } ; f"
-
-  ## Useful
-  # Prepend "done-" to a branch
-  done = "!f() { git branch | grep "$1" | cut -c 3- | grep -v done | xargs -I{} git branch -m {} done-{}; }; f"
-
-  # Commit log
-  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-  lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
-  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
-  le = log --oneline --decorate
-
-  # History of a file with diffs
-  filelog = log -u
-  fl = log -u
-
-  # Files modified in last commit
-  dl = "!git ll -1"
-
-  # Diff of last commit
-  dlc = diff --cached HEAD^
-
-  # Find files by content or file name
-  f = "!git ls-files | grep -i"
-
-  # Search entire codebase for string
-  grep = grep -Ii
-  # gr = grep -Ii
-
-  # Grep from the root of repo
-  gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
-
-  # List all aliases
-  list-aliases = "!git config -l | grep alias | cut -c 7-"
-
-  # Assume a file as changed
-  assume = update-index --assume-unchanged
-
-  # Unassume a file
-  unassume = update-index --no-assume-unchanged
-
-  # Show assumed files
-  assumed = "!git ls-files -v | grep ^h | cut -c 3-"
-
-  # Unassume or Assume all files
-  unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
-  assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
-
-  # Show the last tag
-  lasttag = describe --tags --abbrev=0
-  lt = describe --tags --abbrev=0
-
-  # Merge aliases
-  ours = "!f() { git co --ours $@ && git add $@; }; f"
-  theirs = "!f() { git co --theirs $@ && git add $@; }; f"
-
-  ##  Workflow
-  setup-workflow = "!f() { git checkout master; git checkout -b develop; git checkout master; }; f"
-  headless = !sh -c 'git symbolic-ref HEAD refs/heads/$0 && rm .git/index && git clean -fdx'
-
-  ## Borrowed
-  wip = !"git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
-  unwip = !"git log -n 1 | grep -q -c wip && git reset HEAD~1"
-
-  # Creating
-  create-hotfix = "!f() { git checkout -b hotfix-$1 master; }; f"
-  create-feature = "!f() { git checkout -b feature-$1 develop; }; f"
-  create-release = "!f() { git checkout -b release-$1 develop; echo; echo '---> PLEASE UPDATE THE VERSION NUMBER IN YOUR CODE TO MATCH THIS RELEASE <---'; echo Target Version: $1; echo; }; f"
-
-  # Merging/Consolidating
-  merge-feature = "!f() { echo Merging Feature $1...; git codev && git fm feature-$1 && echo && echo You can now delete your branch and push \\(origin develop\\); }; f"
-  merge-hotfix = "!f() { echo Merging Hot-Fix $1...; git com &&  git fm hotfix-$1 && git tag -s $1 && git checkout develop && git fm hotfix-$1 && echo && echo You can delete you branch.; }; f"
-
-  # Release / Release Management
-  finalize-release = "!f() { git com && git fm release-$1 && git tag -s $1 && git codev && git fm release-$1 && echo && echo You can delete your branch now.; }; f"
-
-  # Being Lazier
-  sync = !legit sync
-  graft = !legit graft
-  harvest = !legit harvest
-  publish = !legit publish
-  unpublish = !legit unpublish
-  sprout = !legit sprout
-  switch = !legit switch
-  resync = !legit resync
-  undo = !legit undo
-  ignore = "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
-
-[core]
-  editor = vim
-  excludesfile = ~/.gitignore_global
-  # diff-so-fancy    --> https://github.com/so-fancy/diff-so-fancy
-  # =============
-  # pager = diff-so-fancy | less --tabs=4 -RFX
-  #
-  # delta            --> https://github.com/dandavison/delta
-  # =====
-  pager = delta
-
-[mergetool "sourcetree"]
-  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
-
-[http]
-
-[filter "lfs"]
-  required = true
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-
-[mergetool]
-  keepBackup = true
-  prompt = false
-
-[mergetool "Kaleidoscope"]
-  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-  trustexitcode = true
-
-[merge]
-  tool = Kaleidoscope
-
-[difftool "Kaleidoscope"]
-  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-
-[difftool]
-  prompt = false
-
-[diff-so-fancy]
-  markEmptyLines = false
+# Git Configuration
+# Managed by chezmoi
 
 [user]
   name = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/Name" }}
   email = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/email" }}
   signingkey = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/public key" }}
+
+[init]
+  defaultBranch = main
+
+[core]
+  editor = nvim
+  excludesfile = ~/.gitignore_global
+  pager = delta
+
+[push]
+  default = current
+
+[pull]
+  rebase = true
+
+[branch]
+  autosetuprebase = always
+
+[diff]
+  renames = copies
+  mnemonicprefix = true
+  colorMoved = default
+
+[merge]
+  conflictstyle = diff3
+
+[rebase]
+  autosquash = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+
+[remote "origin"]
+  prune = true
+
+# =============================================================================
+# Commit Signing (1Password SSH)
+# =============================================================================
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
+# =============================================================================
+# Delta Pager
+# =============================================================================
+
+[pager]
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
 
 [interactive]
   diffFilter = delta --color-only
@@ -261,31 +80,152 @@
   file-style = bold yellow ul
   file-decoration-style = none
 
-[pager]
-  diff = delta
-  log = delta
-  reflog = delta
-  show = delta
+# =============================================================================
+# Colors
+# =============================================================================
 
-[init]
-  defaultBranch = main
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = true
 
-[remote "origin"]
-	prune = true
+[color "branch"]
+  current = green bold
+  local = green
+  remote = red bold
 
-[commit]
-  gpgsign = true
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  old = red bold
+  new = green bold
+  commit = yellow bold
+  whitespace = red reverse
 
-[gpg]
-  format = ssh
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 
-[gpg "ssh"]
-    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[color "status"]
+  added = green bold
+  changed = yellow bold
+  untracked = red
+
+# =============================================================================
+# Aliases
+# =============================================================================
+
+[alias]
+  # Graph log
+  gr = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
+
+  # Status
+  s = status -s
+  st = status
+
+  # Branch
+  b = branch
+  br = branch
+
+  # Checkout
+  co = checkout
+  cob = checkout -b
+  com = checkout main
+
+  # Commit
+  ci = commit
+  ca = commit -a
+  cam = commit -am
+
+  # Push
+  pt = push --tags
+
+  # Fetch
+  ft = fetch --tags
+
+  # Log formats
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+  le = log --oneline --decorate
+
+  # File history with diffs
+  fl = log -u
+  filelog = log -u
+
+  # Last commit files/diff
+  dl = "!git ll -1"
+  dlc = diff --cached HEAD^
+
+  # Find files
+  f = "!git ls-files | grep -i"
+
+  # Grep from repo root
+  gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
+
+  # List aliases
+  aliases = "!git config -l | grep alias | cut -c 7-"
+
+  # Tags
+  tags = tag -l
+  lasttag = describe --tags --abbrev=0
+  lt = describe --tags --abbrev=0
+
+  # Assume unchanged (useful for local config changes)
+  assume = update-index --assume-unchanged
+  unassume = update-index --no-assume-unchanged
+  assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+  unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
+
+  # Merge conflict helpers
+  ours = "!f() { git co --ours $@ && git add $@; }; f"
+  theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+
+  # WIP commits
+  wip = !"git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
+  unwip = !"git log -n 1 | grep -q -c wip && git reset HEAD~1"
+
+  # Pull request fetch
+  pr = "!f() { git fetch origin refs/pull/$1/head:pr/$1; }; f"
+
+  # Contributors
+  who = shortlog -s --
+
+  # Panic backup
+  panic = !tar cvf ../git_panic.tar *
+
+  # Generate .gitignore from gitignore.io
+  ignore = "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
+
+# =============================================================================
+# Git LFS
+# =============================================================================
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+# =============================================================================
+# Credentials
+# =============================================================================
 
 [credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+  helper =
+  helper = !/opt/homebrew/bin/gh auth git-credential
 
 [credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+  helper =
+  helper = !/opt/homebrew/bin/gh auth git-credential
+
+[mergetool]
+  keepBackup = false
+  prompt = false
+
+[difftool]
+  prompt = false
