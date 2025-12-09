@@ -1,79 +1,115 @@
 packages:
   darwin:
     brews:
-      - actionlint
-      - age
-      - age-plugin-yubikey
-      - ansible
-      - argocd
-      - auto-doc
-      - aws-sso-cli
+      # Essential CLI tools
       - bat
-      - cmake
-      - colima
       - coreutils
-      - cosign
-      - dagger
-      - direnv
-      - dive
+      - curl
       - eza
-      - fblog
-      - ffmpeg
+      - fd
+      - fzf
+      - gnu-sed
+      - jq
+      - ripgrep
+      - watch
+      - wget
+
+      # Shell & Terminal
       - fish
       - fisher
-      - flux
-      - gcc@11
-      - gh
+      - starship
+      - tmux
+      - tmux-sessionizer
+      - zsh
+      - zsh-completions
+
+      # Git & Version Control
       - git
       - git-delta
-      - git-flow
       - git-lfs
-      - gnu-sed
-      - gnutls
-      - go-jsonnet
-      - golangci-lint
-      - grepcidr
+      - gh
+      - glab
+      - lazygit
+
+      # Kubernetes & Cloud Native
+      - argocd
+      - colima
+      - docker
+      - flux
       - helm
-      - imagemagick
-      - istioctl
+      - helmfile
       - k9s
       - krew
+      - kubecolor
       - kubeseal
       - kustomize
-      - lazygit
-      - lua
-      - lua@5.1
-      - luajit
-      - luarocks
-      - mono
+      - stern
+      - talosctl
+      - timoni
+
+      # Infrastructure & DevOps
+      - ansible
+      - aws-sso-cli
+      - granted
+      - infisical
+      - step
+
+      # Development Tools
+      - dagger
+      - direnv
+      - imagemagick
       - neovim
-      - pinentry
       - pipx
       - pre-commit
       - prettier
       - restish
-      - ripgrep
-      - rust
-      - shellcheck
-      - starship
-      - step
-      - stern
-      - terraform-docs
-      - tflint
-      - tmux
-      - tmux-sessionizer
+
+      # Neovim dependencies (keep as brew)
+      - lua
+      - lua@5.1
+      - luajit
+      - luarocks
       - tree-sitter
-      - vhs
-      - watch
-      - yamlfmt
-      - yamllint
-      - yq
-      - zoxide
-      - zsh
+
+      # Neovim version manager
+      - bob
+
+      # macOS specific
+      - sketchybar
+      - yabai
+
+      # Media
+      - viddy
+      - yt-dlp
+
     casks:
       - 1password-cli
       - copyq
-      - dotnet-sdk
       - font-hack-nerd-font
       - font-symbols-only-nerd-font
       - hammerspoon
+      - kitty
+      - wezterm
+
+  # Tools managed by mise (cross-platform)
+  # See ~/.config/mise/config.toml for versions
+  mise_managed:
+    - actionlint
+    - cosign
+    - fzf
+    - gh
+    - go
+    - golangci-lint
+    - helm
+    - istioctl
+    - jq
+    - k9s
+    - kubectl
+    - kustomize
+    - pre-commit
+    - stern
+    - terraform
+    - terraform-docs
+    - terragrunt
+    - tflint
+    - yq

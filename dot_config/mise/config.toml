@@ -1,10 +1,35 @@
 [tools]
+# Infrastructure
 terraform = "1.12"
-uv = "latest"
 terragrunt = "0.80"
+
+# Languages & Runtimes
 go = "latest"
-dapr = "latest"
+uv = "latest"
+
+# Kubernetes
+kubectl = "latest"
+kustomize = "latest"
+helm = "latest"
+k9s = "latest"
+stern = "latest"
+istioctl = "1.27"
+
+# Development
+golangci-lint = "latest"
+pre-commit = "latest"
+actionlint = "latest"
+terraform-docs = "latest"
+tflint = "latest"
+
+# CLI Tools
+gh = "latest"
+jq = "latest"
+yq = "latest"
+fzf = "latest"
+cosign = "latest"
 copier = "latest"
+dapr = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["go"]
