@@ -1,0 +1,15 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Ensure mise tools are installed
+
+MISE="${HOME}/.local/bin/mise"
+
+if [ ! -x "$MISE" ]; then
+    exit 0
+fi
+
+echo ">>> Installing mise tools..."
+"$MISE" install --yes
+
+echo "✓ mise tools ready"
+{{ end -}}
