@@ -1,0 +1,154 @@
+{
+  "mcpServers": {
+    "authentik-unofficial": {
+      "args": [
+        "authentik-diag-mcp",
+        "--base-url",
+        "https://auth.r35.network",
+        "--token",
+        "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/yxg4dpxsjg62r5yy6lsld3c3bu/password" }}"
+      ],
+      "command": "uvx",
+      "disabled": false
+    },
+    "cloudflare-docs": {
+      "transport": "sse",
+      "url": "https://docs.mcp.cloudflare.com/sse"
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "command": "uvx",
+      "disabled": false
+    },
+    "git": {
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "${REPOSITORY_PATH}"
+      ],
+      "command": "uvx",
+      "disabled": true
+    },
+    "github": {
+      "headers": {
+        "Authorization": "Bearer ${cmd:gh auth token}"
+      },
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "gitlab-native": {
+      "autoApprove": [],
+      "disabled": false,
+      "url": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4/mcp"
+    },
+    "gitlab-unofficial": {
+      "args": [
+        "-y",
+        "@zereight/mcp-gitlab"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {
+        "GITLAB_API_URL": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4",
+        "GITLAB_OAUTH_CLIENT_ID": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/username" }}",
+        "GITLAB_OAUTH_REDIRECT_URI": "http://127.0.0.1:8888/callback",
+        "GITLAB_READ_ONLY_MODE": "false",
+        "GITLAB_USE_OAUTH": "true",
+        "USE_GITLAB_WIKI": "true",
+        "USE_MILESTONE": "true",
+        "USE_PIPELINE": "true"
+      }
+    },
+    "gitlab-unofficial-dev": {
+      "args": [
+        "{{ .chezmoi.homeDir }}/workspace/gitlab-mcp/build/index.js"
+      ],
+      "command": "node",
+      "disabled": false,
+      "env": {
+        "GITLAB_API_URL": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4",
+        "GITLAB_OAUTH_CLIENT_ID": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/username" }}",
+        "GITLAB_OAUTH_REDIRECT_URI": "http://127.0.0.1:8888/callback",
+        "GITLAB_READ_ONLY_MODE": "false",
+        "GITLAB_USE_OAUTH": "true",
+        "USE_GITLAB_WIKI": "true",
+        "USE_MILESTONE": "true",
+        "USE_PIPELINE": "true"
+      }
+    },
+    "harbor": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "HARBOR_API_BASE",
+        "-e",
+        "HARBOR_AUTH_USER",
+        "-e",
+        "HARBOR_AUTH_PASS",
+        "bupd/harbor-mcp:latest"
+      ],
+      "command": "docker",
+      "env": {
+        "HARBOR_API_BASE": "https://{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/hostname"}}/api/v2.0",
+        "HARBOR_AUTH_PASS": "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/username" }}",
+        "HARBOR_AUTH_USER": "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/credential" }}"
+      }
+    },
+    "k8s-mcp": {
+      "args": [
+        "-y",
+        "kubernetes-mcp-server@latest"
+      ],
+      "command": "npx"
+    },
+    "memory": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "command": "npx"
+    },
+    "notion": {
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "sequentialthinking": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "command": "npx"
+    },
+    "sqlite": {
+      "args": [
+        "mcp-server-sqlite",
+        "--db-path",
+        "${DB_PATH}"
+      ],
+      "command": "uvx",
+      "disabled": true
+    },
+    "task_master": {
+      "args": [
+        "-y",
+        "--package=task-master-ai",
+        "task-master-ai"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {
+        "ANTHROPIC_API_KEY": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/rpgctfzch2tq5flv6z3dghkld4/credential" }}",
+        "OPENAI_API_KEY": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/ypj3wrnivyl4gpyvlnnmncyfjm/credential" }}"
+      }
+    },
+    "time": {
+      "args": [
+        "mcp-server-time"
+      ],
+      "command": "uvx",
+      "disabled": false
+    }
+  }
+}
