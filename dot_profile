@@ -1,0 +1,7 @@
+# Mise shims - available to all shells and subprocesses (e.g., git credential helpers)
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+    export PATH="$HOME/.local/share/mise/shims:$PATH"
+fi
+
+# Cargo
+. "$HOME/.cargo/env"
