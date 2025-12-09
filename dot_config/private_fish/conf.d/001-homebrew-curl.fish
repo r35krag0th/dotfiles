@@ -3,7 +3,7 @@ if test -d /opt/homebrew/opt/curl/bin
     fish_add_path /opt/homebrew/opt/curl/bin
     # For compilers to find curl you may need to set:
     set -gx LDFLAGS "$LDFLAGS -L/opt/homebrew/opt/curl/lib"
-    set -gx CPPFLAGS "$LDFLAGS -I/opt/homebrew/opt/curl/include"
+    set -gx CPPFLAGS "$CPPFLAGS -I/opt/homebrew/opt/curl/include"
     # For pkg-config to find curl you may need to set:
     # set -gx PKG_CONFIG_PATH /opt/homebrew/opt/curl/lib/pkgconfig
 end

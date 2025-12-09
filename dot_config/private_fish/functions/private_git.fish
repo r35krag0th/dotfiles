@@ -1,4 +1,5 @@
-function git
+# Git wrapper with safety checks
+function git --description 'Git with safety checks for dangerous operations'
     if test "$argv[1]" = "push"
         for arg in $argv[2..]
             if string match -q "*--prune*" -- $arg
