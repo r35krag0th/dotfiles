@@ -1,0 +1,16 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Upgrade bob via Homebrew if installed that way
+
+# Check if bob is installed via Homebrew
+if ! brew list bob &>/dev/null; then
+    exit 0
+fi
+
+# Check if upgrade is available
+if brew outdated bob &>/dev/null; then
+    echo ">>> Upgrading bob via Homebrew..."
+    brew upgrade bob
+    echo "✓ bob upgraded"
+fi
+{{ end -}}
