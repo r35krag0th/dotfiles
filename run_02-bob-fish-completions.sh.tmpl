@@ -4,10 +4,16 @@
 
 set -e
 
-BOB="${HOME}/.local/bin/bob"
 FISH_COMPLETIONS_DIR="${HOME}/.config/fish/completions"
 
-if [ ! -x "$BOB" ]; then
+# Find bob - check common locations
+if command -v bob &>/dev/null; then
+    BOB="bob"
+elif [ -x "/opt/homebrew/bin/bob" ]; then
+    BOB="/opt/homebrew/bin/bob"
+elif [ -x "${HOME}/.local/bin/bob" ]; then
+    BOB="${HOME}/.local/bin/bob"
+else
     echo "⚠ bob not found, skipping completions"
     exit 0
 fi
