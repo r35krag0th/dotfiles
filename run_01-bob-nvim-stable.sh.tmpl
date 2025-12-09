@@ -1,0 +1,21 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Ensure bob has the latest stable neovim installed and in use
+
+set -e
+
+BOB="${HOME}/.local/bin/bob"
+
+if [ ! -x "$BOB" ]; then
+    echo "⚠ bob not found, skipping nvim setup"
+    exit 0
+fi
+
+echo ">>> Ensuring neovim stable is installed via bob..."
+"$BOB" install stable
+
+echo ">>> Setting neovim stable as active version..."
+"$BOB" use stable
+
+echo "✓ neovim stable is ready"
+{{ end -}}

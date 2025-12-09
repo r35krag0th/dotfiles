@@ -1,0 +1,22 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Install bob (neovim version manager) if not already installed
+# https://github.com/MordechaiHadad/bob
+
+set -e
+
+if command -v bob &>/dev/null; then
+    echo "✓ bob is already installed: $(bob --version)"
+    exit 0
+fi
+
+if [ -x "$HOME/.local/bin/bob" ]; then
+    echo "✓ bob is already installed at ~/.local/bin/bob"
+    exit 0
+fi
+
+echo ">>> Installing bob (neovim version manager)..."
+curl -fsSL https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh | bash
+
+echo "✓ bob installed successfully"
+{{ end -}}

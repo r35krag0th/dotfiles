@@ -1,0 +1,11 @@
+# Bob (Neovim Version Manager) Configuration
+# https://github.com/MordechaiHadad/bob
+
+# Automatically add neovim binary to PATH
+add_neovim_binary_to_path = true
+
+# Show commit info for nightly builds
+enable_nightly_info = true
+
+# Number of versions to keep for rollback
+rollback_limit = 3

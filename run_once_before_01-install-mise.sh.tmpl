@@ -1,0 +1,21 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Install mise (https://mise.jdx.dev) if not already installed
+
+set -e
+
+if command -v mise &>/dev/null; then
+    echo "✓ mise is already installed: $(mise --version)"
+    exit 0
+fi
+
+if [ -x "$HOME/.local/bin/mise" ]; then
+    echo "✓ mise is already installed at ~/.local/bin/mise"
+    exit 0
+fi
+
+echo ">>> Installing mise..."
+curl -fsSL https://mise.run | sh
+
+echo "✓ mise installed successfully"
+{{ end -}}

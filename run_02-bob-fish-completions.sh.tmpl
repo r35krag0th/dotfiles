@@ -1,0 +1,21 @@
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/bash
+# Generate bob shell completions for fish
+
+set -e
+
+BOB="${HOME}/.local/bin/bob"
+FISH_COMPLETIONS_DIR="${HOME}/.config/fish/completions"
+
+if [ ! -x "$BOB" ]; then
+    echo "⚠ bob not found, skipping completions"
+    exit 0
+fi
+
+mkdir -p "$FISH_COMPLETIONS_DIR"
+
+echo ">>> Generating bob fish completions..."
+"$BOB" complete fish > "${FISH_COMPLETIONS_DIR}/bob.fish"
+
+echo "✓ bob fish completions installed"
+{{ end -}}
