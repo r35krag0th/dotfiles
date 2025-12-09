@@ -7,9 +7,7 @@ packages:
       - curl
       - eza
       - fd
-      - fzf
       - gnu-sed
-      - jq
       - ripgrep
       - watch
       - wget
@@ -27,7 +25,6 @@ packages:
       - git
       - git-delta
       - git-lfs
-      - gh
       - glab
       - lazygit
 
@@ -36,14 +33,9 @@ packages:
       - colima
       - docker
       - flux
-      - helm
-      - helmfile
-      - k9s
       - krew
       - kubecolor
       - kubeseal
-      - kustomize
-      - stern
       - talosctl
       - timoni
 
@@ -60,7 +52,6 @@ packages:
       - imagemagick
       - neovim
       - pipx
-      - pre-commit
       - prettier
       - restish
 
@@ -101,6 +92,7 @@ packages:
     - go
     - golangci-lint
     - helm
+    - helmfile
     - istioctl
     - jq
     - k9s
