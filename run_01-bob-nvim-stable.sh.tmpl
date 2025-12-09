@@ -2,8 +2,6 @@
 #!/bin/bash
 # Ensure bob has the latest stable neovim installed and in use
 
-set -e
-
 # Find bob - check common locations
 if command -v bob &>/dev/null; then
     BOB="bob"
@@ -16,11 +14,17 @@ else
     exit 0
 fi
 
+# Skip if nvim is running (bob can't update while in use)
+if pgrep -x nvim >/dev/null; then
+    echo "⚠ nvim is running, skipping bob update"
+    exit 0
+fi
+
 echo ">>> Ensuring neovim stable is installed via bob..."
-"$BOB" install stable
+"$BOB" install stable || { echo "⚠ bob install failed"; exit 0; }
 
 echo ">>> Setting neovim stable as active version..."
-"$BOB" use stable
+"$BOB" use stable || { echo "⚠ bob use failed"; exit 0; }
 
 echo "✓ neovim stable is ready"
 {{ end -}}
