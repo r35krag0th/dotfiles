@@ -57,6 +57,7 @@ yt-dlp = "latest"
 cosign = "latest"
 copier = "latest"
 dapr = "latest"
+node = "25"
 
 [settings]
 idiomatic_version_file_enable_tools = ["go"]
