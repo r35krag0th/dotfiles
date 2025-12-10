@@ -10,6 +10,7 @@ step = "latest"
 # Languages & Runtimes
 go = "latest"
 uv = "latest"
+node = "25"
 
 # Kubernetes
 argocd = "latest"
@@ -39,6 +40,7 @@ lazygit = "latest"
 pipx = "latest"
 prettier = "latest"
 restish = "latest"
+bob = "latest"
 
 # CLI Tools
 bat = "latest"
@@ -57,7 +59,6 @@ yt-dlp = "latest"
 cosign = "latest"
 copier = "latest"
 dapr = "latest"
-node = "25"
 
 [settings]
 idiomatic_version_file_enable_tools = ["go"]
