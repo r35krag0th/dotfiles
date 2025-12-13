@@ -10,7 +10,6 @@ step = "latest"
 # Languages & Runtimes
 go = "latest"
 uv = "latest"
-node = "25"
 
 # Kubernetes
 argocd = "latest"
@@ -40,7 +39,6 @@ lazygit = "latest"
 pipx = "latest"
 prettier = "latest"
 restish = "latest"
-bob = "latest"
 
 # CLI Tools
 bat = "latest"
@@ -59,6 +57,20 @@ yt-dlp = "latest"
 cosign = "latest"
 copier = "latest"
 dapr = "latest"
+node = "25"
+claude-code = { version = "latest", bin = "claude", platforms = """
+[linux-arm64]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{version}/linux-arm64/claude"
+
+[linux-x64]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{version}/linux-x64/claude"
+
+[macos-arm64]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{version}/darwin-arm64/claude"
+
+[macos-x64]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{version}/darwin-x64/claude"
+""", version_list_url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/stable" }
 
 [settings]
 idiomatic_version_file_enable_tools = ["go"]
