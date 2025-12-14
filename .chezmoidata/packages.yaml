@@ -5,6 +5,7 @@ packages:
       - coreutils
       - curl
       - gnu-sed
+      - stow
       - watch
       - wget
 
@@ -45,6 +46,7 @@ packages:
 
     casks:
       - 1password-cli
+      - claude-code
       - copyq
       - font-hack-nerd-font
       - font-symbols-only-nerd-font
