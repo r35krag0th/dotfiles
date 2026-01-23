@@ -1,0 +1,357 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "boto3>=1.35.0",
+#     "click>=8.1.0",
+#     "rich>=13.0.0",
+# ]
+# ///
+"""
+AWS Role Assumption Tool
+
+Assumes AWS roles not available in SSO permission sets, storing credentials
+in a new AWS CLI profile for easy reuse.
+
+Examples:
+    # Same-account assumption
+    assume-role.py -p prod:admin -r DataEngineerRole
+
+    # Cross-account assumption
+    assume-role.py -p management:admin -r DataEngineerRole --account 123456789012
+
+    # Custom output profile name
+    assume-role.py -p prod:admin -r DataEngineerRole --output my-data-profile
+"""
+
+import configparser
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+import boto3
+import click
+from botocore.exceptions import BotoCoreError, ClientError
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+console = Console()
+
+
+def get_credentials_path() -> Path:
+    """Return the path to AWS credentials file."""
+    return Path.home() / ".aws" / "credentials"
+
+
+def parse_source_profile(profile: str) -> tuple[str, str]:
+    """
+    Parse source profile name to extract account name component.
+
+    Handles formats like:
+    - "account:role" -> ("account", "role")
+    - "simple-name" -> ("simple-name", "")
+    """
+    if ":" in profile:
+        parts = profile.split(":", 1)
+        return parts[0], parts[1]
+    return profile, ""
+
+
+def generate_output_profile_name(source_profile: str, role_name: str) -> str:
+    """Generate a descriptive output profile name."""
+    account_name, _ = parse_source_profile(source_profile)
+    return f"{account_name}-assumed:{role_name}"
+
+
+def get_account_id_from_session(session: boto3.Session) -> str:
+    """Get the AWS account ID from the current session."""
+    sts = session.client("sts")
+    identity = sts.get_caller_identity()
+    return identity["Account"]
+
+
+def build_role_arn(account_id: str, role_name: str) -> str:
+    """Build the full role ARN from account ID and role name."""
+    # Handle case where user passes full ARN
+    if role_name.startswith("arn:aws:iam::"):
+        return role_name
+    return f"arn:aws:iam::{account_id}:role/{role_name}"
+
+
+def validate_role_exists(session: boto3.Session, role_arn: str) -> bool:
+    """
+    Attempt to validate that the role exists.
+
+    Note: This may fail due to permissions, which doesn't mean the role doesn't exist.
+    """
+    try:
+        # Extract account from ARN to check if it's cross-account
+        arn_parts = role_arn.split(":")
+        role_account = arn_parts[4]
+
+        # Get current account
+        sts = session.client("sts")
+        current_account = sts.get_caller_identity()["Account"]
+
+        # Can only validate IAM roles in same account
+        if role_account == current_account:
+            iam = session.client("iam")
+            role_name = role_arn.split("/")[-1]
+            iam.get_role(RoleName=role_name)
+            return True
+        else:
+            # Cross-account - can't validate, assume it exists
+            return True
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchEntity":
+            return False
+        # Other errors (AccessDenied, etc.) - role might exist
+        return True
+    except Exception:
+        return True
+
+
+def assume_role(
+    session: boto3.Session,
+    role_arn: str,
+    duration_seconds: int,
+    session_name: str | None = None,
+) -> dict:
+    """Assume the specified role and return credentials."""
+    sts = session.client("sts")
+
+    if session_name is None:
+        session_name = f"assume-role-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
+
+    response = sts.assume_role(
+        RoleArn=role_arn,
+        RoleSessionName=session_name,
+        DurationSeconds=duration_seconds,
+    )
+
+    return response["Credentials"]
+
+
+def write_credentials_to_profile(
+    profile_name: str,
+    access_key: str,
+    secret_key: str,
+    session_token: str,
+    region: str | None = None,
+) -> None:
+    """Write the assumed role credentials to the AWS credentials file."""
+    credentials_path = get_credentials_path()
+
+    # Ensure .aws directory exists
+    credentials_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Read existing credentials file
+    config = configparser.ConfigParser()
+    if credentials_path.exists():
+        config.read(credentials_path)
+
+    # Add or update the profile
+    if profile_name not in config.sections():
+        config.add_section(profile_name)
+
+    config.set(profile_name, "aws_access_key_id", access_key)
+    config.set(profile_name, "aws_secret_access_key", secret_key)
+    config.set(profile_name, "aws_session_token", session_token)
+
+    if region:
+        config.set(profile_name, "region", region)
+
+    # Write back to file
+    with open(credentials_path, "w") as f:
+        config.write(f)
+
+
+def format_expiration(expiration: datetime) -> str:
+    """Format the expiration time with remaining duration."""
+    now = datetime.now(timezone.utc)
+    remaining = expiration - now
+    minutes = int(remaining.total_seconds() / 60)
+
+    expiration_str = expiration.strftime("%Y-%m-%d %H:%M:%S UTC")
+    return f"{expiration_str} ({minutes} minutes)"
+
+
+@click.command()
+@click.option(
+    "-p",
+    "--profile",
+    "source_profile",
+    required=True,
+    help="Source AWS profile to use for assuming the role (e.g., 'prod:admin')",
+)
+@click.option(
+    "-r",
+    "--role",
+    "role_name",
+    required=True,
+    help="Name of the role to assume (e.g., 'DataEngineerRole') or full ARN",
+)
+@click.option(
+    "--account",
+    "target_account",
+    default=None,
+    help="Target AWS account ID (required for cross-account, auto-detected for same-account)",
+)
+@click.option(
+    "-o",
+    "--output",
+    "output_profile",
+    default=None,
+    help="Custom name for the output profile (default: {account}-assumed:{role})",
+)
+@click.option(
+    "-d",
+    "--duration",
+    "duration_seconds",
+    default=3600,
+    type=int,
+    help="Session duration in seconds (default: 3600 = 1 hour)",
+)
+@click.option(
+    "--region",
+    default=None,
+    help="AWS region to set in the output profile",
+)
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would happen without making changes",
+)
+@click.option(
+    "--validate/--no-validate",
+    default=True,
+    help="Validate role exists before assuming (default: enabled)",
+)
+def main(
+    source_profile: str,
+    role_name: str,
+    target_account: str | None,
+    output_profile: str | None,
+    duration_seconds: int,
+    region: str | None,
+    dry_run: bool,
+    validate: bool,
+) -> None:
+    """
+    Assume an AWS role and store credentials in a new profile.
+
+    This tool chains from an existing SSO profile to assume roles that
+    aren't available in your permission sets.
+    """
+    try:
+        # Create session from source profile
+        console.print(f"\n[bold]Assuming role [cyan]{role_name}[/cyan] from [cyan]{source_profile}[/cyan]...[/bold]\n")
+
+        session = boto3.Session(profile_name=source_profile)
+
+        # Determine target account
+        if target_account is None:
+            target_account = get_account_id_from_session(session)
+            console.print(f"[dim]Auto-detected account: {target_account}[/dim]")
+
+        # Build role ARN
+        role_arn = build_role_arn(target_account, role_name)
+
+        # Generate output profile name if not specified
+        if output_profile is None:
+            output_profile = generate_output_profile_name(source_profile, role_name)
+
+        # Display info table
+        info_table = Table(show_header=False, box=None, padding=(0, 2))
+        info_table.add_column("Key", style="bold")
+        info_table.add_column("Value", style="cyan")
+        info_table.add_row("AWS Account", target_account)
+        info_table.add_row("Role ARN", role_arn)
+        info_table.add_row("Output Profile", output_profile)
+        info_table.add_row("Duration", f"{duration_seconds}s ({duration_seconds // 60} minutes)")
+        if region:
+            info_table.add_row("Region", region)
+
+        console.print(info_table)
+        console.print()
+
+        # Validate role if requested
+        if validate:
+            if not validate_role_exists(session, role_arn):
+                console.print(f"[red]Error: Role does not exist: {role_arn}[/red]")
+                sys.exit(1)
+
+        if dry_run:
+            console.print(Panel(
+                "[yellow]DRY RUN[/yellow] - No changes made\n\n"
+                f"Would assume role and write credentials to profile:\n"
+                f"  [cyan]{output_profile}[/cyan]",
+                title="Dry Run",
+                border_style="yellow",
+            ))
+            return
+
+        # Assume the role
+        credentials = assume_role(session, role_arn, duration_seconds)
+
+        # Write credentials to profile
+        write_credentials_to_profile(
+            profile_name=output_profile,
+            access_key=credentials["AccessKeyId"],
+            secret_key=credentials["SecretAccessKey"],
+            session_token=credentials["SessionToken"],
+            region=region,
+        )
+
+        # Format expiration
+        expiration_str = format_expiration(credentials["Expiration"])
+
+        # Success output
+        console.print(f"[green]✓[/green] Credentials written to profile: [bold cyan]{output_profile}[/bold cyan]")
+        console.print(f"  Expires: [dim]{expiration_str}[/dim]\n")
+
+        # Usage hints
+        console.print("[bold]Use with:[/bold]")
+        console.print(f"  [dim]aws --profile '{output_profile}' s3 ls[/dim]")
+        console.print(f"  [dim]export AWS_PROFILE='{output_profile}'[/dim]\n")
+
+    except ClientError as e:
+        error_code = e.response["Error"]["Code"]
+        error_message = e.response["Error"]["Message"]
+
+        if error_code == "AccessDenied":
+            console.print(Panel(
+                f"[red]Access Denied[/red]\n\n"
+                f"Your source profile [cyan]{source_profile}[/cyan] doesn't have permission "
+                f"to assume role [cyan]{role_name}[/cyan].\n\n"
+                f"Check that:\n"
+                f"  • The role's trust policy allows your source role\n"
+                f"  • Your source role has sts:AssumeRole permission",
+                title="Permission Error",
+                border_style="red",
+            ))
+        elif error_code == "ExpiredTokenException":
+            console.print(Panel(
+                f"[red]Expired Token[/red]\n\n"
+                f"Your SSO session has expired. Refresh with:\n"
+                f"  [cyan]aws sso login --profile {source_profile}[/cyan]",
+                title="Token Error",
+                border_style="red",
+            ))
+        else:
+            console.print(f"[red]AWS Error ({error_code}): {error_message}[/red]")
+
+        sys.exit(1)
+
+    except BotoCoreError as e:
+        console.print(f"[red]AWS SDK Error: {e}[/red]")
+        sys.exit(1)
+
+    except Exception as e:
+        console.print(f"[red]Unexpected error: {e}[/red]")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
