@@ -6,11 +6,14 @@ local themeRegistry = {
   rosepine = "rose-pine/neovim",
   vague = "vague2k/vague.nvim",
   ayu = "Shatur/neovim-ayu",
+  koda = "oskarnurm/koda.nvim",
 }
 
 ---Sets the colorscheme
-function M.setTheme()
-  vim.cmd(string.format("colorscheme %s", desiredTheme))
+function M.setTheme(themeOverride)
+  themeOverride = themeOverride or desiredTheme
+  -- vim.notify("Setting theme to " .. desiredTheme, vim.log.levels.TRACE)
+  vim.cmd(string.format("colorscheme %s", themeOverride))
 end
 
 ---Returns a list of plugin specs

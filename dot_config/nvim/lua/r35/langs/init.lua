@@ -16,7 +16,7 @@ end
 
 function M.plugins()
   local output = {}
-  for k, v in pairs(M.registered_modules) do
+  for _, v in pairs(M.registered_modules) do
     v:init()
 
     table.insert(output, v:plugins())

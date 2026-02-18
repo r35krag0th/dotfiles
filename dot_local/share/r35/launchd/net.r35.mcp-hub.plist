@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>net.r35.mcp-hub</string>
+
+    <!-- Environment variables are sourced from ~/.envrc by the wrapper script -->
+    <!-- To refresh secrets: op inject -i ~/.envrc.1password -o ~/.envrc -->
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/bobsaska/.local/bin/mcp-hub-launcher</string>
+      <string>--port</string>
+      <string>37373</string>
+      <string>--config</string>
+      <string>/Users/bobsaska/.config/mcphub/servers.json</string>
+      <string>--watch</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/bobsaska/.local/share/r35/launchd/mcp-hub.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/bobsaska/.local/share/r35/launchd/mcp-hub.error.log</string>
+  </dict>
+</plist>

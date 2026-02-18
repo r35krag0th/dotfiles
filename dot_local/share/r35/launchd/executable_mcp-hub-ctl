@@ -1,0 +1,187 @@
+#!/usr/bin/env fish
+# mcp-hub-ctl - Control script for the mcp-hub launchd service
+
+set -g LABEL "net.r35.mcp-hub"
+set -g PLIST "$HOME/Library/LaunchAgents/$LABEL.plist"
+set -g LOG_DIR "$HOME/.local/share/r35/launchd"
+
+# Colors
+set -g C_RESET (set_color normal)
+set -g C_BOLD (set_color --bold)
+set -g C_DIM (set_color --dim)
+set -g C_GREEN (set_color green)
+set -g C_RED (set_color red)
+set -g C_YELLOW (set_color yellow)
+set -g C_BLUE (set_color blue)
+set -g C_CYAN (set_color cyan)
+set -g C_MAGENTA (set_color magenta)
+
+function print_header
+    echo ""
+    echo $C_BOLD$C_CYAN"  mcp-hub-ctl"$C_RESET$C_DIM" — MCP Hub Service Manager"$C_RESET
+    echo ""
+end
+
+function usage
+    print_header
+    echo $C_BOLD"USAGE:"$C_RESET
+    echo "    mcp-hub-ctl "$C_CYAN"<command>"$C_RESET
+    echo ""
+    echo $C_BOLD"COMMANDS:"$C_RESET
+    echo "    "$C_GREEN"start"$C_RESET"       Start the mcp-hub service"
+    echo "    "$C_RED"stop"$C_RESET"        Stop the mcp-hub service"
+    echo "    "$C_YELLOW"restart"$C_RESET"     Restart the mcp-hub service"
+    echo "    "$C_BLUE"status"$C_RESET"      Show service status"
+    echo "    "$C_MAGENTA"logs"$C_RESET"        Tail the service logs"
+    echo "    "$C_MAGENTA"errors"$C_RESET"      Tail the error logs"
+    echo ""
+    exit 1
+end
+
+function check_plist
+    if not test -f $PLIST
+        echo $C_RED"Error:"$C_RESET" plist not found at "$C_DIM$PLIST$C_RESET
+        echo "Run: "$C_CYAN"ln -s $LOG_DIR/$LABEL.plist $PLIST"$C_RESET
+        exit 1
+    end
+end
+
+function service_status
+    launchctl list | grep -q $LABEL
+    return $status
+end
+
+function get_pid
+    launchctl list | grep $LABEL | awk '{print $1}'
+end
+
+function print_service_info
+    set -l info (launchctl list $LABEL 2>/dev/null)
+    set -l pid (get_pid)
+
+    echo $C_DIM"────────────────────────────────────────"$C_RESET
+    echo $C_BOLD"  PID:"$C_RESET"      $pid"
+    echo $C_BOLD"  Label:"$C_RESET"    $LABEL"
+    echo $C_BOLD"  Plist:"$C_RESET"    "$C_DIM$PLIST$C_RESET
+    echo $C_DIM"────────────────────────────────────────"$C_RESET
+end
+
+function cmd_start
+    check_plist
+    print_header
+    if service_status
+        echo $C_YELLOW"  ● mcp-hub is already running"$C_RESET
+        print_service_info
+    else
+        echo $C_BLUE"  ◐ Starting mcp-hub..."$C_RESET
+        launchctl load $PLIST
+        sleep 1
+        if service_status
+            echo $C_GREEN"  ● mcp-hub started"$C_RESET
+            print_service_info
+        else
+            echo $C_RED"  ✗ Failed to start mcp-hub"$C_RESET
+            exit 1
+        end
+    end
+end
+
+function cmd_stop
+    check_plist
+    print_header
+    if service_status
+        echo $C_BLUE"  ◐ Stopping mcp-hub..."$C_RESET
+        launchctl unload $PLIST
+        sleep 1
+        if not service_status
+            echo $C_GREEN"  ○ mcp-hub stopped"$C_RESET
+        else
+            echo $C_RED"  ✗ Failed to stop mcp-hub"$C_RESET
+            exit 1
+        end
+    else
+        echo $C_DIM"  ○ mcp-hub is not running"$C_RESET
+    end
+end
+
+function cmd_restart
+    check_plist
+    print_header
+    echo $C_BLUE"  ◐ Restarting mcp-hub..."$C_RESET
+    if service_status
+        launchctl unload $PLIST
+        sleep 1
+    end
+    launchctl load $PLIST
+    sleep 1
+    if service_status
+        echo $C_GREEN"  ● mcp-hub restarted"$C_RESET
+        print_service_info
+    else
+        echo $C_RED"  ✗ Failed to restart mcp-hub"$C_RESET
+        exit 1
+    end
+end
+
+function cmd_status
+    print_header
+    if service_status
+        echo $C_GREEN"  ● Running"$C_RESET
+        print_service_info
+    else
+        echo $C_DIM"  ○ Stopped"$C_RESET
+        echo ""
+        echo $C_DIM"  Label:"$C_RESET"    $LABEL"
+        echo $C_DIM"  Plist:"$C_RESET"    $PLIST"
+        echo ""
+    end
+end
+
+function cmd_logs
+    if test -f "$LOG_DIR/mcp-hub.log"
+        print_header
+        echo $C_MAGENTA"  Tailing"$C_RESET" $C_DIM$LOG_DIR/mcp-hub.log$C_RESET"
+        echo $C_DIM"  Press Ctrl+C to exit"$C_RESET
+        echo ""
+        tail -f "$LOG_DIR/mcp-hub.log"
+    else
+        echo $C_RED"  ✗ Log file not found:"$C_RESET" $LOG_DIR/mcp-hub.log"
+        exit 1
+    end
+end
+
+function cmd_errors
+    if test -f "$LOG_DIR/mcp-hub.error.log"
+        print_header
+        echo $C_MAGENTA"  Tailing"$C_RESET" $C_DIM$LOG_DIR/mcp-hub.error.log$C_RESET"
+        echo $C_DIM"  Press Ctrl+C to exit"$C_RESET
+        echo ""
+        tail -f "$LOG_DIR/mcp-hub.error.log"
+    else
+        echo $C_RED"  ✗ Error log file not found:"$C_RESET" $LOG_DIR/mcp-hub.error.log"
+        exit 1
+    end
+end
+
+# Main
+if test (count $argv) -eq 0
+    usage
+end
+
+switch $argv[1]
+    case start
+        cmd_start
+    case stop
+        cmd_stop
+    case restart
+        cmd_restart
+    case status
+        cmd_status
+    case logs
+        cmd_logs
+    case errors
+        cmd_errors
+    case '*'
+        echo "Unknown command: $argv[1]"
+        usage
+end

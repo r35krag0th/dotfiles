@@ -58,6 +58,9 @@ cosign = "latest"
 copier = "latest"
 dapr = "latest"
 node = "25"
+neovim = "v0.11.5"
+lnav = "latest"
+opentofu = "latest"
 # NOTE: Use the native install of claude-code
 
 [settings]

@@ -5,8 +5,11 @@ local M = {}
 -- :TSInstall markdown markdown_inline html latex typst yaml
 function M.plugins()
   return {
+    -- NOTE: We disable markdown-preview because we don't need/want it.
     { "iamcco/markdown-preview.nvim", enabled = false },
+    -- NOTE: Follow-MD-Links is probably getting retired in favor of IWE
     "jghauser/follow-md-links.nvim",
+    -- NOTE: Markview does all the heavy lifting for markdown
     {
       "OXY2DEV/markview.nvim",
       lazy = false,
@@ -166,6 +169,37 @@ function M.plugins()
         { "<localleader>ng", desc = "YeahNotes: Grep notes" },
         { "<localleader>nm", desc = "YeahNotes: Migrate tasks to tomorrow" },
         { "<localleader>nM", desc = "YeahNotes: Migrate and open tomorrow" },
+      },
+    },
+    {
+      "iwe-org/iwe.nvim",
+      dependencies = {
+        {
+          "nvim-telescope/telescope.nvim",
+          dependencies = {
+            "nvim-telescope/telescope-ui-select.nvim",
+          },
+        }, -- Required
+      },
+      opts = {
+        lsp = {
+          cmd = { "iwes" },
+          name = "iwes",
+          debounce_text_changes = 500,
+          auto_format_on_save = true,
+        },
+        mappings = {
+          enable_markdown_mappings = true,
+          enable_telescope_keybindings = false,
+          enable_lsp_keybindings = false,
+          leader = "<leader>",
+          localleader = "<localleader>",
+        },
+        telescope = {
+          enabled = true,
+          setup_config = true,
+          load_extensions = { "ui-select", "emoji" },
+        },
       },
     },
   }
