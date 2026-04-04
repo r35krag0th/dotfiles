@@ -1,0 +1,50 @@
+#!/usr/bin/env fish
+# vim: ft=fish
+
+set plugin_root ~/.local/share/zellij/plugins
+
+# Plugin versions
+set zjstatus_hints_version "v0.1.4"
+set zellij_tools_version "v0.2.0"
+set zjforgot_version "0.4.2"
+set room_version "v1.2.1"
+
+# zjstatus and zjframes are in the same repo
+set zjstatus_version "v0.22.0"
+set zjframes_version $zjstatus_version
+
+function download_plugin
+    if test -z "$argv[1]"
+        echo "plugin name missing"
+        return
+    end
+
+    if test -z "$argv[2]"
+        echo "plugin URL missing"
+        return
+    end
+
+    echo ""
+    echo -e "Downloading \033[1;35m$argv[1]\033[0m from \033[1;36m$argv[2]\033[0m"
+    curl -fsSL "$argv[2]" -o ~/.local/share/zellij/plugins/$argv[1].wasm
+    echo Done
+    echo ""
+end
+
+mkdir -p $plugin_root
+
+# [PLUGINS]
+# =============================================================================
+# zjstatus        https://github.com/dj95/zjstatus/releases
+# zjframes        https://github.com/dj95/zjstatus/releases
+# zjstatus-hints  https://github.com/b0o/zjstatus-hints/releases
+# zellij-tools    https://github.com/b0o/zellij-tools/releases
+# zj-forgot       https://github.com/karimould/zellij-forgot/releases
+# room            https://github.com/rvcas/room/releases
+
+download_plugin zjstatus "https://github.com/dj95/zjstatus/releases/download/$zjstatus_version/zjstatus.wasm"
+download_plugin zjframes "https://github.com/dj95/zjstatus/releases/download/$zjframes_version/zjframes.wasm"
+download_plugin zjstatus-hints "https://github.com/b0o/zjstatus-hints/releases/download/$zjstatus_hints_version/zjstatus-hints.wasm"
+download_plugin zellij-tools "https://github.com/b0o/zellij-tools/releases/download/$zellij_tools_version/zellij-tools.wasm"
+download_plugin zj-forgot "https://github.com/karimould/zellij-forgot/releases/download/$zjforgot_version/zellij_forgot.wasm"
+download_plugin room "https://github.com/rvcas/room/releases/download/$room_version/room.wasm"

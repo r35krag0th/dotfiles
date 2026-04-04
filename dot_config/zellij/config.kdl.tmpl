@@ -233,14 +233,16 @@ plugins {
   }
 
   // Additional Plugins
-  zj-forgot location="file:/Users/bobsaska/.local/share/zellij/plugins/zj-forgot.wasm"
-  zjstatus location="file:/Users/bobsaska/.local/share/zellij/plugins/zjstatus.wasm" {
+  zj-forgot location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/zj-forgot.wasm"
+  zjstatus location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/zjstatus.wasm" {
     // format_left   "{mode} {tabs}"
     // format_center ""
     // format_right  "{pipe_zjstatus_hints}{datetime}#[bg=#6e5fb7,fg=#ffffff,bold] {session} "
     // format_space  ""
 
     pipe_zjstatus_hints_format "{output}"
+    pipe_status_format "#[fg=#6C7086]| {output}"
+    pipe_status_rendermod "dynamic"
 
     border_enabled  "false"
     border_char     "─"
@@ -263,6 +265,7 @@ plugins {
     mode_session     "#[fg=#FF87A5,bold]◖#[bg=#FF87A5,fg=#7d001f,bold] ⛁ SESS #[bg=#141D3A,fg=#ff87a5,bold]◗#[bg=#141D3A] "
     mode_tmux        "#[fg=#c9c0ff,bold]◖#[bg=#c9c0ff,fg=#412da2,bold] ꏎTMUX #[bg=#141D3A,fg=#c9c0ff,bold]◗#[bg=#141D3A] "
 
+    // First American Branding Colors
     // name	      background	text 1	  text 2
     // Foundation	#141D3A	    #FFFFFF   #4EADE1     <- status bar background
     // Legacy	    #013A6F	    #FFFFFF	              <- active tab bg (and half-circles)
@@ -329,7 +332,7 @@ plugins {
   }
 
   // Status Hints: A Zellij plugin that displays context-aware key bindings for each Zellij mode. Extends the functionality of zjstatus.
-  zjstatus-hints location="file:/Users/bobsaska/.local/share/zellij/plugins/zjstatus-hints.wasm" {
+  zjstatus-hints location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/zjstatus-hints.wasm" {
     max_length 180
     overflow_str ""
     pipe_name "zjstatus_hints"
@@ -337,13 +340,13 @@ plugins {
   }
 
   // Tools: A Zellij plugin and companion CLI that add scratchpads, focus helpers, event streaming, and session tree utilities.
-  zellij-tools location="file:/Users/bobsaska/.local/share/zellij/plugins/zellij-tools.wasm" {
+  zellij-tools location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/zellij-tools.wasm" {
     include "zellij-tools.kdl"
     watch_ms 2000
   }
 
 
-  zjframes location="file:/Users/bobsaska/.local/share/zellij/plugins/zjframes.wasm" {
+  zjframes location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/zjframes.wasm" {
     hide_frame_for_single_pane       "true"
     hide_frame_except_for_search     "true"
     hide_frame_except_for_scroll     "true"
@@ -355,7 +358,7 @@ plugins {
   // nvim-nav location="https://github.com/sharph/zellij-nvim-nav-plugin/releases/download/v1.0.0/zellij-nvim-nav-plugin.wasm"
 
   // Room: A Zellij plugin for quickly searching and switching between tabs.
-  room location="file:/Users/bobsaska/.local/share/zellij/plugins/room.wasm"
+  room location="file:{{ .chezmoi.homeDir }}/.local/share/zellij/plugins/room.wasm"
 }
 
 load_plugins {
@@ -369,8 +372,23 @@ load_plugins {
 ui {
   pane_frames {
     rounded_corners true
+    hide_session_name true
   }
 }
 
 show_startup_tips false
 advanced_mouse_actions false
+scroll_buffer_size 2000
+
+// Sessions are serialized to the cache folder.
+session_serialization true
+// Additionally, serialize pane viewport (except scrollback)
+pane_viewport_serialization true
+// Whether to start the Zellij webserver on startup
+web_server true
+web_server_ip "127.0.0.1"
+web_server_port 18082
+osc8_hyperlinks true
+support_kitty_keyboard_protocol true
+web_sharing "off"
+mouse_hover_effects true
