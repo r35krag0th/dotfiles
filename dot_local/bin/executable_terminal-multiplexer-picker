@@ -1,0 +1,44 @@
+#!/usr/bin/env fish
+# vim: ft=fish
+
+# Simple fzf picker for choosing between Zellij and Tmux
+
+set -l choice (printf "Zellij\nTmux\nNeither\n" | fzf \
+    --height=~10 \
+    --border=rounded \
+    --prompt="Choose your multiplexer: " \
+    --color="fg:#F4F4F4,bg:#141D3A,hl:#4EADE1" \
+    --color="fg+:#FFFFFF,bg+:#013A6F,hl+:#EBBD5F" \
+    --color="border:#0075C3,prompt:#4EADE1,pointer:#C23E26" \
+    --pointer="▶" \
+    --no-info)
+
+switch $choice
+    case "Zellij"
+        exec zellij -l welcome
+    case "Tmux"
+        # Prompt for session name using fzf for consistency
+        set -l session_name (printf "" | fzf \
+            --height=~5 \
+            --border=rounded \
+            --header="▶ Tmux" \
+            --prompt="Session name: " \
+            --print-query \
+            --disabled \
+            --color="fg:#F4F4F4,bg:#141D3A,hl:#4EADE1" \
+            --color="fg+:#FFFFFF,bg+:#013A6F,hl+:#EBBD5F" \
+            --color="border:#0075C3,prompt:#4EADE1,header:#4EADE1" \
+            --no-info | head -n1)
+
+        if test -z "$session_name"
+            echo "No session name provided, exiting..."
+            exit 1
+        end
+
+        exec tmux -2u new -s $session_name
+    case "Neither"
+        exec fish
+    case "*"
+        # User cancelled (Esc), just start a plain shell
+        exec fish
+end
