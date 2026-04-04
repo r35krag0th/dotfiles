@@ -1,5 +1,9 @@
+{{/* vim: ft=gohtml */}}
+{{- $brewPrefix := "/opt/homebrew" -}}
+{{- if eq .chezmoi.arch "amd64" -}}
+{{-   $brewPrefix = "/usr/local" -}}
+{{- end -}}
 # vim:fileencoding=utf-8:foldmethod=marker
-# kitty_mod is [ctrl]+[shift]
 
 # Font Settings
 font_family PragmataPro VF Mono Liga
@@ -22,37 +26,38 @@ bell_on_tab "🔔 "
 window_padding_width 5 8
 hide_window_decorations titlebar-only
 
-# Tab Feels
-# :> Turn off the Tab Bar since we're exclusively in Zellij
-tab_bar_style             hidden
+# Tab Bar — hidden since we use Zellij exclusively
+tab_bar_style hidden
 
 # Shell Settings
-{{- $fish := index .shells .chezmoi.os "fish" -}}
-{{- if and (hasKey .shells "hosts") (hasKey .shells.hosts .chezmoi.hostname) -}}
-  {{- $fish = index .shells.hosts .chezmoi.hostname "fish" | default $fish -}}
+{{- if eq .chezmoi.os "darwin" }}
+shell {{ $brewPrefix }}/bin/fish --login -c "terminal-multiplexer-picker"
+editor {{ $brewPrefix }}/bin/nvim
+{{- else }}
+shell /usr/bin/fish --login -c "terminal-multiplexer-picker"
+editor /usr/bin/nvim
 {{- end }}
-shell {{ $fish }} --login -c "zellij -l welcome"
-editor /opt/homebrew/bin/nvim
 allow_remote_control yes
 shell_integration enabled
-# term xterm-kitty
 
-# For macOS, use LEFT Option as ALT
+{{- if eq .chezmoi.os "darwin" }}
+
+# macOS-specific
 macos_option_as_alt left
+{{- end }}
 
-# Extra Key Bindings
-map kitty_mod+\ toggle_fullscreen
-# ==> [ F1 will highlight these things ] <==
-map f1 toggle_marker iregex 1 \\bERROR\\b 2 \\bWARNING\\b 3 \\bEXCEPTION\\b
-map shift+f1 new -a 100,100
-
-# Make the cusor more obvious
+# Cursor
 cursor #ebfafa
 cursor_text_color #0D1116
 
-# No confirmation
+# No confirmation on close
 confirm_os_window_close 0
 
+# Key Bindings
+map kitty_mod+\ toggle_fullscreen
+map f1 toggle_marker iregex 1 \\bERROR\\b 2 \\bWARNING\\b 3 \\bEXCEPTION\\b
+map shift+f1 new -a 100,100
+map f8 launch --title "Today's Notes" --copy-env --type=os-window --cwd ~/notes/notes {{ .chezmoi.homeDir }}/.local/share/bob/nvim-bin/nvim +YNToday
 
-# Include our theme here
+# Theme
 include current-theme.conf

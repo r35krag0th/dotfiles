@@ -149,7 +149,7 @@ function M.plugins()
     {
       "r35krag0th/yeahnotes.nvim",
       lazy = false,
-      dev = true,
+      --dev = true,
       dir = "~/workspace/yeahnotes.nvim",
       dependencies = {
         "nvim-mini/mini.pick", -- Required for find/grep functionality

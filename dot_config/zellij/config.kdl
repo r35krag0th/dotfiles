@@ -1,13 +1,7 @@
 // Use the zjstatus plugin layout as default
-default_layout "zjs-default"
+default_layout "r35"
 
-load_plugins {
-  // "file:/Users/bobsaska/.config/zellij/plugins/multitask-0.43.1.wasm";
-  "file:/Users/bobsaska/.config/zellij/plugins/zjstatus-0.21.1.wasm";
-}
-
-theme "tokyo-night"
-// theme "nord"
+theme "r35"
 
 on_force_close "quit"
 
@@ -223,14 +217,160 @@ keybinds clear-defaults=true {
     }
 }
 
-tmux {
-  bind "g" {
-    LaunchOrFocusPlugin "file:~/.config/zellij/plugins/zellij-sessionizer.wasm" {
-      floating true
-      move_to_focused_tab true
-      cwd "/"
-      root_dirs "/Users/bobsaska/workspace"
-      // session_layout "myCustomLayout"
-    }; SwitchToMode "Locked";
-    }
+plugins {
+  // Built-In Plugins
+  about location="zellij:about"
+  compact-bar location="zellij:compact-bar"
+  configuration location="zellij:configuration"
+  filepicker location="zellij:strider" {
+    cwd "/"
+  }
+  plugin-manager location="zellij:plugin-manager"
+  session-manager location="zellij:session-manager"
+  strider location="zellij:strider"
+  welcome-screen location="zellij:session-manager" {
+    welcome_screen true
+  }
+
+  // Additional Plugins
+  zj-forgot location="file:/Users/bobsaska/.local/share/zellij/plugins/zj-forgot.wasm"
+  zjstatus location="file:/Users/bobsaska/.local/share/zellij/plugins/zjstatus.wasm" {
+    // format_left   "{mode} {tabs}"
+    // format_center ""
+    // format_right  "{pipe_zjstatus_hints}{datetime}#[bg=#6e5fb7,fg=#ffffff,bold] {session} "
+    // format_space  ""
+
+    pipe_zjstatus_hints_format "{output}"
+
+    border_enabled  "false"
+    border_char     "─"
+    border_format   "#[fg=#4C435C]{char}"
+    border_position "top"
+
+    hide_frame_for_single_pane "false"
+
+    mode_locked      "#[fg=#141D3A,bold]◖#[bg=#141D3A,fg=#ffffff,bold] ☑ #[bg=#141D3A,fg=#141D3A,bold]◗#[bg=#141D3A] "
+    mode_normal      "#[fg=#aa87fe,bold]◖#[bg=#aa87fe,fg=#3c01cd,bold] ⚠ #[bg=#141D3A,fg=#aa87fe,bold]◗#[bg=#141D3A] "
+    mode_resize      "#[fg=#ff9969,bold]◖#[bg=#ff9969,fg=#7f3513,bold] ⭿ #[bg=#141D3A,fg=#ff9969,bold]◗#[bg=#141D3A] "
+    mode_pane        "#[fg=#9FFBB6,bold]◖#[bg=#9FFBB6,fg=#30563a,bold] ❐ #[bg=#141D3A,fg=#9ffbb6,bold]◗#[bg=#141D3A] "
+    mode_move        "#[fg=#FFD896,bold]◖#[bg=#FFD896,fg=#905b00,bold] ⮒  #[bg=#141D3A,fg=#ffd896,bold]◗#[bg=#141D3A] "
+    mode_tab         "#[fg=#80BDFF,bold]◖#[bg=#80BDFF,fg=#0051a8,bold] Ⲷ #[bg=#141D3A,fg=#80BDff,bold]◗#[bg=#141D3A] "
+    mode_scroll      "#[fg=#412da2,bold]◖#[bg=#412da2,fg=#c9c0ff,bold] ↕ #[bg=#141D3A,fg=#412da2,bold]◗#[bg=#141D3A] "
+    mode_search      "#[fg=#e28e00,bold]◖#[bg=#e28e00,fg=#ffe9c4,bold] ꌷSearch #[bg=#141D3A,fg=#e28e00,bold]◗#[bg=#141D3A] "
+    mode_entersearch "#[fg=#e28e00,bold]◖#[bg=#e28e00,fg=#ffe9c4,bold] ↩ Enter Search #[bg=#141D3A,fg=#e28e00,bold]◗#[bg=#141D3A] "
+    mode_renametab   "#[fg=#0051a8,bold]◖#[bg=#0051a8,fg=#80BDFF,bold] Ⓣ Ren Tab #[bg=#141D3A,fg=#0051a8,bold]◗#[bg=#141D3A] "
+    mode_renamepane  "#[fg=#30563a,bold]◖#[bg=#30563a,fg=#9FFBB6,bold] Ⓟ Ren Pane #[bg=#141D3A,fg=#30563a,bold]◗#[bg=#141D3A] "
+    mode_session     "#[fg=#FF87A5,bold]◖#[bg=#FF87A5,fg=#7d001f,bold] ⛁ SESS #[bg=#141D3A,fg=#ff87a5,bold]◗#[bg=#141D3A] "
+    mode_tmux        "#[fg=#c9c0ff,bold]◖#[bg=#c9c0ff,fg=#412da2,bold] ꏎTMUX #[bg=#141D3A,fg=#c9c0ff,bold]◗#[bg=#141D3A] "
+
+    // name	      background	text 1	  text 2
+    // Foundation	#141D3A	    #FFFFFF   #4EADE1     <- status bar background
+    // Legacy	    #013A6F	    #FFFFFF	              <- active tab bg (and half-circles)
+    // Welcome	  #0075C3	    #FFFFFF	
+    // Vivid		  #4EADE1	
+    // Gold		    #EBBD5F	
+    // Charcol	  #2F2F2F	    #FFFFFF	
+    // Feather	  #F4F4F4	    #2F2F2F   #141D3A
+    // Sky	      #DCEFF9	    #2F2F2F   #141D3A
+    // White	    #FFFFFF	    #0075C3	
+
+    // Active Tab Colors
+    tab_active              "#[bg=#141D3A,fg=#013a6f,bold]◖#[bg=#013a6f,fg=#f4f4f4,bold] #[bg=#013a6f,fg=#4EADE1]{index} #[bg=#013a6f,fg=#f4f4f4]{name} #[bg=#141D3A,fg=#013a6f,bold]◗"
+    tab_active_fullscreen   "#[bg=#141D3A,fg=#013a6f,bold]◖#[bg=#013a6f,fg=#f4f4f4,bold] #[bg=#013a6f,fg=#EBBD5F]{fullscreen_indicator} #[bg=#013a6f,fg=#4EADE1]{index} #[bg=#013a6f,fg=#f4f4f4]{name} #[bg=#141D3A,fg=#013a6f,bold]◗"
+    tab_active_sync         "#[bg=#141D3A,fg=#013a6f,bold]◖#[bg=#013a6f,fg=#f4f4f4,bold] #[bg=#013a6f,fg=#EBBD5F]{sync_indicator} #[bg=#013a6f,fg=#4EADE1]{index} #[bg=#013a6f,fg=#f4f4f4]{name} #[bg=#141D3A,fg=#013a6f,bold]◗"
+
+    // Inactive Tab Colors
+    tab_normal              "#[bg=#141D3A,fg=#424554,bold] {index} {name} "
+    tab_normal_fullscreen   "#[bg=#141D3A,fg=#EBBD5F,bold] {fullscreen_indicator} #[bg=#141D3A,fg=#424554,bold]{index} {name} "
+    tab_normal_sync         "#[bg=#141D3A,fg=#0075C3,bold] {sync_indicator} #[bg=#141D3A,fg=#424554,bold]{index} {name} "
+
+    tab_separator "#[bg=#141D3A] "
+
+    tab_sync_indicator       "󰓦"
+    tab_fullscreen_indicator "󰊓"
+    tab_floating_indicator   "⬚"
+
+    tab_rename              "#[bg=#141D3A,fg=#013a6f,bold]◖#[bg=#013a6f,fg=#4EADE1]{index} #[bg=#013A6F,fg=#C23E26]▸ #[bg=#013a6f,fg=#f4f4f4]{name} #[bg=#013a6f,fg=#EBBD5F]{floating_indicator} #[fg=#013a6f,bold]◗"
+
+    tab_display_count         "15"
+    tab_truncate_start_format "#[fg=#EBBD5F]  +{count}  "
+    tab_truncate_end_format   "#[fg=#EBBD5F]   +{count} "
+
+    // datetime        "#[fg=#141D3A,bold] {format} "
+    // datetime_format "%H:%M:%S"
+    // datetime_timezone "America/Los_Angeles"
+
+    // ---------------------------
+    format_left  "{mode}#[fg=#89B4FA,bg=#141D3A,bold] {session}#[bg=#141D3A] {tabs}"
+    // format_right "{command_kubectx}#[fg=#424554,bg=#141D3A]::{command_kubens}{datetime}"
+    format_right "{pipe_zjstatus_hints}{command_kubectx}#[fg=#424554,bg=#141D3A]::{command_kubens}{datetime}"
+    format_space "#[bg=#141D3A]"
+    // mode_normal          "#[bg=#89B4FA] "
+    // mode_tmux            "#[bg=#ffc387] "
+    // mode_default_to_mode "tmux"
+
+    // tab_normal               "#[fg=#6C7086,bg=#141D3A] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
+    // tab_active               "#[fg=#9399B2,bg=#141D3A,bold,italic] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
+    // tab_fullscreen_indicator "□ "
+    // tab_sync_indicator       "  "
+    // tab_floating_indicator   "󰉈 "
+
+    command_kubectx_command  "kubectx -c"
+    command_kubectx_format   "#[fg=#6C7086,bg=#141D3A,italic] {stdout}"
+    command_kubectx_interval "2"
+
+    command_kubens_command  "kubens -c"
+    command_kubens_format   "#[fg=#6C7086,bg=#141D3A]{stdout} "
+    command_kubens_interval "2"
+
+    datetime          "#[fg=#9399B2,bg=#141D3A] {format} "
+    datetime_format   "%a, %b %d %H:%M"
+    datetime_timezone "America/Chicago"
+  }
+
+  // Status Hints: A Zellij plugin that displays context-aware key bindings for each Zellij mode. Extends the functionality of zjstatus.
+  zjstatus-hints location="file:/Users/bobsaska/.local/share/zellij/plugins/zjstatus-hints.wasm" {
+    max_length 180
+    overflow_str ""
+    pipe_name "zjstatus_hints"
+    hide_in_base_mode false
+  }
+
+  // Tools: A Zellij plugin and companion CLI that add scratchpads, focus helpers, event streaming, and session tree utilities.
+  zellij-tools location="file:/Users/bobsaska/.local/share/zellij/plugins/zellij-tools.wasm" {
+    include "zellij-tools.kdl"
+    watch_ms 2000
+  }
+
+
+  zjframes location="file:/Users/bobsaska/.local/share/zellij/plugins/zjframes.wasm" {
+    hide_frame_for_single_pane       "true"
+    hide_frame_except_for_search     "true"
+    hide_frame_except_for_scroll     "true"
+    hide_frame_except_for_fullscreen "true"
+  }
+
+  // Neovim Nav: This Zellij plugin is intended to be used in conjunction with zellij-nav.nvim as an alternative to zellij-autolock (which served as a valuable reference during the development of this plugin).
+  //  >> The companion plugin for nvim is -> https://github.com/swaits/zellij-nav.nvim
+  // nvim-nav location="https://github.com/sharph/zellij-nvim-nav-plugin/releases/download/v1.0.0/zellij-nvim-nav-plugin.wasm"
+
+  // Room: A Zellij plugin for quickly searching and switching between tabs.
+  room location="file:/Users/bobsaska/.local/share/zellij/plugins/room.wasm"
 }
+
+load_plugins {
+  zjstatus
+  zjframes
+  zjstatus-hints
+  zellij-tools
+  nvim-nav
+}
+
+ui {
+  pane_frames {
+    rounded_corners true
+  }
+}
+
+show_startup_tips false
+advanced_mouse_actions false

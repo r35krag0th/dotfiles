@@ -1,0 +1,10 @@
+title = "Dotfiles Betterleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+
+regexes = [
+  '''^87FB0C9A9BDCD83433B5D02C58BD034942B9F1B6$''', # This is just the fingerprint of my gpg public key
+]

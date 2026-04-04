@@ -1,7 +1,7 @@
 [tools]
 # Infrastructure
 terraform = "1.12"
-terragrunt = "0.80"
+"aqua:gruntwork-io/terragrunt" = "0.99"
 ansible = "latest"
 dagger = "latest"
 infisical = "latest"

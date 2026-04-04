@@ -223,6 +223,12 @@
   helper =
   helper = !$HOME/.local/share/mise/shims/gh auth git-credential
 
+[credential "https://gitlab.r35.dev"]
+	helper = !$HOME/.local/bin/glab-git-credential
+
+[credential]
+	helper = store
+
 [mergetool]
   keepBackup = false
   prompt = false

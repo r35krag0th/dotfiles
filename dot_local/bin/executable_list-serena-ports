@@ -1,0 +1,76 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["rich"]
+# ///
+"""List running Serena MCP server instances and their ports."""
+
+import subprocess
+import re
+
+from rich.console import Console
+from rich.table import Table
+
+
+def get_serena_instances() -> list[dict]:
+    """Find running Serena MCP server processes and their listening ports."""
+    result = subprocess.run(["ps", "aux"], capture_output=True, text=True)
+    instances = []
+    for line in result.stdout.splitlines():
+        if "serena start-mcp-server" not in line or "grep" in line:
+            continue
+        # Skip the parent uv/uvx wrapper — only want the actual python process
+        if "/uv" in line and "tool" in line:
+            continue
+        parts = line.split()
+        pid = int(parts[1])
+        tty = parts[6]
+
+        port = _get_listening_port(pid)
+        instances.append({"pid": pid, "tty": tty, "port": port})
+    return instances
+
+
+def _get_listening_port(pid: int) -> int | None:
+    """Get the listening port for a specific PID."""
+    result = subprocess.run(
+        ["lsof", "-i", "-P", "-n", "-p", str(pid)],
+        capture_output=True, text=True,
+    )
+    for line in result.stdout.splitlines():
+        if "LISTEN" not in line:
+            continue
+        # Only match lines belonging to this exact PID
+        parts = line.split()
+        if len(parts) >= 2 and parts[1] == str(pid):
+            match = re.search(r":(\d+)\s+\(LISTEN\)", line)
+            if match:
+                return int(match.group(1))
+    return None
+
+
+def main() -> None:
+    console = Console()
+    instances = get_serena_instances()
+
+    if not instances:
+        console.print("[dim]No running Serena instances found.[/dim]")
+        return
+
+    table = Table(title="Serena MCP Servers")
+    table.add_column("PID", style="cyan", justify="right")
+    table.add_column("Port", style="green", justify="right")
+    table.add_column("TTY", style="yellow")
+
+    for inst in sorted(instances, key=lambda e: e["pid"]):
+        table.add_row(
+            str(inst["pid"]),
+            str(inst["port"]) if inst["port"] else "[dim]—[/dim]",
+            inst["tty"],
+        )
+
+    console.print(table)
+
+
+if __name__ == "__main__":
+    main()
