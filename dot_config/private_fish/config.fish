@@ -36,5 +36,9 @@ end
 # NOTE: This is required by docker helpers
 fish_add_path -g --prepend /usr/local/bin
 
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+fish_add_path "$BUN_INSTALL/bin"
+
 # Initialize the Starship prompt -- https://starship.rs/
 starship init fish | source
