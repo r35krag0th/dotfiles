@@ -59,3 +59,4 @@ abbr -a -- gstm 'git switch main'
 # -t => Update Tags: fetch all tags from remote
 abbr -a -- g-gl 'git fetch -pPt && git pull -pt'
 abbr -a -- g-fgl 'git fetch -pPt --force && git pull -pt'
+abbr -a -- gwl 'git worktree list'
