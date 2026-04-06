@@ -42,6 +42,9 @@ restish = "latest"
 
 # CLI Tools
 bat = "latest"
+{{- if ne .chezmoi.os "darwin" }}
+chezmoi = "latest"
+{{- end }}
 eza = "latest"
 fd = "latest"
 fzf = "latest"
