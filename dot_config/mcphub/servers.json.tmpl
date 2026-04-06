@@ -4,9 +4,9 @@
       "args": [
         "authentik-diag-mcp",
         "--base-url",
-        "https://auth.r35.network",
+        "{{ onepasswordRead "op://k8s-production/nstsp2wkuzjlkyum5v5vesrmxi/appUrl" }}",
         "--token",
-        "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/yxg4dpxsjg62r5yy6lsld3c3bu/password" }}"
+        "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/nstsp2wkuzjlkyum5v5vesrmxi/password" }}"
       ],
       "command": "uvx",
       "disabled": false

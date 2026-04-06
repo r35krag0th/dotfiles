@@ -1,165 +1,192 @@
-# tmux configuration
-# Requires: tmux 3.2+ (tested with 3.5a)
-#
-# TPM (tmux Plugin Manager) Commands:
-#   prefix + I       Install plugins
-#   prefix + U       Update plugins
-#   prefix + alt-u   Uninstall removed plugins
 
-# ==============================================================================
-# General Settings
-# ==============================================================================
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Core                                                       ║
+# ╚══════════════════════════════════════════════════════════════╝
 
-# Default shell (configured via chezmoi)
+# Shell (resolved by chezmoi from .shells data)
 {{- $fish := index .shells .chezmoi.os "fish" -}}
 {{- if and (hasKey .shells "hosts") (hasKey .shells.hosts .chezmoi.hostname) -}}
   {{- $fish = index .shells.hosts .chezmoi.hostname "fish" | default $fish -}}
 {{- end }}
 set -g default-shell {{ $fish }}
 
-# Terminal settings for true color support
-set -g default-terminal "tmux-256color"
-set -ga terminal-overrides ",xterm-256color:Tc,xterm-kitty:Tc"
-set -sa terminal-features ",xterm-256color:RGB,xterm-kitty:RGB"
+set -g default-terminal "xterm-256color"
+set -ga terminal-overrides ",xterm-256color*:Tc:smso=^[[3m"
+set -g base-index 1
+set -g escape-time 0
+set -g display-time 2000
+set -g history-limit 1000
+set -g mouse on
+set -g focus-events on
+set -g detach-on-destroy off
+set -g aggressive-resize off
 
-# General behavior
-set -g base-index 1              # Start window numbering at 1
-set -g pane-base-index 1         # Start pane numbering at 1
-set -g renumber-windows on       # Renumber windows when one is closed
-set -s escape-time 0             # No delay for escape key
-set -g history-limit 10000       # Scrollback buffer size
-set -g display-time 2000         # Message display time (ms)
-set -g focus-events on           # Pass focus events to applications
-set -g mouse on                  # Enable mouse support
-set -g detach-on-destroy off     # Don't exit tmux when last session closes
-set -g mode-keys vi              # Vi keys in copy mode
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Visual                                                     ║
+# ╚══════════════════════════════════════════════════════════════╝
 
-# Activity monitoring
-set -g monitor-activity on
+setw -g monitor-activity on
 set -g visual-activity on
 
-# ==============================================================================
-# Key Bindings
-# ==============================================================================
+# Pane borders
+set -g pane-border-style "fg=#013A6F"
+set -g pane-active-border-style "fg=#0075C3,bold"
+set -g pane-border-lines heavy
+set -g pane-border-status top
+set -g pane-border-format "#{?pane_active,#[fg=#013A6F]◖#[bg=#013A6F]#[fg=#4EADE1] #P #[fg=#F4F4F4]#T #[bg=default]#[fg=#013A6F]◗,#[fg=#424554] #P #T}#[default]"
 
-# Reload config
-bind r source-file ~/.tmux.conf \; display-message "Config reloaded"
+# Message styling
+set -g message-style "fg=#FFFFFF,bg=#0075C3,bold"
+set -g message-command-style "fg=#FFFFFF,bg=#013A6F"
 
-# Window splitting (preserve current path)
-bind v split-window -h -c "#{pane_current_path}"
-bind b split-window -v -c "#{pane_current_path}"
-bind c new-window -c "#{pane_current_path}"
-bind '"' split-window -v -c "#{pane_current_path}"
-bind % split-window -h -c "#{pane_current_path}"
+# Selection/mode styling (session switcher, copy mode)
+set -g mode-style "fg=#FFFFFF,bg=#0075C3,bold"
 
-# Vim-style pane navigation
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Theme                                                      ║
+# ╚══════════════════════════════════════════════════════════════╝
 
-# Arrow key window navigation
-bind Left previous-window
-bind Right next-window
-bind Up choose-buffer
-bind Down choose-buffer
+# Color palette
+# Foundation: #141D3A  Legacy: #013A6F  Welcome: #0075C3
+# Vivid: #4EADE1  Gold: #EBBD5F  Red: #C23E26
 
-# Vi copy mode bindings
-bind -T copy-mode-vi v send -X begin-selection
-bind -T copy-mode-vi y send -X copy-selection-and-cancel
-
-# Mouse toggle
-bind m set -g mouse \; display "Mouse: #{?mouse,ON,OFF}"
-
-# Function keys (no prefix required)
-bind -n F1 clock-mode
-bind -n F3 previous-window
-bind -n F4 next-window
-bind -n F5 choose-buffer
-
-# TMS (tmux-sessionizer) bindings
-bind -r '(' switch-client -p \; refresh-client -S
-bind -r ')' switch-client -n \; refresh-client -S
-bind C-o display-popup -E "tms"
-bind C-j display-popup -E "tms switch"
-bind C-w command-prompt -p "Rename session: " "run-shell 'tms rename %1'"
-bind C-r display-message "Refreshing TMS..." \; run-shell 'tms refresh' \; display-message "TMS refreshed"
-
-# ==============================================================================
-# Status Bar
-# ==============================================================================
-
+# Status bar
 set -g status on
 set -g status-interval 1
 set -g status-justify left
 set -g status-left-length 50
 set -g status-right-length 140
+set -g status-style "bg=#141D3A,fg=#FFFFFF"
 
-# Status bar style (transparent background)
-set -g status-style "bg=default,fg=colour231"
+# Window list
+setw -g window-status-style "fg=#424554,bg=#141D3A"
+setw -g window-status-format "#[fg=#424554,bg=#141D3A] #I #W "
+setw -g window-status-current-style "fg=#F4F4F4,bg=#013A6F,bold"
+setw -g window-status-current-format "#[fg=#013A6F,bg=#141D3A]◖#[bg=#013A6F]#[fg=#4EADE1] #I #[fg=#F4F4F4]#W #[bg=#141D3A]#[fg=#013A6F]◗#[default]"
 
-# Window status
-setw -g window-status-current-style "fg=default,bg=default"
-setw -g window-status-current-format "#[fg=colour106,bright] ⎨ #[fg=colour154,bright]#I:#W #[fg=colour106]⎬ "
+# Status left: {Prefix indicator} {Session name}
+set -g status-left '#{prefix_highlight}'
+set -ga status-left "#[fg=#89B4FA,bg=#141D3A,bold] #S #[default]"
+set -ga status-left "#[fg=#4EADE1,bg=#141D3A] │ #[default]"
 
-# Status left: prefix indicator + session name
-set -g status-left "#{prefix_highlight}"
-set -ga status-left " #[fg=colour202,bright]#S"
-set -ga status-left " #[fg=colour214]❯❯❯ "
+# Status right: {Date} │ {Time} │ {Battery}
+set -g status-right ''
+set -ga status-right ' #[fg=#4EADE1]│#[default]'
+set -ga status-right ' #[fg=#8A8FA7]%a %m/%d'
+set -ga status-right ' #[fg=#4EADE1]│#[default]'
+set -ga status-right ' #[fg=#EBBD5F,bold]%H:%M#[default]'
+set -ga status-right ' #[fg=#4EADE1]│#[default]'
+set -ga status-right ' #{battery_color_charge_fg}#{battery_icon_charge}#{battery_color_status_fg} #{battery_remain} '
 
-# Status right: uptime / date / time / battery
-set -g status-right "#[fg=colour201,bright]↑#[fg=colour207,dim]#(uptime | cut -f 4-5 -d ' ' | cut -f 1 -d ',')"
-set -ga status-right " #[fg=colour81]/ "
-set -ga status-right "#[fg=colour225]%a #[fg=colour219]%m/%d"
-set -ga status-right " #[fg=colour81]/ "
-set -ga status-right "#[fg=colour156]%H:%M "
-set -ga status-right "#{battery_color_charge_fg}#{battery_icon_charge}#{battery_color_status_fg} #{battery_remain} "
-
-# Pane/window styles
-set -g window-style "fg=default,bg=colour16"
-set -g window-active-style "fg=default,bg=default"
-
-# ==============================================================================
-# Plugin Settings
-# ==============================================================================
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Theme — Plugin Configuration                               ║
+# ╚══════════════════════════════════════════════════════════════╝
 
 # Prefix highlight
-set -g @prefix_highlight_fg colour231
-set -g @prefix_highlight_bg colour202
+set -g @prefix_highlight_fg '#FFFFFF'
+set -g @prefix_highlight_bg '#C23E26'
 set -g @prefix_highlight_empty_prompt '    '
 
-# Battery (color tiers from green to red)
+# Battery
 set -g @batt_remain_short true
-set -g @batt_color_charge_primary_tier8 colour34
-set -g @batt_color_charge_primary_tier7 colour118
-set -g @batt_color_charge_primary_tier6 colour190
-set -g @batt_color_charge_primary_tier5 colour220
-set -g @batt_color_charge_primary_tier4 colour214
-set -g @batt_color_charge_primary_tier3 colour208
-set -g @batt_color_charge_primary_tier2 colour202
-set -g @batt_color_charge_primary_tier1 colour196
-set -g @batt_color_charge_secondary_tier8 colour237
-set -g @batt_color_charge_secondary_tier7 colour237
-set -g @batt_color_charge_secondary_tier6 colour237
-set -g @batt_color_charge_secondary_tier5 colour237
-set -g @batt_color_charge_secondary_tier4 colour237
-set -g @batt_color_charge_secondary_tier3 colour237
-set -g @batt_color_charge_secondary_tier2 colour237
-set -g @batt_color_charge_secondary_tier1 colour237
-set -g @batt_color_status_primary_charged colour22
-set -g @batt_color_status_primary_charging colour136
-set -g @batt_color_status_primary_discharging colour99
-set -g @batt_color_status_primary_attached colour17
-set -g @batt_color_status_primary_unknown colour240
-set -g @batt_color_status_secondary_charged colour34
-set -g @batt_color_status_secondary_charging colour220
-set -g @batt_color_status_secondary_discharging colour177
-set -g @batt_color_status_secondary_attached colour45
-set -g @batt_color_status_secondary_unknown colour237
+set -g @batt_color_charge_primary_tier8   '#53A02D'
+set -g @batt_color_charge_primary_tier7   '#ABF846'
+set -g @batt_color_charge_primary_tier6   '#DEFA49'
+set -g @batt_color_charge_primary_tier5   '#F3D23F'
+set -g @batt_color_charge_primary_tier4   '#EAA934'
+set -g @batt_color_charge_primary_tier3   '#E3832B'
+set -g @batt_color_charge_primary_tier2   '#DE6223'
+set -g @batt_color_charge_primary_tier1   '#C23E26'
+set -g @batt_color_charge_secondary_tier8 '#333333'
+set -g @batt_color_charge_secondary_tier7 '#333333'
+set -g @batt_color_charge_secondary_tier6 '#333333'
+set -g @batt_color_charge_secondary_tier5 '#333333'
+set -g @batt_color_charge_secondary_tier4 '#333333'
+set -g @batt_color_charge_secondary_tier3 '#333333'
+set -g @batt_color_charge_secondary_tier2 '#333333'
+set -g @batt_color_charge_secondary_tier1 '#333333'
+set -g @batt_color_status_primary_charged       '#2B5117'
+set -g @batt_color_status_primary_charging      '#EBBD5F'
+set -g @batt_color_status_primary_discharging   '#745DF5'
+set -g @batt_color_status_primary_attached      '#030A50'
+set -g @batt_color_status_primary_unknown       '#4E4E4E'
+set -g @batt_color_status_secondary_charged     '#141D3A'
+set -g @batt_color_status_secondary_charging    '#141D3A'
+set -g @batt_color_status_secondary_discharging '#141D3A'
+set -g @batt_color_status_secondary_attached    '#141D3A'
+set -g @batt_color_status_secondary_unknown     '#141D3A'
 
-# ==============================================================================
-# Plugins (TPM)
-# ==============================================================================
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Clipboard                                                  ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+set -g mode-keys vi
+bind-key -Tcopy-mode-vi v send -X begin-selection
+bind-key -Tcopy-mode-vi y send -X copy-selection-and-cancel
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Key Bindings — Prefix                                      ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# Splits
+bind v split-window -h -c "#{pane_current_path}"
+bind b split-window -v -c "#{pane_current_path}"
+
+# Pane navigation (vim-style)
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Window navigation
+bind n next-window
+bind p previous-window
+
+# Utilities
+bind F5 source-file ~/.tmux.conf \; display-message ">=> {tmux} --- Config has been reloaded!"
+bind m set -g mouse \; display "Mouse: #{?mouse,ON,OFF}"
+bind x kill-pane
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Key Bindings — No Prefix (Zellij-style Option keys)        ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+bind-key -n M-n split-window -h -c "#{pane_current_path}"
+bind-key -n M-N split-window -v -c "#{pane_current_path}"
+bind-key -n M-\\ resize-pane -Z
+bind-key -n M-h select-pane -L
+bind-key -n M-j select-pane -D
+bind-key -n M-k select-pane -U
+bind-key -n M-l select-pane -R
+bind-key -n M-[ copy-mode
+bind-key -n M-] paste-buffer
+bind-key -n M-+ resize-pane -U 5
+bind-key -n M-- resize-pane -D 5
+bind-key -n M-F5 source-file ~/.tmux.conf \; display-message ">=> {tmux} --- Config has been reloaded!"
+
+# Function keys (no prefix)
+bind-key -n F1 clock-mode
+bind-key -n F3 previous-window
+bind-key -n F4 next-window
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Productivity — Tmux Sessionizer (tms)                      ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+bind -r '(' switch-client -p\; refresh-client -S
+bind -r ')' switch-client -n\; refresh-client -S
+bind s choose-tree -Zs
+bind C-o display-popup -E "tms"
+bind C-j display-popup -E "tms switch"
+bind C-w command-prompt -p "Rename active session to: " "run-shell 'tms rename %1'"
+bind C-r display-message "Refreshing TMS sessions..."\; run-shell 'tms refresh'\; display-message "Refresh completed"
+bind C-c command-prompt -p "What Repo? " "run-shell 'tms clone-repo %1'"
+bind C-s display-popup -E "tms sessions && read -P 'Press any key to continue... '"
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Plugins (TPM)                                              ║
+# ║  ^B+I = install  ^B+U = update  ^B+Alt+U = uninstall       ║
+# ╚══════════════════════════════════════════════════════════════╝
 
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
@@ -171,5 +198,4 @@ set -g @plugin 'tmux-plugins/tmux-cpu'
 set -g @plugin 'thewtex/tmux-mem-cpu-load'
 set -g @plugin 'sainnhe/tmux-fzf'
 
-# Initialize TPM (must be at the very end)
-run -b '~/.tmux/plugins/tpm/tpm'
+run '~/.tmux/plugins/tpm/tpm'

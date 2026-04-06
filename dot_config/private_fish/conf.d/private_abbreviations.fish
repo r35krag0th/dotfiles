@@ -29,6 +29,7 @@ abbr -a -- lt 'eza --tree --level=2 --icons'
 
 # Kubernetes
 # NOTE: k and kubectl are fish functions (kubecolor wrappers) in functions/
+abbr -a -- k kubectl
 
 # Terraform/Terragrunt
 abbr -a -- tf terraform
