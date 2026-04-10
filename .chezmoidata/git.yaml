@@ -1,0 +1,17 @@
+git:
+  signing:
+    darwin:
+      program: /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+      key_source: onepassword
+      key: "op://Private/7i6yzmonhr36trvokpnhn7efve/public key"
+    linux:
+      program: ""
+      key_source: file
+      key: ~/.ssh/r35krag0th-signing.pem
+    # Host-specific overrides (add entries as needed)
+    # Example:
+    #   my-macbook:
+    #     program: /opt/1Password/op-ssh-sign
+    #     key_source: file
+    #     key: ~/.ssh/signing.pem
+    hosts: {}

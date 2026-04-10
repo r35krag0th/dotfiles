@@ -4,7 +4,21 @@
 [user]
   name = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/Name" }}
   email = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/email" }}
-  signingkey = {{ onepasswordRead "op://Private/7i6yzmonhr36trvokpnhn7efve/public key" }}
+{{- if and (hasKey .git.signing "hosts") (hasKey .git.signing.hosts .chezmoi.hostname) -}}
+  {{- $s := index .git.signing.hosts .chezmoi.hostname -}}
+  {{- if eq $s.key_source "onepassword" }}
+  signingkey = {{ onepasswordRead $s.key }}
+  {{- else }}
+  signingkey = {{ $s.key }}
+  {{- end }}
+{{- else if hasKey .git.signing .chezmoi.os -}}
+  {{- $s := index .git.signing .chezmoi.os -}}
+  {{- if eq $s.key_source "onepassword" }}
+  signingkey = {{ onepasswordRead $s.key }}
+  {{- else }}
+  signingkey = {{ $s.key }}
+  {{- end }}
+{{- end }}
 
 [init]
   defaultBranch = main
@@ -42,7 +56,7 @@
   prune = true
 
 # =============================================================================
-# Commit Signing (1Password SSH)
+# Commit Signing
 # =============================================================================
 
 [commit]
@@ -50,9 +64,21 @@
 
 [gpg]
   format = ssh
+{{- if and (hasKey .git.signing "hosts") (hasKey .git.signing.hosts .chezmoi.hostname) -}}
+  {{- $s := index .git.signing.hosts .chezmoi.hostname -}}
+  {{- if ne $s.program "" }}
 
 [gpg "ssh"]
-  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+  program = {{ $s.program }}
+  {{- end }}
+{{- else if hasKey .git.signing .chezmoi.os -}}
+  {{- $s := index .git.signing .chezmoi.os -}}
+  {{- if ne $s.program "" }}
+
+[gpg "ssh"]
+  program = {{ $s.program }}
+  {{- end }}
+{{- end }}
 
 # =============================================================================
 # Delta Pager
