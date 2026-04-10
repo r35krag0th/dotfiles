@@ -64,19 +64,19 @@
 
 [gpg]
   format = ssh
+
+[gpg "ssh"]
   allowedSignersFile = ~/.ssh/allowed_signers
 {{- if and (hasKey .git.signing "hosts") (hasKey .git.signing.hosts .chezmoi.hostname) -}}
   {{- $s := index .git.signing.hosts .chezmoi.hostname -}}
   {{- if ne $s.program "" }}
 
-[gpg "ssh"]
   program = {{ $s.program }}
   {{- end }}
 {{- else if hasKey .git.signing .chezmoi.os -}}
   {{- $s := index .git.signing .chezmoi.os -}}
   {{- if ne $s.program "" }}
 
-[gpg "ssh"]
   program = {{ $s.program }}
   {{- end }}
 {{- end }}
