@@ -3,7 +3,7 @@ git:
     darwin:
       program: /Applications/1Password.app/Contents/MacOS/op-ssh-sign
       key_source: onepassword
-      key: "op://Private/7i6yzmonhr36trvokpnhn7efve/public key"
+      key: "op://dihsvyqd4nqdjlkuy3vny3pk7i/7i6yzmonhr36trvokpnhn7efve/public key"
     linux:
       program: ""
       key_source: file
