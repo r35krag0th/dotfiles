@@ -1,6 +1,7 @@
+# vim: ft=tmux.chezmoitmpl
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Core                                                       ║
+# ║  Core                                                        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Shell (resolved by chezmoi from .shells data)
@@ -22,11 +23,11 @@ set -g detach-on-destroy off
 set -g aggressive-resize off
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Visual                                                     ║
+# ║  Visual                                                      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 setw -g monitor-activity on
-set -g visual-activity on
+set -g visual-activity off
 
 # Pane borders
 set -g pane-border-style "fg=#013A6F"
@@ -43,7 +44,7 @@ set -g message-command-style "fg=#FFFFFF,bg=#013A6F"
 set -g mode-style "fg=#FFFFFF,bg=#0075C3,bold"
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Theme                                                      ║
+# ║  Theme                                                       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Color palette
@@ -59,10 +60,12 @@ set -g status-right-length 140
 set -g status-style "bg=#141D3A,fg=#FFFFFF"
 
 # Window list
-setw -g window-status-style "fg=#424554,bg=#141D3A"
-setw -g window-status-format "#[fg=#424554,bg=#141D3A] #I #W "
+setw -g window-status-style "fg=#8A8FA7,bg=#141D3A"
+setw -g window-status-activity-style "none"
+setw -g window-status-bell-style "none"
+setw -g window-status-format "#[fg=#8A8FA7,bg=#141D3A] #I #W#{?window_zoomed_flag, #[fg=#EBBD5F]󰊓,}#{?pane_synchronized, #[fg=#EBBD5F]󰓦,}#{?window_activity_flag, #[fg=#EBBD5F]󰂞,}#{?window_bell_flag, #[fg=#EBBD5F]󰂚,}#{?window_marked_flag, #[fg=#EBBD5F]󰃀,} "
 setw -g window-status-current-style "fg=#F4F4F4,bg=#013A6F,bold"
-setw -g window-status-current-format "#[fg=#013A6F,bg=#141D3A]◖#[bg=#013A6F]#[fg=#4EADE1] #I #[fg=#F4F4F4]#W #[bg=#141D3A]#[fg=#013A6F]◗#[default]"
+setw -g window-status-current-format "#[fg=#013A6F,bg=#141D3A]◖#[bg=#013A6F]#{?window_zoomed_flag,#[fg=#EBBD5F] 󰊓,}#{?pane_synchronized,#[fg=#EBBD5F] 󰓦,}#[fg=#4EADE1] #I #[fg=#F4F4F4]#W #[bg=#141D3A]#[fg=#013A6F]◗#[default]"
 
 # Status left: {Prefix indicator} {Session name}
 set -g status-left '#{prefix_highlight}'
@@ -79,7 +82,7 @@ set -ga status-right ' #[fg=#4EADE1]│#[default]'
 set -ga status-right ' #{battery_color_charge_fg}#{battery_icon_charge}#{battery_color_status_fg} #{battery_remain} '
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Theme — Plugin Configuration                               ║
+# ║  Theme — Plugin Configuration                                ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Prefix highlight
@@ -117,7 +120,7 @@ set -g @batt_color_status_secondary_attached    '#141D3A'
 set -g @batt_color_status_secondary_unknown     '#141D3A'
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Clipboard                                                  ║
+# ║  Clipboard                                                   ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -g mode-keys vi
@@ -125,7 +128,7 @@ bind-key -Tcopy-mode-vi v send -X begin-selection
 bind-key -Tcopy-mode-vi y send -X copy-selection-and-cancel
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Key Bindings — Prefix                                      ║
+# ║  Key Bindings — Prefix                                       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Splits
@@ -144,11 +147,11 @@ bind p previous-window
 
 # Utilities
 bind F5 source-file ~/.tmux.conf \; display-message ">=> {tmux} --- Config has been reloaded!"
-bind m set -g mouse \; display "Mouse: #{?mouse,ON,OFF}"
+bind C-m set -g mouse \; display "Mouse: #{?mouse,ON,OFF}"
 bind x kill-pane
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Key Bindings — No Prefix (Zellij-style Option keys)        ║
+# ║  Key Bindings — No Prefix (Zellij-style Option keys)         ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 bind-key -n M-n split-window -h -c "#{pane_current_path}"
@@ -170,7 +173,7 @@ bind-key -n F3 previous-window
 bind-key -n F4 next-window
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Productivity — Tmux Sessionizer (tms)                      ║
+# ║  Productivity — Tmux Sessionizer (tms)                       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 bind -r '(' switch-client -p\; refresh-client -S
@@ -184,8 +187,8 @@ bind C-c command-prompt -p "What Repo? " "run-shell 'tms clone-repo %1'"
 bind C-s display-popup -E "tms sessions && read -P 'Press any key to continue... '"
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Plugins (TPM)                                              ║
-# ║  ^B+I = install  ^B+U = update  ^B+Alt+U = uninstall       ║
+# ║  Plugins (TPM)                                               ║
+# ║  ^B+I = install  ^B+U = update  ^B+Alt+U = uninstall         ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -g @plugin 'tmux-plugins/tpm'
