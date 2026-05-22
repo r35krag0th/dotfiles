@@ -28,8 +28,10 @@ abbr -a -- la 'eza --icons --git --header --long --all --'
 abbr -a -- lt 'eza --tree --level=2 --icons'
 
 # Kubernetes
-# NOTE: k and kubectl are fish functions (kubecolor wrappers) in functions/
-abbr -a -- k kubectl
+# NOTE: k points to kubecolor and we don't alias k->kubectl->kubecolor
+# because it breaks `kubectl completion fish | source` because color codes
+# get injected into the output.
+abbr -a -- k kubecolor
 
 # Terraform/Terragrunt
 abbr -a -- tf terraform
@@ -60,3 +62,6 @@ abbr -a -- gstm 'git switch main'
 abbr -a -- g-gl 'git fetch -pPt && git pull -pt'
 abbr -a -- g-fgl 'git fetch -pPt --force && git pull -pt'
 abbr -a -- gwl 'git worktree list'
+
+# Claude Stuff
+abbr -a -- danger-claude 'claude --allow-dangerously-skip-permissions --dangerously-skip-permissions'

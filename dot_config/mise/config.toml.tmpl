@@ -3,7 +3,6 @@
 [tools]
 # Infrastructure
 terraform = "1.12"
-"aqua:gruntwork-io/terragrunt" = "0.99"
 ansible = "latest"
 dagger = "latest"
 infisical = "latest"
@@ -43,32 +42,36 @@ prettier = "latest"
 restish = "latest"
 
 # CLI Tools
+# > Using native package managers for their lang
+"go:golang.org/x/tools/gopls" = "latest"
+"npm:task-master" = "latest"
+"npm:task-master-ai" = "latest"
+# > Using "whatever"
 bat = "latest"
 {{- if ne .chezmoi.os "darwin" }}
 chezmoi = "latest"
 {{- end }}
+copier = "latest"
+cosign = "latest"
+dapr = "latest"
 eza = "latest"
 fd = "latest"
 fzf = "latest"
 gh = "latest"
-glab = "latest"
+glab = { version = "latest", exe = "glab" }
 granted = "latest"
 jq = "latest"
+lnav = "latest"
+neovim = "0.12.2"
+node = "25"
+opentofu = "latest"
 ripgrep = "latest"
 starship = "latest"
+terragrunt = "1"
+usage = "latest"
 viddy = "latest"
 yq = "latest"
 yt-dlp = "latest"
-cosign = "latest"
-copier = "latest"
-dapr = "latest"
-node = "25"
-neovim = "0.12.0"
-lnav = "latest"
-opentofu = "latest"
-usage = "latest"
-"npm:task-master" = "latest"
-"npm:task-master-ai" = "latest"
 # NOTE: Use the native install of claude-code
 
 [settings]

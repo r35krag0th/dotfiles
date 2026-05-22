@@ -2,6 +2,19 @@
 .claude/settings.local.json
 .mcp.json
 
+# AIDE local runtime files (machine-specific / binary)
+.aide/_logs/
+.aide/state/
+.aide/bin/
+.aide/worktrees/
+.aide/memory/
+.aide/code/
+.aide/grammars/
+.aide/aide.sock
+.aide/config/mcp.json
+.aide/config/mcp-sync.journal.json
+.aide/aide-memory.db
+
 # Serena MCP server cache
 .serena/cache/
 

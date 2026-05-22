@@ -134,25 +134,43 @@ set -g @batt_color_charge_primary_tier5           '#F3D23F'
 set -g @batt_color_charge_primary_tier4           '#EAA934'
 set -g @batt_color_charge_primary_tier3           '#E3832B'
 set -g @batt_color_charge_primary_tier2           '#DE6223'
-set -g @batt_color_charge_primary_tier1           '{{ .terminals.styles.work.lilred }}'
-set -g @batt_color_charge_secondary_tier8         '#333333'
-set -g @batt_color_charge_secondary_tier7         '#333333'
-set -g @batt_color_charge_secondary_tier6         '#333333'
-set -g @batt_color_charge_secondary_tier5         '#333333'
-set -g @batt_color_charge_secondary_tier4         '#333333'
-set -g @batt_color_charge_secondary_tier3         '#333333'
-set -g @batt_color_charge_secondary_tier2         '#333333'
-set -g @batt_color_charge_secondary_tier1         '#333333'
+set -g @batt_color_charge_primary_tier1           '#C23E26'
+# set -g @batt_color_charge_secondary_tier8         '#333333'
+# set -g @batt_color_charge_secondary_tier7         '#333333'
+# set -g @batt_color_charge_secondary_tier6         '#333333'
+# set -g @batt_color_charge_secondary_tier5         '#333333'
+# set -g @batt_color_charge_secondary_tier4         '#333333'
+# set -g @batt_color_charge_secondary_tier3         '#333333'
+# set -g @batt_color_charge_secondary_tier2         '#333333'
+# set -g @batt_color_charge_secondary_tier1         '#333333'
 set -g @batt_color_status_primary_charged         '#2B5117'
-set -g @batt_color_status_primary_charging        '{{ .terminals.styles.work.gold }}'
+set -g @batt_color_status_primary_charging        '#EBBD5F'
 set -g @batt_color_status_primary_discharging     '#745DF5'
 set -g @batt_color_status_primary_attached        '#030A50'
 set -g @batt_color_status_primary_unknown         '#4E4E4E'
-set -g @batt_color_status_secondary_charged       '{{ .terminals.styles.work.foundation }}'
-set -g @batt_color_status_secondary_charging      '{{ .terminals.styles.work.foundation }}'
-set -g @batt_color_status_secondary_discharging   '{{ .terminals.styles.work.foundation }}'
-set -g @batt_color_status_secondary_attached      '{{ .terminals.styles.work.foundation }}'
-set -g @batt_color_status_secondary_unknown       '{{ .terminals.styles.work.foundation }}'
+set -g @batt_color_status_secondary_charged       '#141D3A'
+set -g @batt_color_status_secondary_charging      '#141D3A'
+set -g @batt_color_status_secondary_discharging   '#141D3A'
+set -g @batt_color_status_secondary_attached      '#141D3A'
+set -g @batt_color_status_secondary_unknown       '#141D3A'
+#           
+set -g @batt_icon_charge_tier8              '' # 95-100%
+set -g @batt_icon_charge_tier7              '' # 80-95%
+set -g @batt_icon_charge_tier6              ''  # 65-80%
+set -g @batt_icon_charge_tier5              ''  # 50-65%
+set -g @batt_icon_charge_tier4              ''  # 35-50%
+set -g @batt_icon_charge_tier3              ''  # 20-35%
+set -g @batt_icon_charge_tier2              ''  # 5-20%
+set -g @batt_icon_charge_tier1              ''  # 0-5%
+# 
+# set -g @batt_icon_status_charged            ''
+set -g @batt_icon_status_charged            ''
+
+# set -g @batt_icon_status_charging           ''
+set -g @batt_icon_status_charging           ''
+set -g @batt_icon_status_discharging        ''
+set -g @batt_icon_status_attached           ''
+set -g @batt_icon_status_unknown            ' '
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Menu                                                        ║

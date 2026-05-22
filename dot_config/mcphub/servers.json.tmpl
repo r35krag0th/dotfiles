@@ -1,12 +1,13 @@
+{{/* vim: set ft=json.chezmoitmpl: */}}
 {
   "mcpServers": {
     "authentik-unofficial": {
       "args": [
         "authentik-diag-mcp",
         "--base-url",
-        "{{ onepasswordRead "op://k8s-production/nstsp2wkuzjlkyum5v5vesrmxi/appUrl" }}",
+        "${cmd:op read op://k8s-production/nstsp2wkuzjlkyum5v5vesrmxi/appUrl}",
         "--token",
-        "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/nstsp2wkuzjlkyum5v5vesrmxi/password" }}"
+        "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/nstsp2wkuzjlkyum5v5vesrmxi/password}"
       ],
       "command": "uvx",
       "disabled": false
@@ -22,15 +23,6 @@
       "command": "uvx",
       "disabled": false
     },
-    "git": {
-      "args": [
-        "mcp-server-git",
-        "--repository",
-        "${REPOSITORY_PATH}"
-      ],
-      "command": "uvx",
-      "disabled": true
-    },
     "github": {
       "headers": {
         "Authorization": "Bearer ${cmd:gh auth token}"
@@ -40,41 +32,24 @@
     "gitlab-native": {
       "autoApprove": [],
       "disabled": false,
-      "url": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4/mcp"
+      "url": "https://${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname}/api/v4/mcp"
     },
-    "gitlab-unofficial": {
+    "glab": {
       "args": [
-        "-y",
-        "@zereight/mcp-gitlab"
+        "mcp",
+        "serve"
       ],
-      "command": "npx",
-      "disabled": true,
-      "env": {
-        "GITLAB_API_URL": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4",
-        "GITLAB_OAUTH_CLIENT_ID": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/username" }}",
-        "GITLAB_OAUTH_REDIRECT_URI": "http://127.0.0.1:8888/callback",
-        "GITLAB_READ_ONLY_MODE": "false",
-        "GITLAB_USE_OAUTH": "true",
-        "USE_GITLAB_WIKI": "true",
-        "USE_MILESTONE": "true",
-        "USE_PIPELINE": "true"
-      }
+      "command": "glab",
+      "type": "stdio"
     },
-    "gitlab-unofficial-dev": {
+    "ha-unofficial": {
       "args": [
-        "{{ .chezmoi.homeDir }}/workspace/gitlab-mcp/build/index.js"
+        "ha-mcp"
       ],
-      "command": "node",
-      "disabled": false,
+      "command": "uvx",
       "env": {
-        "GITLAB_API_URL": "https://{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname"}}/api/v4",
-        "GITLAB_OAUTH_CLIENT_ID": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/username" }}",
-        "GITLAB_OAUTH_REDIRECT_URI": "http://127.0.0.1:8888/callback",
-        "GITLAB_READ_ONLY_MODE": "false",
-        "GITLAB_USE_OAUTH": "true",
-        "USE_GITLAB_WIKI": "true",
-        "USE_MILESTONE": "true",
-        "USE_PIPELINE": "true"
+        "HOMEASSISTANT_TOKEN": "${cmd:op read op://k8s-production/vvaokd5xbnb4f6xaifv2gzuasy/password}",
+        "HOMEASSISTANT_URL": "https://home.r35.network"
       }
     },
     "harbor": {
@@ -91,10 +66,10 @@
         "bupd/harbor-mcp:latest"
       ],
       "command": "docker",
-      "env": {
-        "HARBOR_API_BASE": "https://{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/hostname"}}/api/v2.0",
-        "HARBOR_AUTH_PASS": "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/username" }}",
-        "HARBOR_AUTH_USER": "{{ onepasswordRead "op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/credential" }}"
+      "env": /authentik{
+        "HARBOR_API_BASE": "https://${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/hostname}/api/v2.0",
+        "HARBOR_AUTH_PASS": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/username}",
+        "HARBOR_AUTH_USER": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/credential}"
       }
     },
     "k8s-mcp": {
@@ -139,8 +114,8 @@
       "command": "npx",
       "disabled": true,
       "env": {
-        "ANTHROPIC_API_KEY": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/rpgctfzch2tq5flv6z3dghkld4/credential" }}",
-        "OPENAI_API_KEY": "{{ onepasswordRead "op://dihsvyqd4nqdjlkuy3vny3pk7i/ypj3wrnivyl4gpyvlnnmncyfjm/credential" }}"
+        "ANTHROPIC_API_KEY": "${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/rpgctfzch2tq5flv6z3dghkld4/credential}",
+        "OPENAI_API_KEY": "${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/ypj3wrnivyl4gpyvlnnmncyfjm/credential}"
       }
     },
     "time": {
@@ -149,6 +124,17 @@
       ],
       "command": "uvx",
       "disabled": false
+    },
+    "radiant": {
+      "headers": {
+        "Authorization": "Bearer ${cmd: op read op://k8s-production/radiant-prod-bootstrap/credential}",
+        "CF-Access-Client-Id": "${cmd: op read op://Private/sa67kyw23jgpg3iiky5e7ncjqi/username}",
+        "CF-Access-Client-Secret": "${cmd: op read op://Private/sa67kyw23jgpg3iiky5e7ncjqi/credential}"
+      },
+      "url": "https://api.r35.dev/radiant/mcp"
+    },
+    "kube-schemas": {
+      "url": "https://schemas-mcp.r35.dev/mcp"
     }
   }
 }
