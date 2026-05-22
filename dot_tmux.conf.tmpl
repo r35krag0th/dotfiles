@@ -1,5 +1,11 @@
 # vim: ft=tmux.chezmoitmpl
 
+# INFO: Reference for PragmataPro Symbols
+# https://fabrizioschiavi.github.io/pragmatapro-semiotics/?q=box%20drawings
+#
+# NOTE: I've also got the All Characters ref which, opened in Vim, is really great
+# vim -R ~/.local/share/r35/pragmata-all-chars.txt
+
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Core                                                        ║
 # ╚══════════════════════════════════════════════════════════════╝
@@ -13,6 +19,7 @@ set -g default-shell {{ $fish }}
 
 set -g default-terminal "xterm-256color"
 set -ga terminal-overrides ",xterm-256color*:Tc:smso=^[[3m"
+
 set -g base-index 1
 set -g escape-time 0
 set -g display-time 2000
@@ -22,63 +29,91 @@ set -g focus-events on
 set -g detach-on-destroy off
 set -g aggressive-resize off
 
+# Additional Core Settings
+set -g base-index 1
+set -g escape-time 0
+set -g display-time 2000
+set -g history-limit 1000
+set -g mouse on
+set -g focus-events on
+set -g detach-on-destroy off
+set -g aggressive-resize off
+
+# Terminal Settings
+
+# Handle OSC8 links and other fun terminal goodies
+# NOTE: tmux is rendered in the alternate screen in Ghostty.
+# So you will need to use 󰘳 󰘶 󰳽  instead of normal 󰘳 󰳽  !
+set -sa terminal-features ",*:hyperlinks"       # Supports OSC 8 hyperlinks.
+set -sa terminal-features ",*:RGB"              # Supports RGB colour with the SGR escape sequences.
+set -sa terminal-features ",*:256"              # Supports 256 colours with the SGR escape sequences.
+set -sa terminal-features ",*:ccolor,*:cstyle"  # Allows setting the cursor colour and style.
+set -sa terminal-features ",*:focus"            # Supports focus reporting.
+set -sa terminal-features ",*:osc7"             # Supports the OSC 7 working directory extension.
+set -sa terminal-features ",*:overline"         # Supports the overline SGR attribute.
+set -sa terminal-features ",*:sixel"            # Supports SIXEL graphics.
+set -sa terminal-features ",*:strikethrough"    # Supports the strikethrough SGR escape sequence.
+set -sa terminal-features ",*:title"            # Supports xterm title setting.
+set -sa terminal-features ",*:usstyle"          # Allows underscore style and color to be set
+
+set -g allow-passthrough on
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Visual                                                      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-setw -g monitor-activity on
-set -g visual-activity off
+setw -g monitor-activity  on
+set -g visual-activity    off
 
 # Pane borders
-set -g pane-border-style "fg=#013A6F"
-set -g pane-active-border-style "fg=#0075C3,bold"
-set -g pane-border-lines heavy
-set -g pane-border-status top
-set -g pane-border-format "#{?pane_active,#[fg=#013A6F]◖#[bg=#013A6F]#[fg=#4EADE1] #P #[fg=#F4F4F4]#T #[bg=default]#[fg=#013A6F]◗,#[fg=#424554] #P #T}#[default]"
+set -g pane-border-style        "fg={{ .terminals.styles.work.legacy }}"
+set -g pane-active-border-style "fg={{ .terminals.styles.work.welcome }},bold"
+set -g pane-border-lines        heavy
+set -g pane-border-status       top
+set -g pane-border-format       "#{?pane_active,#[fg={{ .terminals.styles.work.legacy }}]#[bg={{ .terminals.styles.work.legacy }}]#[fg={{ .terminals.styles.work.vivid }}] #P #[fg={{ .terminals.styles.work.feather }}]#T #[bg=default]#[fg={{ .terminals.styles.work.legacy }}],#[fg=#424554] #P #T}#[default]"
 
 # Message styling
-set -g message-style "fg=#FFFFFF,bg=#0075C3,bold"
-set -g message-command-style "fg=#FFFFFF,bg=#013A6F"
+set -g message-style          "fg={{ .terminals.styles.work.white }},bg={{ .terminals.styles.work.welcome }},bold"
+set -g message-command-style  "fg={{ .terminals.styles.work.white }},bg={{ .terminals.styles.work.legacy }}"
 
 # Selection/mode styling (session switcher, copy mode)
-set -g mode-style "fg=#FFFFFF,bg=#0075C3,bold"
+set -g mode-style "fg={{ .terminals.styles.work.white }},bg={{ .terminals.styles.work.welcome }},bold"
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Theme                                                       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Color palette
-# Foundation: #141D3A  Legacy: #013A6F  Welcome: #0075C3
-# Vivid: #4EADE1  Gold: #EBBD5F  Red: #C23E26
+# Foundation: {{ .terminals.styles.work.foundation }}  Legacy: {{ .terminals.styles.work.legacy }}  Welcome: {{ .terminals.styles.work.welcome }}
+# Vivid: {{ .terminals.styles.work.vivid }}  Gold: {{ .terminals.styles.work.gold }}  Red: {{ .terminals.styles.work.lilred }}
 
 # Status bar
-set -g status on
-set -g status-interval 1
-set -g status-justify left
-set -g status-left-length 50
-set -g status-right-length 140
-set -g status-style "bg=#141D3A,fg=#FFFFFF"
+set -g status               on
+set -g status-interval      1
+set -g status-justify       left
+set -g status-left-length   50
+set -g status-right-length  140
+set -g status-style         "bg={{ .terminals.styles.work.foundation }},fg={{ .terminals.styles.work.white }}"
 
 # Window list
-setw -g window-status-style "fg=#8A8FA7,bg=#141D3A"
-setw -g window-status-activity-style "none"
-setw -g window-status-bell-style "none"
-setw -g window-status-format "#[fg=#8A8FA7,bg=#141D3A] #I #W#{?window_zoomed_flag, #[fg=#EBBD5F]󰊓,}#{?pane_synchronized, #[fg=#EBBD5F]󰓦,}#{?window_activity_flag, #[fg=#EBBD5F]󰂞,}#{?window_bell_flag, #[fg=#EBBD5F]󰂚,}#{?window_marked_flag, #[fg=#EBBD5F]󰃀,} "
-setw -g window-status-current-style "fg=#F4F4F4,bg=#013A6F,bold"
-setw -g window-status-current-format "#[fg=#013A6F,bg=#141D3A]◖#[bg=#013A6F]#{?window_zoomed_flag,#[fg=#EBBD5F] 󰊓,}#{?pane_synchronized,#[fg=#EBBD5F] 󰓦,}#[fg=#4EADE1] #I #[fg=#F4F4F4]#W #[bg=#141D3A]#[fg=#013A6F]◗#[default]"
+setw -g window-status-style           "fg=#8A8FA7,bg={{ .terminals.styles.work.foundation }}"
+setw -g window-status-activity-style  "none"
+setw -g window-status-bell-style      "none"
+setw -g window-status-format          "#[fg=#8A8FA7,bg={{ .terminals.styles.work.foundation }}] #I #W#{?window_zoomed_flag, #[fg={{ .terminals.styles.work.gold }}]󰊓,}#{?pane_synchronized, #[fg={{ .terminals.styles.work.gold }}]󰓦,}#{?window_activity_flag, #[fg={{ .terminals.styles.work.gold }}]󰂞,}#{?window_bell_flag, #[fg={{ .terminals.styles.work.gold }}]󰂚,}#{?window_marked_flag, #[fg={{ .terminals.styles.work.gold }}]󰃀,} "
+setw -g window-status-current-style   "fg={{ .terminals.styles.work.feather }},bg={{ .terminals.styles.work.legacy }},bold"
+setw -g window-status-current-format  "#[fg={{ .terminals.styles.work.legacy }},bg={{ .terminals.styles.work.foundation }}]#[bg={{ .terminals.styles.work.legacy }}]#{?window_zoomed_flag,#[fg={{ .terminals.styles.work.gold }}] 󰊓,}#{?pane_synchronized,#[fg={{ .terminals.styles.work.gold }}] 󰓦,}#[fg={{ .terminals.styles.work.vivid }}] #I #[fg={{ .terminals.styles.work.feather }}]#W #[bg={{ .terminals.styles.work.foundation }}]#[fg={{ .terminals.styles.work.legacy }}]#[default]"
 
 # Status left: {Prefix indicator} {Session name}
-set -g status-left '#{prefix_highlight}'
-set -ga status-left "#[fg=#89B4FA,bg=#141D3A,bold] #S #[default]"
-set -ga status-left "#[fg=#4EADE1,bg=#141D3A] │ #[default]"
+set -g status-left  '#{prefix_highlight}'
+set -ga status-left "#[fg=#89B4FA,bg={{ .terminals.styles.work.foundation }},bold] #S #[default]"
+set -ga status-left "#[fg={{ .terminals.styles.work.vivid }},bg={{ .terminals.styles.work.foundation }}] │ #[default]"
 
 # Status right: {Date} │ {Time} │ {Battery}
-set -g status-right ''
-set -ga status-right ' #[fg=#4EADE1]│#[default]'
+set -g status-right  ''
+set -ga status-right ' #[fg={{ .terminals.styles.work.vivid }}]│#[default]'
 set -ga status-right ' #[fg=#8A8FA7]%a %m/%d'
-set -ga status-right ' #[fg=#4EADE1]│#[default]'
-set -ga status-right ' #[fg=#EBBD5F,bold]%H:%M#[default]'
-set -ga status-right ' #[fg=#4EADE1]│#[default]'
+set -ga status-right ' #[fg={{ .terminals.styles.work.vivid }}]│#[default]'
+set -ga status-right ' #[fg={{ .terminals.styles.work.gold }},bold]%H:%M#[default]'
+set -ga status-right ' #[fg={{ .terminals.styles.work.vivid }}]│#[default]'
 set -ga status-right ' #{battery_color_charge_fg}#{battery_icon_charge}#{battery_color_status_fg} #{battery_remain} '
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -86,38 +121,79 @@ set -ga status-right ' #{battery_color_charge_fg}#{battery_icon_charge}#{battery
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Prefix highlight
-set -g @prefix_highlight_fg '#FFFFFF'
-set -g @prefix_highlight_bg '#C23E26'
+set -g @prefix_highlight_fg           '{{ .terminals.styles.work.white }}'
+set -g @prefix_highlight_bg           '{{ .terminals.styles.work.lilred }}'
 set -g @prefix_highlight_empty_prompt '    '
 
 # Battery
 set -g @batt_remain_short true
-set -g @batt_color_charge_primary_tier8   '#53A02D'
-set -g @batt_color_charge_primary_tier7   '#ABF846'
-set -g @batt_color_charge_primary_tier6   '#DEFA49'
-set -g @batt_color_charge_primary_tier5   '#F3D23F'
-set -g @batt_color_charge_primary_tier4   '#EAA934'
-set -g @batt_color_charge_primary_tier3   '#E3832B'
-set -g @batt_color_charge_primary_tier2   '#DE6223'
-set -g @batt_color_charge_primary_tier1   '#C23E26'
-set -g @batt_color_charge_secondary_tier8 '#333333'
-set -g @batt_color_charge_secondary_tier7 '#333333'
-set -g @batt_color_charge_secondary_tier6 '#333333'
-set -g @batt_color_charge_secondary_tier5 '#333333'
-set -g @batt_color_charge_secondary_tier4 '#333333'
-set -g @batt_color_charge_secondary_tier3 '#333333'
-set -g @batt_color_charge_secondary_tier2 '#333333'
-set -g @batt_color_charge_secondary_tier1 '#333333'
-set -g @batt_color_status_primary_charged       '#2B5117'
-set -g @batt_color_status_primary_charging      '#EBBD5F'
-set -g @batt_color_status_primary_discharging   '#745DF5'
-set -g @batt_color_status_primary_attached      '#030A50'
-set -g @batt_color_status_primary_unknown       '#4E4E4E'
-set -g @batt_color_status_secondary_charged     '#141D3A'
-set -g @batt_color_status_secondary_charging    '#141D3A'
-set -g @batt_color_status_secondary_discharging '#141D3A'
-set -g @batt_color_status_secondary_attached    '#141D3A'
-set -g @batt_color_status_secondary_unknown     '#141D3A'
+set -g @batt_color_charge_primary_tier8           '#53A02D'
+set -g @batt_color_charge_primary_tier7           '#ABF846'
+set -g @batt_color_charge_primary_tier6           '#DEFA49'
+set -g @batt_color_charge_primary_tier5           '#F3D23F'
+set -g @batt_color_charge_primary_tier4           '#EAA934'
+set -g @batt_color_charge_primary_tier3           '#E3832B'
+set -g @batt_color_charge_primary_tier2           '#DE6223'
+set -g @batt_color_charge_primary_tier1           '{{ .terminals.styles.work.lilred }}'
+set -g @batt_color_charge_secondary_tier8         '#333333'
+set -g @batt_color_charge_secondary_tier7         '#333333'
+set -g @batt_color_charge_secondary_tier6         '#333333'
+set -g @batt_color_charge_secondary_tier5         '#333333'
+set -g @batt_color_charge_secondary_tier4         '#333333'
+set -g @batt_color_charge_secondary_tier3         '#333333'
+set -g @batt_color_charge_secondary_tier2         '#333333'
+set -g @batt_color_charge_secondary_tier1         '#333333'
+set -g @batt_color_status_primary_charged         '#2B5117'
+set -g @batt_color_status_primary_charging        '{{ .terminals.styles.work.gold }}'
+set -g @batt_color_status_primary_discharging     '#745DF5'
+set -g @batt_color_status_primary_attached        '#030A50'
+set -g @batt_color_status_primary_unknown         '#4E4E4E'
+set -g @batt_color_status_secondary_charged       '{{ .terminals.styles.work.foundation }}'
+set -g @batt_color_status_secondary_charging      '{{ .terminals.styles.work.foundation }}'
+set -g @batt_color_status_secondary_discharging   '{{ .terminals.styles.work.foundation }}'
+set -g @batt_color_status_secondary_attached      '{{ .terminals.styles.work.foundation }}'
+set -g @batt_color_status_secondary_unknown       '{{ .terminals.styles.work.foundation }}'
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  Menu                                                        ║
+# ╚══════════════════════════════════════════════════════════════╝
+set -g @menus_format_title            "'#[align=cenre] #{@menu_name} '"
+set -g @menus_border_type             'rounded'
+set -g @menus_simple_style_selected   'fg={{ .terminals.styles.work.feather }},bg={{ .terminals.styles.work.legacy }}'
+set -g @menus_simple_style            'fg={{ .terminals.styles.work.sky }},bg=transparent'
+set -g @menus_simple_style_border     'fg={{ .terminals.styles.work.vivid }}'
+set -g @menus_nav_next                '#[fg={{ .terminals.styles.work.sky }}]▶'
+set -g @menus_nav_prev                '#[fg={{ .terminals.styles.work.sky }}]◀'
+set -g @menus_nav_home                '#[fg={{ .terminals.styles.work.gold }}]🏠'
+# Locations quick reference
+#
+# ╔═══╤═════🮤X-only🮥════════════╦═══╤═════════🮤Both Axis🮥═════════════╗
+# ║ R │ right side of terminal  ║ C │ Center of Terminal              ║
+# ║   │                         ║ P │ Bottom-left of pane             ║
+# ╠═══╪═════🮤Y-only🮥════════════╣ M │ Mouse position                  ║
+# ║ S │ Line above/below status ║ W │ Window position on status line  ║
+# ╚═══╧═════════════════════════╩═══╧═════════════════════════════════╝
+set -g @menus_location_x              'W'
+set -g @menus_location_y              'W'
+
+
+# Keybinding Notes:
+#
+# bindkey flags:
+#   -n = an alias for `-T root`
+#   -r = key may be repeated (see initial-repeat-time and repeat-time settings)
+#   -N {note} = note shown when using `list-keys -N`
+#   -T {key_table} = which key table to bind; when not set, it's `prefix`
+#                     prefix  => `C-b` + `{key}`
+#                     root    => `{key}`
+# keys:
+#   Control = C-{key}, ^-{key}
+#   Shift   = S-{key}
+#   Alt     = M-{key}
+#   Up, Down, Left, Right,
+#   BSpace, BTab, DC (Delete), End, Enter, Escape,
+#   F1 to F12, Home, IC (Insert), NPage/PageDown/PgDn,
+#   PPage/PageUp/PgUp, Space, and Tab
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Clipboard                                                   ║
@@ -200,5 +276,6 @@ set -g @plugin 'tmux-plugins/tmux-logging'
 set -g @plugin 'tmux-plugins/tmux-cpu'
 set -g @plugin 'thewtex/tmux-mem-cpu-load'
 set -g @plugin 'sainnhe/tmux-fzf'
+set -g @plugin 'jaclu/tmux-menus'
 
 run '~/.tmux/plugins/tpm/tpm'

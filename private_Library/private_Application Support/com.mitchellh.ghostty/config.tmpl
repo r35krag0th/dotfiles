@@ -1,0 +1,124 @@
+# vim: ft=conf.chezmoitmpl
+
+# Notifications
+desktop-notifications = true
+notify-on-command-finish = unfocused
+
+progress-style = true
+auto-update = download
+auto-update-channel = stable
+link-url = true
+link-previews = osc8
+
+# https://r35.net
+
+# Font
+window-title-font-family = Sys
+font-family = "PragmataPro VF Liga"
+font-size = 20
+font-feature = "+liga +dlig +calt +ss12 +ss13 +rlig -hwid"
+window-padding-x = 10
+window-padding-y = 10,0
+window-padding-color = background
+window-padding-balance = true
+
+# Efficiency
+clipboard-trim-trailing-spaces = true
+copy-on-select = true
+cursor-click-to-move = true
+
+# Shell
+command = /opt/homebrew/bin/fish
+shell-integration = fish
+
+# Aesthetics
+# theme = TokyoNight Night
+# theme = Banana Blueberry
+# theme = Carbonfox
+
+# Ultra dark BGs
+# ===============
+# - Modus Vivendi is nice, but the 5 is too pink and less magenta
+# - Liquid Carbon Tranparent is nice; the reds are VERY red; very saturated theme
+# - Firefox Dev is nice.  Not fully ultra dark.
+# - Citruszest is nice, but not fully ultra dark
+# - Argonaut is good, (5) is pretty dark.
+
+# theme = Argonaut
+# theme = Citruszest
+theme = {{ .terminals.ghostty.theme }}
+# theme = Modus Vivendi
+window-theme = "ghostty"
+window-subtitle = "working-directory"
+macos-icon = custom-style
+macos-icon-ghost-color = "{{ .terminals.styles.work.vivid }}"
+macos-icon-screen-color = "{{ .terminals.styles.work.foundation }}"
+unfocused-split-opacity = 0.95
+split-divider-color = #524f67
+
+# Window Options
+macos-titlebar-style = transparent
+# macos-titlebar-style = hidden
+
+# Key Bindings
+# ============
+# Trigger Sequence Reference: https://ghostty.org/docs/config/keybind/sequence
+# Actions Reference: https://ghostty.org/docs/config/keybind/reference
+
+# Make left-opt -> alt
+macos-option-as-alt = left
+
+# Split Management
+# ----------------
+
+# Window Management (Scale)
+# -------------------------
+# keybind = alt+w>m=toggle_maximize            # NOTE: Only works on Linux
+# keybind = alt+w>f=toggle_fullscreen
+keybind = alt+w>alt+d=toggle_window_decorations
+
+# This depends on what mode we want to be running in.
+{{- if (eq .terminals.ghostty.keybind_style "zellij") }}
+# Zellij-Style Keybinds enabled
+# ---------------------
+# [Splits]
+# -> Creation
+keybind = alt+n=new_split:auto
+keybind = alt+p>d=new_split:down
+keybind = alt+p>u=new_split:up
+keybind = alt+p>l=new_split:left
+keybind = alt+p>r=new_split:right
+keybind = alt+z=toggle_split_zoom
+keybind = alt+\=toggle_split_zoom
+# -> Goodies
+keybind = alt+==equalize_splits
+keybind = ctrl+shift+\=toggle_fullscreen
+# -> Movement
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:down
+keybind = alt+k=goto_split:up
+keybind = alt+l=goto_split:right
+
+# [Windows]
+keybind = alt+w>[=goto_window:previous
+keybind = alt+w>]=goto_window:next
+
+# [Tabs]
+keybind = alt+t>n=new_tab
+keybind = alt+[=previous_tab
+keybind = alt+]=next_tab
+
+# [Rename]
+keybind = alt+t>r=prompt_tab_title
+# keybind = alt+r=RESIZE MODE
+
+# [Config]
+keybind = alt+f1=open_config
+keybind = alt+f5=reload_config
+{{- end }}
+
+# [Fun Things]
+keybind = global:alt+grave_accent=toggle_quick_terminal
+keybind = alt+c=copy_url_to_clipboard
+keybind = f12=clear_screen
+keybind = f2=prompt_surface_title

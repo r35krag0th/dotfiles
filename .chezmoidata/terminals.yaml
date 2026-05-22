@@ -1,0 +1,18 @@
+terminals:
+  styles:
+    work:
+      foundation: "#141D3A"
+      legacy: "#013A6F"
+      welcome: "#0075C3"
+      vivid: "#4EADE1"
+      gold: "#EBBD5F"
+      charcoal: "#2F2F2F"
+      feather: "#F4F4F4"
+      sky: "#DCEFF9"
+      white: "#FFFFFF"
+      lilred: "#C23E26"
+  ghostty:
+    keybind_style: default
+    theme: "Liquid Carbon Transparent"
+  tmux:
+    keybind_style: zellij
