@@ -14,6 +14,7 @@ return {
     explorer = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
+    image = { enabled = true },
     picker = {
       enabled = true,
       -- Show hidden files by default (part 1)

@@ -18,6 +18,10 @@ end
 
 local M = {}
 
+M.setup = function()
+  -- require('mason').install({})
+end
+
 M.list_github_tree = function()
   local response = curl.get(github_tree_url(), {
     headers = github_headers,

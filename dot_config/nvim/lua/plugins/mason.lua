@@ -1,54 +1,16 @@
 return {
-  -- {
-  --   "mason-org/mason-lspconfig.nvim",
-  --   dependencies = {
-  --     {
-  --       "mason-org/mason.nvim",
-  --       enabled = true,
-  --       version = "1.*",
-  --       opts = {},
-  --     },
-  --     { "neovim/nvim-lspconfig" },
-  --   },
-  --   opts = {
-  --     -- automatic_enable can be true/false or a list of names
-  --     automatic_enable = true,
-  --     ensure_installed = {
-  --       "bashls",
-  --       "jqls",
-  --       "jsonls",
-  --       "lua_ls",
-  --       -- "bash-language-server",
-  --       -- "dockerfile-language-server",
-  --       -- "gh",
-  --       -- "gh-actions-language-server",
-  --       -- "gofumpt",
-  --       -- "goimports",
-  --       -- "golangci-lint",
-  --       -- "golangci-lint-langserver",
-  --       -- "gopls",
-  --       -- "hadolint", -- dockerfile linter and validator
-  --       -- "jq",
-  --       -- "json-lsp",
-  --       -- "jsonnet-language-server",
-  --       -- "lua-language-server",
-  --       -- "lua_ls",
-  --       -- "markdown-toc",
-  --       -- "markdownlint",
-  --       -- "markdownlint-cli2",
-  --       -- "marksman",
-  --       -- "pydocstyle",
-  --       -- "pyright",
-  --       -- "python-lsp-server",
-  --       -- "ruff",
-  --       -- "shellcheck",
-  --       -- "shfmt",
-  --       -- "sqlfluff", -- dialect-flexible SQL linter
-  --       -- "stylua",
-  --       -- "taplo", -- TOML toolkit
-  --       -- "terraform-ls", -- Hashicorp Official Terraform LSP
-  --       -- "yaml-language-server",
-  --     },
-  --   },
-  -- },
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = function(opts)
+      opts.automatic_enable = {
+        exclude = require("r35.lsp").not_auto_enabled(),
+      }
+      opts.ensure_installed = require("r35.lsp").enabled()
+      return opts
+    end,
+    dependencies = {
+      { "mason-org/mason.nvim", opts = {} },
+      "neovim/nvim-lspconfig",
+    },
+  },
 }
