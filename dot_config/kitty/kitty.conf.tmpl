@@ -4,59 +4,26 @@
 {{-   $brewPrefix = "/usr/local" -}}
 {{- end -}}
 
-# Font Settings
-font_family PragmataPro VF Mono Liga
-font_size 18.0
-modify_font cell_height 110%
+enable_audio_bell         no
+{{- if eq .chezmoi.os "darwin" }}
+# NOTE: I have movied away from using multiplexers so we're dropping this shell setting
+# shell                     {{ $brewPrefix }}/bin/fish --login -c "terminal-multiplexer-picker"
+editor                    {{ $brewPrefix }}/bin/nvim
+macos_option_as_alt       left
+{{- else }}
+# NOTE: I have movied away from using multiplexers so we're dropping this shell setting
+# shell                     /usr/bin/fish --login -c "terminal-multiplexer-picker"
+editor                    /usr/bin/nvim
+{{- end }}
+allow_remote_control      yes
+allow_hyperlinks          yes
+shell_integration         enabled
+confirm_os_window_close   0
 
-# Scrollback Settings
-scrollback_lines 10000
-
-# URL Style/Controls
-url_color #0087bd
-url_style curly
-detect_urls yes
-
-# Audible Bell
-enable_audio_bell no
-bell_on_tab "🔔 "
-
-# Window Feels
-window_padding_width 5 8
-hide_window_decorations titlebar-only
-
-# Tab Bar — hidden since we use Zellij exclusively
-tab_bar_style hidden
+# Includes
+globinclude conf.d/**/*.conf
+globinclude keys.d/**/*.conf
 
 # Shell Settings
-{{- if eq .chezmoi.os "darwin" }}
-shell {{ $brewPrefix }}/bin/fish --login -c "terminal-multiplexer-picker"
-editor {{ $brewPrefix }}/bin/nvim
-{{- else }}
-shell /usr/bin/fish --login -c "terminal-multiplexer-picker"
-editor /usr/bin/nvim
-{{- end }}
 allow_remote_control yes
 shell_integration enabled
-
-{{- if eq .chezmoi.os "darwin" }}
-
-# macOS-specific
-macos_option_as_alt left
-{{- end }}
-
-# Cursor
-cursor #ebfafa
-cursor_text_color #0D1116
-
-# No confirmation on close
-confirm_os_window_close 0
-
-# Key Bindings
-map kitty_mod+\ toggle_fullscreen
-map f1 toggle_marker iregex 1 \\bERROR\\b 2 \\bWARNING\\b 3 \\bEXCEPTION\\b
-map shift+f1 new -a 100,100
-map f8 launch --title "Today's Notes" --copy-env --type=os-window --cwd ~/notes/notes {{ .chezmoi.homeDir }}/.local/share/bob/nvim-bin/nvim +YNToday
-
-# Theme
-include current-theme.conf
