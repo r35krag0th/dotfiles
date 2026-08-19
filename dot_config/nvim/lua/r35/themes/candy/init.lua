@@ -142,7 +142,7 @@ function M.groups()
   ["Underlined"] = { fg = C["info"], underline = true },
   ["Ignore"] = { fg = C["line_nr"] },
   ["Error"] = { fg = C["error"] },
-  ["Todo"] = { fg = C["bg"], bg = C["hint"], bold = true },
+  ["Todo"] = { fg = C["hint"], bg = C["bg_vt_hint"], bold = true },
   -- Diagnostics
   ["DiagnosticError"] = { fg = C["error"] },
   ["DiagnosticWarn"] = { fg = C["warning"] },
@@ -227,10 +227,12 @@ function M.groups()
   ["@punctuation.bracket"] = { fg = C["fg_muted"] },
   ["@punctuation.special"] = { fg = C["boolean"] },
   ["@comment"] = { fg = C["comment"], italic = true },
-  ["@comment.error"] = { fg = C["bg"], bg = C["error"], bold = true },
-  ["@comment.warning"] = { fg = C["bg"], bg = C["warning"], bold = true },
-  ["@comment.todo"] = { fg = C["bg"], bg = C["hint"], bold = true },
-  ["@comment.note"] = { fg = C["bg"], bg = C["info"], bold = true },
+  -- Coloured text on a faint tint, not an inverted badge: neorg links real
+  -- content at these, where a solid slab swallows the line.
+  ["@comment.error"] = { fg = C["error"], bg = C["bg_vt_error"], bold = true },
+  ["@comment.warning"] = { fg = C["warning"], bg = C["bg_vt_warning"], bold = true },
+  ["@comment.todo"] = { fg = C["hint"], bg = C["bg_vt_hint"], bold = true },
+  ["@comment.note"] = { fg = C["info"], bg = C["bg_vt_info"], bold = true },
   ["@markup.strong"] = { bold = true },
   ["@markup.italic"] = { italic = true },
   ["@markup.strikethrough"] = { strikethrough = true },
@@ -252,6 +254,18 @@ function M.groups()
   ["@tag.builtin"] = { fg = C["keyword"] },
   ["@tag.attribute"] = { fg = C["parameter"] },
   ["@tag.delimiter"] = { fg = C["fg_muted"] },
+
+  -- Neorg. Its todo markers link at @comment.* by default, which is meant
+  -- for code tags; these state them directly instead.
+  ["@neorg.todo_items.urgent"] = { fg = C["error"], bold = true },
+  ["@neorg.todo_items.on_hold"] = { fg = C["info"] },
+  ["@neorg.todo_items.uncertain"] = { fg = C["boolean"] },
+  ["@neorg.todo_items.pending"] = { fg = C["constant"] },
+  ["@neorg.todo_items.done"] = { fg = C["string"] },
+  ["@neorg.todo_items.cancelled"] = { fg = C["line_nr"], strikethrough = true },
+  ["@neorg.todo_items.recurring"] = { fg = C["keyword"] },
+  ["@neorg.todo_items.undone"] = { fg = C["fg_muted"] },
+  ["@neorg.markup.spoiler"] = { fg = C["fg_muted"], bg = C["fg_muted"] },
   }
 
   -- LSP semantic tokens layer on top of Treesitter and win, so each one is
