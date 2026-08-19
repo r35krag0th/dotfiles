@@ -1,6 +1,12 @@
 local M = {}
 
-local desiredTheme = "tokyonight"
+local desiredTheme = "candy"
+
+-- NOTE: candy is deliberately absent from themeRegistry. The registry feeds
+-- deps() -> lazy.nvim plugin specs, and candy is local (lua/r35/themes/candy),
+-- not a repo to clone. setTheme() runs `colorscheme <name>` for whatever it is
+-- given, so a local theme works without being registered -- which is also why
+-- tokyonight worked here despite never being listed.
 local themeRegistry = {
   nightfox = "EdenEast/nightfox.nvim",
   rosepine = "rose-pine/neovim",
