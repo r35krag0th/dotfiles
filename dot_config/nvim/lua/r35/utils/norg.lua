@@ -96,6 +96,15 @@ end
 ---@return boolean # true when the cursor is parked on a heading's own line
 M.enclosing_headings = function(buf)
   local row = vim.api.nvim_win_get_cursor(0)[1] - 1
+
+  -- Re-parse before reading ranges. A previous regeneration in the same tick
+  -- leaves the tree describing the pre-edit buffer, and a stale sub-heading
+  -- range spans far past its real end -- which deletes most of the document.
+  local parser = vim.treesitter.get_parser(buf, "norg")
+  if parser then
+    parser:parse()
+  end
+
   local node = vim.treesitter.get_node({ bufnr = buf, pos = { row, 0 } })
   local chain, on_heading_line = {}, false
 
