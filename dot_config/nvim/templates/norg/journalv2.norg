@@ -1,0 +1,41 @@
+@document.meta
+title: W{WEEK_NUMBER} / {DAY}{DAY_ORDINAL} ({WEEKDAY_SHORT})
+  description: Notes for {WEEKDAY_SHORT}, {MONTH_SHORT} {DAY}{DAY_ORDINAL}, {YEAR}
+authors: {AUTHOR}
+categories: [
+{YEAR} {MONTH_SHORT} Logs,
+{YEAR}-Q{QUARTER} Logs,
+{YEAR} Logs
+]
+created: {TODAY}
+updated: {TODAY}
+version: 2.0.0
+@end
+
+%/NOTE: Automatically generated from a template via neorg-templates%
+
+.toc
+
+* Navigation
+
+  {{:{YESTERDAY_N_FILENAME}:}}[⬅️  Yesterday] 🫸 {{:$/index:}}[Index] 🫷 {{:{TOMORROW_N_FILENAME}:}}[Tomorrow ➡️]
+
+* Start of Day
+** How are you feeling this morning?
+
+   > Type Here
+
+** What is your plan for today?
+
+   - ( ) Something
+
+* Daily Enrichment
+
+* Pre-Lunch
+
+* Post-Lunch
+
+* End of Day
+** What did you accomplish?
+** What are you going to work on tomorrow?
+** How do you feel about your day?

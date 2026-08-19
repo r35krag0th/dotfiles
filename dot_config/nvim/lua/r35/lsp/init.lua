@@ -77,6 +77,27 @@ function M.setup()
       "serve",
     },
   })
+
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "kitty",
+    callback = function()
+      vim.lsp.start({
+        name = "kitty-lsp",
+        cmd = { "kitty-lsp", "--stdio" },
+      })
+    end,
+
+    vim.filetype.add({
+      filename = {
+        ["kitty.conf"] = "kitty",
+      },
+      pattern = {
+        [".*/kitty/.*%.conf"] = "kitty",
+        [".*/kitty/conf.d/.*%.conf"] = "kitty",
+        [".*/kitty/keys.d/.*%.conf"] = "kitty",
+      },
+    }),
+  })
 end
 
 return M

@@ -42,3 +42,6 @@ fish_add_path "$BUN_INSTALL/bin"
 
 # Initialize the Starship prompt -- https://starship.rs/
 starship init fish | source
+
+# Pi
+fish_add_path "/Users/bobsaska/.local/share/mise/installs/node/25.8.1/bin"

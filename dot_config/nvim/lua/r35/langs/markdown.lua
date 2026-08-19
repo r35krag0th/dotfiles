@@ -198,7 +198,10 @@ function M.plugins()
         telescope = {
           enabled = true,
           setup_config = true,
-          load_extensions = { "ui-select", "emoji" },
+          load_extensions = {
+            "ui-select",
+            -- "emoji",
+          },
         },
       },
     },
