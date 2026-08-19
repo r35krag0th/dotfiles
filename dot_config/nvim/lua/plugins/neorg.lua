@@ -56,6 +56,13 @@ return {
       { "<localleader>ju", "<cmd>Neorg journal toc update<CR>", desc = "Update the Journal TOC index" },
       { "<localleader>jT", "<cmd>Neorg journal toc open<CR>", desc = "Open the Journal TOC index" },
       { "<localleader>jl", "<cmd>Neorg templates load journalv2<CR>", desc = "Apply Journal v2 Template" },
+      {
+        "<localleader>ns",
+        function()
+          require("r35.utils.norg").regenerate_summary()
+        end,
+        desc = "Regenerate Workspace Summary Under Heading",
+      },
     },
     opts = {
       load = {
@@ -67,7 +74,48 @@ return {
           },
         },
         ["core.integrations.nvim-cmp"] = {},
-        ["core.concealer"] = {},
+        ["core.concealer"] = {
+          config = {
+            -- Icons are written as \u{} escapes on purpose. These glyphs live in
+            -- the Private Use Area and render as nothing in most editors, diffs
+            -- and terminals, so pasting them as literals is a silent-corruption
+            -- trap -- one went missing that way already.
+            --
+            -- They render two cells wide; see lua/r35/glyphs.lua and
+            -- ~/.config/kitty/conf.d/nerd_font_widths.conf for why.
+            icons = {
+              todo = {
+                undone = { icon = "\u{F0C8}" },      -- fa-square-o
+                pending = { icon = "\u{F252}" },     -- fa-hourglass-half
+                done = { icon = "\u{F00C}" },        -- fa-check
+                on_hold = { icon = "\u{F04C}" },     -- fa-pause
+                cancelled = { icon = "\u{F05E}" },   -- fa-ban
+                urgent = { icon = "\u{F071}" },      -- fa-exclamation-triangle
+                uncertain = { icon = "\u{F128}" },   -- fa-question
+                recurring = { icon = "\u{F021}" },   -- fa-refresh
+              },
+              definition = {
+                single = { icon = "\u{F02D}" },      -- fa-book
+                multi_prefix = { icon = "\u{F02D} " },
+                multi_suffix = { icon = "\u{F02D} " },
+              },
+              footnote = {
+                single = { icon = "\u{F249}" },      -- fa-sticky-note
+                multi_prefix = { icon = "\u{F249} " },
+                multi_suffix = { icon = "\u{F249} " },
+              },
+              markup = {
+                spoiler = { icon = "\u{F070}" },     -- fa-eye-slash
+              },
+              -- Deliberately left at neorg's defaults:
+              --   quote     "|" is box drawing and already correct
+              --   ordered   "1." / "A." / "i." are text labels, not icons
+              --   heading   the geometric ramp stays single width; Nerd Font
+              --             equivalents would take two cells and push every
+              --             heading right
+            },
+          },
+        },
         ["core.dirman"] = {
           config = {
             workspaces = {
@@ -219,6 +267,11 @@ return {
             -- Index the workspace when neovim launches. This process happens on a separate thread, so
             -- it doesn't significantly contribute to startup time or block neovim
             index_on_start = true,
+          },
+        },
+        ["core.esupports.metagen"] = {
+          config = {
+            type = "auto",
           },
         },
       },

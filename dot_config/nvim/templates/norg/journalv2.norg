@@ -1,11 +1,9 @@
 @document.meta
 title: W{WEEK_NUMBER} / {DAY}{DAY_ORDINAL} ({WEEKDAY_SHORT})
-  description: Notes for {WEEKDAY_SHORT}, {MONTH_SHORT} {DAY}{DAY_ORDINAL}, {YEAR}
+description: Notes for {WEEKDAY_SHORT}, {MONTH_SHORT} {DAY}{DAY_ORDINAL}, {YEAR}
 authors: {AUTHOR}
 categories: [
-{YEAR} {MONTH_SHORT} Logs,
-{YEAR}-Q{QUARTER} Logs,
-{YEAR} Logs
+{YEAR} Journals
 ]
 created: {TODAY}
 updated: {TODAY}
