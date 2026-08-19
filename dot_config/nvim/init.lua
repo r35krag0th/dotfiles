@@ -17,6 +17,10 @@ vim.g.python3_host_prog = os.getenv("HOME") .. "/.local/venv/neovim-0.12/bin/pyt
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 
+-- Nerd Font glyphs need two cells to render at their designed size. This must
+-- stay in sync with ~/.config/kitty/conf.d/nerd_font_widths.conf.
+require("r35.glyphs").setup()
+
 -- Configure the core LSP stuff
 require("r35.lsp").setup()
 
