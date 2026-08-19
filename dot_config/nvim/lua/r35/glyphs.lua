@@ -34,13 +34,68 @@ M.ranges = {
   { 0x026A0, 0x026A0, 2 }, -- the one non-PUA offender
 }
 
----Apply the widths.
----setcellwidths() rejects the whole list if any entry is invalid, so a bad range
----would silently leave every glyph at its old width. Failing loudly is better
----than a config that looks applied and is not.
+---Codepoints that must stay single width.
+---
+---'fillchars' and 'listchars' may only contain single-width characters, and
+---setcellwidths() rejects the ENTIRE call with E835 if even one of their glyphs
+---falls inside a two-cell range. LazyVim puts Nerd Font chevrons in 'fillchars'
+---(foldopen, foldclose), which lands squarely inside the Font Awesome block.
+---
+---Reading them at runtime rather than hardcoding the exceptions means changing
+---'fillchars' later cannot silently break this.
+---@return table<integer, boolean>
+local function reserved()
+  local set = {}
+  for _, name in ipairs({ "fillchars", "listchars" }) do
+    for item in vim.gsplit(vim.o[name] or "", ",", { trimempty = true }) do
+      local value = item:match("^[^:]+:(.*)$")
+      if value and value ~= "" then
+        for _, cp in ipairs(vim.fn.str2list(value)) do
+          set[cp] = true
+        end
+      end
+    end
+  end
+  return set
+end
+
+---Split ranges so none of `excluded` falls inside any of them.
+---@param ranges integer[][]
+---@param excluded table<integer, boolean>
+---@return integer[][]
+local function carve(ranges, excluded)
+  local out = {}
+  for _, r in ipairs(ranges) do
+    local first, last, width = r[1], r[2], r[3]
+    local holes = {}
+    for cp in pairs(excluded) do
+      if cp >= first and cp <= last then
+        holes[#holes + 1] = cp
+      end
+    end
+    table.sort(holes)
+    local start = first
+    for _, cp in ipairs(holes) do
+      if cp > start then
+        out[#out + 1] = { start, cp - 1, width }
+      end
+      start = cp + 1
+    end
+    if start <= last then
+      out[#out + 1] = { start, last, width }
+    end
+  end
+  return out
+end
+
+---Apply the widths, minus whatever 'fillchars'/'listchars' have claimed.
 function M.setup()
-  local ok, err = pcall(vim.fn.setcellwidths, M.ranges)
+  local excluded = reserved()
+  local ranges = carve(M.ranges, excluded)
+  local ok, err = pcall(vim.fn.setcellwidths, ranges)
   if not ok then
+    -- Failing loudly beats a config that looks applied and is not: setcellwidths
+    -- is all-or-nothing, so a rejected call leaves every glyph at its old width.
     vim.notify("r35.glyphs: setcellwidths failed: " .. tostring(err), vim.log.levels.ERROR)
   end
 end
