@@ -40,12 +40,19 @@ from kitty.tab_bar import (
 
 # ── the candy ────────────────────────────────────────────────────────────────
 #
-# Nine candies generated in OKLCH at a fixed L=0.84 / C=0.21, rotating hue only.
+# Ten candies generated in OKLCH at a fixed L=0.84 / C=0.21, rotating hue only.
 # Holding lightness and chroma constant is what makes them read as one set
-# rather than nine unrelated colours: every candy lands between 10.6:1 and
+# rather than ten unrelated colours: every candy lands between 10.6:1 and
 # 12.0:1 against the #0F1424 bar, so no hue shouts louder than its neighbours.
 # Picking them by eye in HSL could not have done this -- #FFFF00 and #0000FF are
 # both "100% saturated" yet differ roughly 12x in actual luminance.
+#
+# Marigold was added last, to split the widest gap in the wheel (Tangerine 50 to
+# Lemon 105).  A periwinkle at hue 272 was generated and rejected: sRGB is
+# pinched there, so at L=0.84 it could only reach C=0.079 of the requested 0.21
+# and landed 3.4 from both Cotton and Grape in OKLab -- closer than any existing
+# neighbour pair, which would have turned tabs 7-9 into one pale blue smear.
+# Keep hue order monotonic when adding more, or the gradient stops reading.
 #
 # INK is the text colour on an active pill: a near-black tinted with that
 # candy's *own* hue (OKLCH L=0.20, C=0.055), so cherry gets a near-black maroon
@@ -55,6 +62,7 @@ from kitty.tab_bar import (
 CANDIES: tuple[tuple[str, int, int], ...] = (
     ("Cherry",     0xFFB4B1, 0x2A090A),
     ("Tangerine",  0xFFB891, 0x280D00),
+    ("Marigold",   0xFFBD4F, 0x211300),
     ("Lemon",      0xDDD000, 0x191700),
     ("Sour Apple", 0x7FE954, 0x081B02),
     ("Spearmint",  0x00EDB5, 0x001C12),
