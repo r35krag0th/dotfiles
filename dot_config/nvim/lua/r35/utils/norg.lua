@@ -127,9 +127,12 @@ end
 ---@param on_heading_line boolean
 ---@return table|nil # one entry from `chain`, or nil to abort
 M.summary_target = function(chain, on_heading_line)
-  -- TODO(bob): 6-ish lines. Park on a heading line -> use that heading;
-  -- cursor loose in the body -> walk out to the outermost one.
-  error("r35.utils.norg.summary_target is not implemented yet")
+  -- Parked on a heading: rebuild exactly that one, however deep it is.
+  -- Loose in the body: the intent is "refresh this index", so go to the top.
+  if on_heading_line then
+    return chain[1]
+  end
+  return chain[#chain]
 end
 
 --- Regenerate the workspace summary under a heading, replacing what is there.
@@ -188,7 +191,11 @@ M.regenerate_summary = function()
 
   local from, lines = head_row + 1, generated
   if not outermost then
-    lines = M.extract_category_block(generated, vim.api.nvim_buf_get_lines(buf, head_row, head_row + 1, true)[1], target.level)
+    lines = M.extract_category_block(
+      generated,
+      vim.api.nvim_buf_get_lines(buf, head_row, head_row + 1, true)[1],
+      target.level
+    )
     if not lines then
       vim.notify("No generated block matches that heading -- has it been renamed?", vim.log.levels.WARN)
       return
