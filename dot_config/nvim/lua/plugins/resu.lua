@@ -1,3 +1,0 @@
-return {
-  "koushikxd/resu.nvim",
-}
