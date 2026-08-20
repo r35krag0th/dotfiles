@@ -1,3 +1,5 @@
+local norg_icons = require("r35.utils.norg_icons")
+
 return {
   {
     -- Neorg Dew: Breadcrumb in win-bar
@@ -50,19 +52,27 @@ return {
     version = "*",
     config = true,
     keys = {
+      -- Journal Days
       { "<localleader>jo", "<cmd>Neorg journal today<CR>", desc = "Open Today's Journal" },
       { "<localleader>jy", "<cmd>Neorg journal yesterday<CR>", desc = "Open Yesterday's Journal" },
       { "<localleader>jt", "<cmd>Neorg journal tomorrow<CR>", desc = "Open Tomorrow's Journal" },
+      -- Journal ToC (index)
       { "<localleader>ju", "<cmd>Neorg journal toc update<CR>", desc = "Update the Journal TOC index" },
       { "<localleader>jT", "<cmd>Neorg journal toc open<CR>", desc = "Open the Journal TOC index" },
+      -- Journal Template Loader
       { "<localleader>jl", "<cmd>Neorg templates load journalv2<CR>", desc = "Apply Journal v2 Template" },
+      -- Neorg globals -> index management
+      { "<localleader>Ni", "<cmd>Neorg index<CR>", desc = "Open Workspace Index" },
       {
-        "<localleader>ns",
+        "<localleader>Ngws",
         function()
           require("r35.utils.norg").regenerate_summary()
         end,
         desc = "Regenerate Workspace Summary Under Heading",
       },
+      -- Neorg globals -> search
+      { "<localleader>Nsc", "<cmd>Neorg search query categories<CR>", desc = "Search Categories" },
+      { "<localleader>Nsf", "<cmd>Neorg search query fulltext<CR>", desc = "Full-Text Search this Workspace" },
     },
     opts = {
       load = {
@@ -84,28 +94,32 @@ return {
             -- They render two cells wide; see lua/r35/glyphs.lua and
             -- ~/.config/kitty/conf.d/nerd_font_widths.conf for why.
             icons = {
-              todo = {
-                undone = { icon = "\u{F0C8}" },      -- fa-square-o
-                pending = { icon = "\u{F252}" },     -- fa-hourglass-half
-                done = { icon = "\u{F00C}" },        -- fa-check
-                on_hold = { icon = "\u{F04C}" },     -- fa-pause
-                cancelled = { icon = "\u{F05E}" },   -- fa-ban
-                urgent = { icon = "\u{F071}" },      -- fa-exclamation-triangle
-                uncertain = { icon = "\u{F128}" },   -- fa-question
-                recurring = { icon = "\u{F021}" },   -- fa-refresh
-              },
+              -- Rendered across the whole `(x)`, brackets and all: at two cells
+              -- these no longer fit inside the parentheses, and neorg's stock
+              -- renderer would overlay one cell too far and eat the `)`. See
+              -- r35.utils.norg_icons.
+              todo = norg_icons.todo({
+                undone = "\u{F0C8}", -- fa-square-o
+                pending = "\u{F252}", -- fa-hourglass-half
+                done = "\u{F00C}", -- fa-check
+                on_hold = "\u{F04C}", -- fa-pause
+                cancelled = "\u{F05E}", -- fa-ban
+                urgent = "\u{F071}", -- fa-exclamation-triangle
+                uncertain = "\u{F128}", -- fa-question
+                recurring = "\u{F021}", -- fa-refresh
+              }),
               definition = {
-                single = { icon = "\u{F02D}" },      -- fa-book
+                single = { icon = "\u{F02D}" }, -- fa-book
                 multi_prefix = { icon = "\u{F02D} " },
                 multi_suffix = { icon = "\u{F02D} " },
               },
               footnote = {
-                single = { icon = "\u{F249}" },      -- fa-sticky-note
+                single = { icon = "\u{F249}" }, -- fa-sticky-note
                 multi_prefix = { icon = "\u{F249} " },
                 multi_suffix = { icon = "\u{F249} " },
               },
               markup = {
-                spoiler = { icon = "\u{F070}" },     -- fa-eye-slash
+                spoiler = { icon = "\u{F070}" }, -- fa-eye-slash
               },
               -- Deliberately left at neorg's defaults:
               --   quote     "|" is box drawing and already correct

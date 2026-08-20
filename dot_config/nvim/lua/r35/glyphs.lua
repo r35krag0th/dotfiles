@@ -100,4 +100,86 @@ function M.setup()
   end
 end
 
+---Neovim's sign column is two cells wide and `sign_text` may not exceed it.
+local SIGN_CELLS = 2
+
+---Width `cp` will occupy once `setup()` has run -- whether or not it has yet.
+---
+---`strdisplaywidth` reports the table currently installed, which makes it the
+---wrong instrument here. Plugin `opts` are resolved while `require("config.lazy")`
+---runs, and init.lua cannot call `setup()` until after that returns, because
+---`reserved()` has to read the 'fillchars' LazyVim sets during its own setup.
+---An icon measured in that window is still one cell wide and looks like it
+---fits, right up until `setup()` widens it out from under the stored value.
+---
+---Consulting `M.ranges` instead answers the question that actually matters --
+---how wide will this end up? -- identically from either side of that ordering.
+---@param cp integer
+---@return integer
+local function intended_width(cp)
+  for _, range in ipairs(M.ranges) do
+    if cp >= range[1] and cp <= range[2] then
+      return range[3]
+    end
+  end
+  return vim.fn.strdisplaywidth(vim.fn.nr2char(cp))
+end
+
+---@param text string
+---@return integer
+local function intended_cells(text)
+  local total = 0
+  for _, cp in ipairs(vim.fn.str2list(text)) do
+    total = total + intended_width(cp)
+  end
+  return total
+end
+
+---Fit `text` into the sign column's two-cell budget.
+---
+---This is the other half of the bargain `setup()` strikes. Promoting a glyph to
+---two cells spends the entire sign budget on the glyph itself, so the padding
+---icon sets habitually ship with -- LazyVim's diagnostic icons are a glyph plus
+---a trailing space -- pushes `sign_text` to three cells, and every
+---`nvim_buf_set_extmark` carrying it fails with "Invalid 'sign_text'".
+---
+---Widths come from `M.ranges`, so this tracks the declared widths on its own:
+---widen a range and the icons inside it start getting trimmed, with no second
+---list to keep in sync and no constraint on when this may be called.
+---
+---(Codepoints `setup()` carves out for 'fillchars'/'listchars' are measured at
+---their declared width rather than the one cell they keep. Those glyphs are
+---never sign text, so the distinction has nowhere to show up.)
+---@param text string
+---@return string
+function M.fit_sign(text)
+  if intended_cells(text) <= SIGN_CELLS then
+    return text
+  end
+
+  -- The common case: padding that used to fit and no longer does.
+  local trimmed = vim.trim(text)
+  if intended_cells(trimmed) <= SIGN_CELLS then
+    return trimmed
+  end
+
+  -- Genuinely too wide. Drop whole codepoints rather than bytes so the result
+  -- stays valid UTF-8, and say so out loud: a silently clipped icon reads as a
+  -- font problem and sends you hunting in entirely the wrong place.
+  local fitted, width = "", 0
+  for _, cp in ipairs(vim.fn.str2list(trimmed)) do
+    local cells = intended_width(cp)
+    if width + cells > SIGN_CELLS then
+      break
+    end
+    fitted, width = fitted .. vim.fn.nr2char(cp), width + cells
+  end
+
+  vim.notify(
+    ("r35.glyphs: sign text %q is %d cells, truncated to %q"):format(trimmed, intended_cells(trimmed), fitted),
+    vim.log.levels.WARN
+  )
+  return fitted
+end
+
 return M
