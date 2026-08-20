@@ -18,6 +18,7 @@
     },
     "fetch": {
       "args": [
+        "--with='mcp<2'",
         "mcp-server-fetch"
       ],
       "command": "uvx",
@@ -120,6 +121,7 @@
     },
     "time": {
       "args": [
+        "--with='mcp<2'",
         "mcp-server-time"
       ],
       "command": "uvx",
@@ -136,5 +138,8 @@
     "kube-schemas": {
       "url": "https://schemas-mcp.r35.dev/mcp"
     }
-  }
+  },
+  "litellm": {
+    "url": "https://litellm.r35.dev/mcp/"
+  },
 }

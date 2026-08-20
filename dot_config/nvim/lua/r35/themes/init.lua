@@ -15,6 +15,17 @@ local themeRegistry = {
   koda = "oskarnurm/koda.nvim",
 }
 
+---The colorscheme this module will select.
+---
+---Plugin `opts` are resolved while `require("config.lazy")` runs, which is
+---before init.lua can call setTheme(), so `vim.g.colors_name` is not yet set
+---when a plugin spec needs to know the theme. Asking what will be chosen
+---answers the question correctly from either side of that ordering.
+---@return string
+function M.name()
+  return desiredTheme
+end
+
 ---Sets the colorscheme
 function M.setTheme(themeOverride)
   themeOverride = themeOverride or desiredTheme
