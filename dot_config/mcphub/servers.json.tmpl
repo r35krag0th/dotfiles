@@ -1,40 +1,6 @@
 {{/* vim: set ft=json.chezmoitmpl: */}}
 {
   "mcpServers": {
-    "authentik-unofficial": {
-      "args": [
-        "authentik-diag-mcp",
-        "--base-url",
-        "${cmd:op read op://k8s-production/nstsp2wkuzjlkyum5v5vesrmxi/appUrl}",
-        "--token",
-        "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/nstsp2wkuzjlkyum5v5vesrmxi/password}"
-      ],
-      "command": "uvx",
-      "disabled": false
-    },
-    "cloudflare-docs": {
-      "transport": "sse",
-      "url": "https://docs.mcp.cloudflare.com/sse"
-    },
-    "fetch": {
-      "args": [
-        "--with='mcp<2'",
-        "mcp-server-fetch"
-      ],
-      "command": "uvx",
-      "disabled": false
-    },
-    "github": {
-      "headers": {
-        "Authorization": "Bearer ${cmd:gh auth token}"
-      },
-      "url": "https://api.githubcopilot.com/mcp/"
-    },
-    "gitlab-native": {
-      "autoApprove": [],
-      "disabled": false,
-      "url": "https://${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/tbaqn5dd2uedvitwcu7husp6xq/hostname}/api/v4/mcp"
-    },
     "glab": {
       "args": [
         "mcp",
@@ -67,7 +33,7 @@
         "bupd/harbor-mcp:latest"
       ],
       "command": "docker",
-      "env": /authentik{
+      "env": {
         "HARBOR_API_BASE": "https://${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/hostname}/api/v2.0",
         "HARBOR_AUTH_PASS": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/username}",
         "HARBOR_AUTH_USER": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/credential}"
@@ -87,46 +53,6 @@
       ],
       "command": "npx"
     },
-    "notion": {
-      "url": "https://mcp.notion.com/mcp"
-    },
-    "sequentialthinking": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
-      "command": "npx"
-    },
-    "sqlite": {
-      "args": [
-        "mcp-server-sqlite",
-        "--db-path",
-        "${DB_PATH}"
-      ],
-      "command": "uvx",
-      "disabled": true
-    },
-    "task_master": {
-      "args": [
-        "-y",
-        "--package=task-master-ai",
-        "task-master-ai"
-      ],
-      "command": "npx",
-      "disabled": true,
-      "env": {
-        "ANTHROPIC_API_KEY": "${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/rpgctfzch2tq5flv6z3dghkld4/credential}",
-        "OPENAI_API_KEY": "${cmd:op read op://dihsvyqd4nqdjlkuy3vny3pk7i/ypj3wrnivyl4gpyvlnnmncyfjm/credential}"
-      }
-    },
-    "time": {
-      "args": [
-        "--with='mcp<2'",
-        "mcp-server-time"
-      ],
-      "command": "uvx",
-      "disabled": false
-    },
     "radiant": {
       "headers": {
         "Authorization": "Bearer ${cmd: op read op://k8s-production/radiant-prod-bootstrap/credential}",
@@ -135,11 +61,15 @@
       },
       "url": "https://api.r35.dev/radiant/mcp"
     },
-    "kube-schemas": {
-      "url": "https://schemas-mcp.r35.dev/mcp"
+    "litellm": {
+      "url": "https://litellm.r35.dev/mcp/"
+    },
+    "leyline": {
+      "diabled": true,
+      "url": "https://leyline.r35.dev/mcp"
+      "headers": {
+        "Authorization": "Bearer ${cmd: op read op://k8s-production/ucdecoiq7uapvlibigfjloofma/password}"
+      }
     }
-  },
-  "litellm": {
-    "url": "https://litellm.r35.dev/mcp/"
-  },
+  }
 }
