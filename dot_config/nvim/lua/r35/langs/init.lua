@@ -6,6 +6,7 @@ function M.init()
   M.registered_modules.yaml = require("r35.langs.yaml")
   M.registered_modules.markdown = require("r35.langs.markdown")
   M.registered_modules.cue = require("r35.langs.cue")
+  M.registered_modules.norg = require("r35.langs.norg")
   -- load up the yaml_v2 module and create a keybinding to activate it
 end
 

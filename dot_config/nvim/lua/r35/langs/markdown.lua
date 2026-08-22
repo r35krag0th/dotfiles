@@ -182,12 +182,6 @@ function M.plugins()
         }, -- Required
       },
       opts = {
-        lsp = {
-          cmd = { "iwes" },
-          name = "iwes",
-          debounce_text_changes = 500,
-          auto_format_on_save = true,
-        },
         mappings = {
           enable_markdown_mappings = true,
           enable_telescope_keybindings = false,
@@ -200,7 +194,6 @@ function M.plugins()
           setup_config = true,
           load_extensions = {
             "ui-select",
-            -- "emoji",
           },
         },
       },
