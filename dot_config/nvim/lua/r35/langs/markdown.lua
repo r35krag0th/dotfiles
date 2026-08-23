@@ -5,10 +5,13 @@ local M = {}
 -- :TSInstall markdown markdown_inline html latex typst yaml
 function M.plugins()
   return {
+    -- NOTE: We hard-disable "render-markdown.nvim" because the LazyExtras attaches it to
+    -- norg files, which jacks up the conceallevel.
+    { "MeanderingProgrammer/render-markdown.nvim", enabled = false },
     -- NOTE: We disable markdown-preview because we don't need/want it.
     { "iamcco/markdown-preview.nvim", enabled = false },
     -- NOTE: Follow-MD-Links is probably getting retired in favor of IWE
-    "jghauser/follow-md-links.nvim",
+    { "jghauser/follow-md-links.nvim", enabled = false },
     -- NOTE: Markview does all the heavy lifting for markdown
     {
       "OXY2DEV/markview.nvim",
