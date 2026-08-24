@@ -1,0 +1,7 @@
+**/.aide/
+**/.remember/
+**/*.png
+**/*.jpg
+**/*.heic
+**/*.jpeg
+**/__pycache__
