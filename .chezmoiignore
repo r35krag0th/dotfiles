@@ -5,3 +5,5 @@
 **/*.heic
 **/*.jpeg
 **/__pycache__
+.hammerspoon/Spoons
+.hammerspoon/icon-cache
