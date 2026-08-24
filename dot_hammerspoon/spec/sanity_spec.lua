@@ -1,0 +1,20 @@
+local t = require("spec.runner")
+local hsFake = require("spec.fake_hs")
+
+t.describe("harness", function()
+  t.it("runs assertions", function()
+    t.assertEquals(1 + 1, 2)
+    t.assertTrue(true)
+    t.assertNil(nil)
+    t.assertNotNil("x")
+  end)
+
+  t.it("defers doAfter until flush", function()
+    hsFake.reset()
+    local ran = false
+    hsFake.timer.doAfter(0, function() ran = true end)
+    t.assertEquals(ran, false, "must not run before flush")
+    t.assertEquals(hsFake.flush(), 1)
+    t.assertEquals(ran, true, "must run after flush")
+  end)
+end)

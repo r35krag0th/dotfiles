@@ -22,7 +22,20 @@ function M.plugins()
         "setupyourskills/dew-highlights", -- Optional for colorization
       },
     },
-    { "benlubas/neorg-se" },
+    {
+      -- Effectively the norg search engine
+      -- https://github.com/benlubas/neorg-se
+      --
+      -- :Neorg search index
+      -- :Neorg search query fulltext
+      -- :Neorg search query categories
+      "benlubas/neorg-se",
+    },
+    {
+      -- The "interim" LSP for norg
+      -- https://github.com/benlubas/neorg-interim-ls
+      "benlubas/neorg-interim-ls",
+    },
     {
       -- Neorg Dew: Category Picker (uses Teleport)
       -- https://github.com/setupyourskills/dew-catngo
@@ -82,7 +95,13 @@ function M.plugins()
           ["core.tempus"] = {},
           ["core.completion"] = {
             config = {
-              engine = "nvim-cmp",
+              -- NOTE: you can hook nvim-cmp directly
+              -- engine = "nvim-cmp",
+
+              -- NOTE: you can also use the interim-ls
+              engine = {
+                module_name = "external.lsp-completion",
+              },
             },
           },
           ["core.integrations.nvim-cmp"] = {},
@@ -283,6 +302,25 @@ function M.plugins()
               -- Index the workspace when neovim launches. This process happens on a separate thread, so
               -- it doesn't significantly contribute to startup time or block neovim
               index_on_start = true,
+            },
+          },
+          ["external.interim-ls"] = {
+            config = {
+              completion_provider = {
+                enable = true,
+                documentation = true,
+                -- Try to complete norg categories (provided by norg-query)
+                categories = true,
+                -- Suggesting heading completions from the given file for `{@x|}` where `|` is your cursor,
+                -- and `x` is an alphanumeric character.
+                --
+                -- `{@name}` expands to `[name]{:$/people:# name}`
+                people = {
+                  enable = true,
+                  -- Path to the name file relative to the workspace root without the .norg extension.
+                  path = "people",
+                },
+              },
             },
           },
           ["core.esupports.metagen"] = {
