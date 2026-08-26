@@ -2,7 +2,16 @@ local norg_icons = require("r35.utils.norg_icons")
 local M = {}
 
 function M.plugins()
+  -- Useful Utils:
+  -- "lith" -- a static site generator from norg files
+  --    cargo install --git https://github.com/norgolith/core norgolith
+  --    cargo install --git https://github.com/norgolith/core norgolith-mcp
   return {
+    {
+      -- Wrap lines based on their concealed width instead of their unconcealed width.
+      -- https://github.com/benlubas/neorg-conceal-wrap
+      "benlubas/neorg-conceal-wrap",
+    },
     {
       -- Neorg Dew: Breadcrumb in win-bar
       -- https://github.com/setupyourskills/dew-crumb
@@ -323,6 +332,7 @@ function M.plugins()
               },
             },
           },
+          ["external.conceal-wrap"] = {},
           ["core.esupports.metagen"] = {
             config = {
               type = "auto",
