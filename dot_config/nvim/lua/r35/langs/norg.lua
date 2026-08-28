@@ -396,6 +396,11 @@ function M.plugins()
             },
             ["external.hopscotch"] = {
               config = {
+                -- Resolves the built-in aliases' symbolic icon names (fa_github_alt,
+                -- fa_npm, dev_rust, ...) to glyphs. Must be the SILENT lookup: the
+                -- indexing form reports unknown names against the calling file, which
+                -- for hopscotch's own defaults would be its source, not this config.
+                icon_provider = icons.get,
                 aliases = {
                   -- Natively it supports the folllowing for links:
                   -- GitHub URL: {&gh org/repo}
@@ -405,23 +410,29 @@ function M.plugins()
                   -- Twitter User: {&tw username}
                   gl = {
                     url = "https://gitlab.r35.dev/{}",
-                    formatter = function(args)
-                      return string.format("%s", args)
+                    url_formatter = function(args)
+                      return args[1]
                     end,
                     icon = "",
                   },
                   glmr = {
-                    url = "https://gitlab.r35.dev/{}/-/merge_requests/{}",
+                    url = "https://gitlab.r35.dev/{}",
                     icon = "",
-                    formatter = function(args)
-                      return string.format("https://gitlab.r35.dev/%s/-/merge_requests/%s", args[1], args[2])
+                    url_formatter = function(args)
+                      return args[1] .. "/-/merge_requests/" .. args[2]
+                    end,
+                    display_formatter = function(args)
+                      return vim.fn.fnamemodify(args[1], ":t") .. "!" .. args[2]
                     end,
                   },
                   glwi = {
-                    url = "https://gitlab.r35.dev/{}/-/work_items/{}",
+                    url = "https://gitlab.r35.dev/{}",
                     icon = "",
-                    formatter = function(args)
-                      return string.format("https://gitlab.r35.dev/%s/-/work_items/%s", args[1], args[2])
+                    url_formatter = function(args)
+                      return args[1] .. "/-/work_items/" .. args[2]
+                    end,
+                    display_formatter = function(args)
+                      return vim.fn.fnamemodify(args[1], ":t") .. "#" .. args[2]
                     end,
                   },
                 },
