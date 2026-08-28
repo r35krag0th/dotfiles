@@ -362,12 +362,27 @@ function M.plugins()
                   -- Rust Package: {&crate packageName}
                   -- Dart Package: {&pub packageName}
                   -- Twitter User: {&tw username}
-                  gl = "https://gitlab.r35.dev/{}",
+                  gl = {
+                    url = "https://gitlab.r35.dev/{}",
+                    formatter = function(args)
+                      return string.format("%s", args)
+                    end,
+                    icon = "",
+                  },
                   glmr = {
                     url = "https://gitlab.r35.dev/{}/-/merge_requests/{}",
                     icon = "",
+                    formatter = function(args)
+                      return string.format("https://gitlab.r35.dev/%s/-/merge_requests/%s", args[1], args[2])
+                    end,
                   },
-                  glwi = "https://gitlab.r35.dev/{}/-/work_items/{}",
+                  glwi = {
+                    url = "https://gitlab.r35.dev/{}/-/work_items/{}",
+                    icon = "",
+                    formatter = function(args)
+                      return string.format("https://gitlab.r35.dev/%s/-/work_items/%s", args[1], args[2])
+                    end,
+                  },
                 },
               },
             },

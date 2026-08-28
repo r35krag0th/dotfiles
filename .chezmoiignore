@@ -7,3 +7,4 @@
 **/__pycache__
 .hammerspoon/Spoons
 .hammerspoon/icon-cache
+.config/nvim/doc/tags
