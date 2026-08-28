@@ -1,0 +1,72 @@
+{{- /*
+Conventional Commits for chezmoi's auto-commits.
+
+chezmoi's default message is a run-on concatenation ("Add X Update Y Remove Z"),
+which is not a Conventional Commit and reads badly in a log. This produces:
+
+    chore(nvim): 12 added, 3 updated, 1 removed
+
+    Add .config/nvim/lua/r35/glyphs/blocks.lua
+    Update .config/nvim/lua/plugins/todo-comments.lua
+    Remove .config/nvim/lua/r35/glyphs.lua
+
+`chore` unconditionally: an automated dotfiles sync is maintenance, and guessing
+feat/fix from a file list would be dressing up a coin flip.
+
+Scope is the second path segment when every change shares one (.config/nvim ->
+nvim), otherwise "dotfiles".
+
+The status lives at .chezmoi.status, NOT at the dot -- chezmoi executes this
+with the full template data map and grafts the status onto .chezmoi. `.X` is a
+byte and compares directly against a rune literal, as chezmoi's own default
+template does.
+*/ -}}
+{{- with .chezmoi.status -}}
+{{- $added := list -}}
+{{- $updated := list -}}
+{{- $removed := list -}}
+{{- range .Ordinary -}}
+  {{- $p := .Path | targetRelPath -}}
+  {{- if eq .X 'A' -}}
+    {{- $added = append $added $p -}}
+  {{- else if eq .X 'D' -}}
+    {{- $removed = append $removed $p -}}
+  {{- else -}}
+    {{- $updated = append $updated $p -}}
+  {{- end -}}
+{{- end -}}
+{{- range .RenamedOrCopied -}}
+  {{- $updated = append $updated (.Path | targetRelPath) -}}
+{{- end -}}
+{{- range .Untracked -}}
+  {{- $added = append $added (.Path | targetRelPath) -}}
+{{- end -}}
+{{- range .Unmerged -}}{{- warnf "unmerged files" -}}{{- end -}}
+{{- $all := concat $added $updated $removed -}}
+{{- $scopes := list -}}
+{{- range $p := $all -}}
+  {{- $parts := splitList "/" $p -}}
+  {{- if and (gt (len $parts) 1) (eq (index $parts 0) ".config") -}}
+    {{- $scopes = append $scopes (index $parts 1) -}}
+  {{- else -}}
+    {{- $scopes = append $scopes "home" -}}
+  {{- end -}}
+{{- end -}}
+{{- $scopes = uniq $scopes -}}
+{{- $scope := "dotfiles" -}}
+{{- if eq (len $scopes) 1 -}}{{- $scope = first $scopes -}}{{- end -}}
+{{- $bits := list -}}
+{{- if $added -}}{{- $bits = append $bits (printf "%d added" (len $added)) -}}{{- end -}}
+{{- if $updated -}}{{- $bits = append $bits (printf "%d updated" (len $updated)) -}}{{- end -}}
+{{- if $removed -}}{{- $bits = append $bits (printf "%d removed" (len $removed)) -}}{{- end -}}
+chore({{ $scope }}): {{ join ", " $bits }}
+{{ range $added }}
+Add {{ . }}
+{{- end -}}
+{{- range $updated }}
+Update {{ . }}
+{{- end -}}
+{{- range $removed }}
+Remove {{ . }}
+{{- end }}
+{{- end -}}
