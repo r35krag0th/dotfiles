@@ -1,4 +1,5 @@
 local norg_icons = require("r35.utils.norg_icons")
+local icons = require("r35.glyphs.icons")
 local M = {}
 
 function M.plugins()
@@ -71,6 +72,13 @@ function M.plugins()
         },
         "opipoy/neorg-colors",
         "setupyourskills/dew-crumb",
+        -- "phenax/neorg-hop-extras", -- Allows adding custom functionality to links!
+        {
+          "https://gitlab.r35.dev/r35krag0th/neorg-hopscotch.nvim",
+          name = "neorg-hopscotch",
+          dev = true,
+          dir = "~/workspace/neorg-hopscotch.nvim/",
+        },
       },
       lazy = false,
       version = "*",
@@ -98,248 +106,276 @@ function M.plugins()
         { "<localleader>Nsc", "<cmd>Neorg search query categories<CR>", desc = "Search Categories" },
         { "<localleader>Nsf", "<cmd>Neorg search query fulltext<CR>", desc = "Full-Text Search this Workspace" },
       },
-      opts = {
-        load = {
-          ["core.defaults"] = {},
-          ["core.tempus"] = {},
-          ["core.completion"] = {
-            config = {
-              -- NOTE: you can hook nvim-cmp directly
-              -- engine = "nvim-cmp",
+      opts = function(_, opts)
+        local di = require("nvim-web-devicons.icons-default")
+        opts = {
+          load = {
+            ["core.defaults"] = {},
+            ["core.tempus"] = {},
+            ["core.completion"] = {
+              config = {
+                -- NOTE: you can hook nvim-cmp directly
+                -- engine = "nvim-cmp",
 
-              -- NOTE: you can also use the interim-ls
-              engine = {
-                module_name = "external.lsp-completion",
-              },
-            },
-          },
-          ["core.integrations.nvim-cmp"] = {},
-          ["core.concealer"] = {
-            config = {
-              -- Icons are written as \u{} escapes on purpose. These glyphs live in
-              -- the Private Use Area and render as nothing in most editors, diffs
-              -- and terminals, so pasting them as literals is a silent-corruption
-              -- trap -- one went missing that way already.
-              --
-              -- They render two cells wide; see lua/r35/glyphs.lua and
-              -- ~/.config/kitty/conf.d/nerd_font_widths.conf for why.
-              icons = {
-                -- Rendered across the whole `(x)`, brackets and all: at two cells
-                -- these no longer fit inside the parentheses, and neorg's stock
-                -- renderer would overlay one cell too far and eat the `)`. See
-                -- r35.utils.norg_icons.
-                todo = norg_icons.todo({
-                  undone = "\u{F0C8}", -- fa-square-o
-                  pending = "\u{F252}", -- fa-hourglass-half
-                  done = "\u{F00C}", -- fa-check
-                  on_hold = "\u{F04C}", -- fa-pause
-                  cancelled = "\u{F05E}", -- fa-ban
-                  urgent = "\u{F071}", -- fa-exclamation-triangle
-                  uncertain = "\u{F128}", -- fa-question
-                  recurring = "\u{F021}", -- fa-refresh
-                }),
-                definition = {
-                  single = { icon = "\u{F02D}" }, -- fa-book
-                  multi_prefix = { icon = "\u{F02D} " },
-                  multi_suffix = { icon = "\u{F02D} " },
+                -- NOTE: you can also use the interim-ls
+                engine = {
+                  module_name = "external.lsp-completion",
                 },
-                footnote = {
-                  single = { icon = "\u{F249}" }, -- fa-sticky-note
-                  multi_prefix = { icon = "\u{F249} " },
-                  multi_suffix = { icon = "\u{F249} " },
-                },
-                markup = {
-                  spoiler = { icon = "\u{F070}" }, -- fa-eye-slash
-                },
-                -- Deliberately left at neorg's defaults:
-                --   quote     "|" is box drawing and already correct
-                --   ordered   "1." / "A." / "i." are text labels, not icons
-                --   heading   the geometric ramp stays single width; Nerd Font
-                --             equivalents would take two cells and push every
-                --             heading right
               },
             },
-          },
-          ["core.dirman"] = {
-            config = {
-              workspaces = {
-                -- The Core notes
-                notes = "~/notes",
-                -- TTRPG Session Notes
-                session_notes = "~/session-notes",
-                -- Keeping this here for now
-                old_notes = "~/Documents/Neorg-Notes/",
-              },
-              default_workspace = "notes",
-            },
-          },
-          ["core.journal"] = {
-            config = {
-              strategy = "nested",
-            },
-          },
-          ["core.looking-glass"] = {},
-          ["core.qol.toc"] = {},
-          ["core.qol.todo_items"] = {},
-          ["core.summary"] = {
-            config = {
-              strategy = "default",
-            },
-          },
-          ["core.promo"] = {},
-          ["core.export"] = { config = { extensions = "all" } },
-          ["core.export.markdown"] = {},
-          ["core.presenter"] = {
-            config = {
-              zen_mode = "zen-mode",
-            },
-          },
-          ["core.ui"] = {},
-          ["core.ui.calendar"] = {},
-          ["core.tangle"] = {
-            config = {
-              tangle_on_write = true,
-              indent_errors = true,
-              report_on_empty = true,
-            },
-          },
-          ["external.context"] = {},
-          ["external.templates"] = {
-            config = {
-              keywords = {
-                ["YESTERDAY_N_FILENAME"] = function()
-                  local r = require("r35.utils.norg")
-                  local ls = require("luasnip")
-                  return ls.text_node(r.journal_path_for(-1))
-                end,
-                ["TODAY_N_FILENAME"] = function()
-                  local r = require("r35.utils.norg")
-                  local ls = require("luasnip")
-                  return ls.text_node(r.journal_path_for(0))
-                end,
-                ["TOMORROW_N_FILENAME"] = function()
-                  local r = require("r35.utils.norg")
-                  local ls = require("luasnip")
-                  return ls.text_node(r.journal_path_for(1))
-                end,
-                ["WEEK_NUMBER"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%V", s.file_tree_date()))
-                end,
-                ["WEEKDAY_SHORT"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%a", s.file_tree_date()))
-                end,
-                ["DAY"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%d", s.file_tree_date()))
-                end,
-                ["MONTH"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%m", s.file_tree_date()))
-                end,
-                ["MONTH_SHORT"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%h", s.file_tree_date()))
-                end,
-                ["YEAR"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  return ls.text_node(os.date("%Y", s.file_tree_date()))
-                end,
-                ["DAY_ORDINAL"] = function()
-                  local ls = require("luasnip")
-                  local s = require("neorg.modules.external.templates.default_snippets")
-                  local r = require("r35.utils.norg")
-                  local dt = os.date("*t", s.file_tree_date())
-                  return ls.text_node(r.day_ordinal(dt.day))
-                end,
-                ["QUARTER"] = function()
-                  local ls = require("luasnip")
-                  local r = require("r35.utils.norg")
-                  return ls.text_node(string.format("%d", r.current_quarter()))
-                end,
-                ["PREVIOUS_QUARTER"] = function()
-                  local ls = require("luasnip")
-                  local r = require("r35.utils.norg")
-                  return ls.text_node(string.format("%d", r.previous_quarter()))
-                end,
-                ["NEXT_QUARTER"] = function()
-                  local ls = require("luasnip")
-                  local r = require("r35.utils.norg")
-                  return ls.text_node(string.format("%d", r.next_quarter()))
-                end,
-              },
-              -- snippets_overwrite = {
-              --   date_format = [[%Y/%m/%d]],
-              -- },
-            },
-          },
-          ["core.integrations.treesitter"] = {
-            config = {
-              configure_parsers = true,
-            },
-          },
-          ["external.neorg-dew"] = {},
-          ["external.dew-crumb"] = {
-            config = {
-              enabled = true, -- Enable or disable the module on startup
-              separator = ">", -- The character to use as a separator
-            },
-          },
-          -- ["external.neorg-query"] = {},
-          ["external.dew-catngo"] = {
-            config = {
-              exclude_cat_prefix = "#", -- all categories prefixed by "#" will be ignored
-            },
-          },
-          ["external.dew-transclude"] = {
-            config = {
-              block_end_marker = "===", -- Marks the end of the level 1 heading block for content extraction
-              no_title = true, -- Set to `true` to disable the title extraction
-              colorify = false, -- Set to `true` to colorize the extracted content see `colors`
-            },
-          },
-          ["external.search"] = {
-            -- values shown are the default
-            config = {
-              -- Index the workspace when neovim launches. This process happens on a separate thread, so
-              -- it doesn't significantly contribute to startup time or block neovim
-              index_on_start = true,
-            },
-          },
-          ["external.interim-ls"] = {
-            config = {
-              completion_provider = {
-                enable = true,
-                documentation = true,
-                -- Try to complete norg categories (provided by norg-query)
-                categories = true,
-                -- Suggesting heading completions from the given file for `{@x|}` where `|` is your cursor,
-                -- and `x` is an alphanumeric character.
+            ["core.integrations.nvim-cmp"] = {},
+            ["core.concealer"] = {
+              config = {
+                -- Icons are named rather than written as codepoints. The escapes
+                -- were there because PUA glyphs render as nothing in diffs and on
+                -- the web -- a silent-corruption trap that ate one already. A name
+                -- cannot be corrupted that way, and a typo is now an ERROR
+                -- diagnostic on the line rather than a silently missing icon.
                 --
-                -- `{@name}` expands to `[name]{:$/people:# name}`
-                people = {
+                -- `undone` was U+F0C8, which is a FILLED square in Nerd Fonts v3.
+                -- `fa_square_o` is the outline the old `-- fa-square-o` comment
+                -- always meant; a filled box for "undone" reads as done.
+                --
+                -- They render two cells wide; see lua/r35/glyphs/blocks.lua and
+                -- ~/.config/kitty/conf.d/nerd_font_widths.conf for why.
+                icons = {
+                  -- Rendered across the whole `(x)`, brackets and all: at two cells
+                  -- these no longer fit inside the parentheses, and neorg's stock
+                  -- renderer would overlay one cell too far and eat the `)`. See
+                  -- r35.utils.norg_icons.
+                  todo = norg_icons.todo({
+                    undone = icons.fa_square_o,
+                    pending = icons.fa_hourglass_half,
+                    done = icons.fa_check,
+                    on_hold = icons.fa_pause,
+                    cancelled = icons.fa_ban,
+                    urgent = icons.fa_exclamation_triangle,
+                    uncertain = icons.fa_question,
+                    recurring = icons.fa_refresh,
+                  }),
+                  definition = {
+                    single = { icon = icons.fa_book },
+                    multi_prefix = { icon = icons.fa_book .. " " },
+                    multi_suffix = { icon = icons.fa_book .. " " },
+                  },
+                  footnote = {
+                    single = { icon = icons.fa_sticky_note },
+                    multi_prefix = { icon = icons.fa_sticky_note .. " " },
+                    multi_suffix = { icon = icons.fa_sticky_note .. " " },
+                  },
+                  markup = {
+                    spoiler = { icon = icons.fa_eye_slash },
+                  },
+                  -- Deliberately left at neorg's defaults:
+                  --   quote     "|" is box drawing and already correct
+                  --   ordered   "1." / "A." / "i." are text labels, not icons
+                  --   heading   the geometric ramp stays single width; Nerd Font
+                  --             equivalents would take two cells and push every
+                  --             heading right
+                },
+              },
+            },
+            ["core.dirman"] = {
+              config = {
+                workspaces = {
+                  -- The Core notes
+                  notes = "~/notes",
+                  -- TTRPG Session Notes
+                  session_notes = "~/session-notes",
+                  -- Keeping this here for now
+                  old_notes = "~/Documents/Neorg-Notes/",
+                },
+                default_workspace = "notes",
+              },
+            },
+            ["core.journal"] = {
+              config = {
+                strategy = "nested",
+              },
+            },
+            ["core.looking-glass"] = {},
+            ["core.qol.toc"] = {},
+            ["core.qol.todo_items"] = {},
+            ["core.summary"] = {
+              config = {
+                strategy = "default",
+              },
+            },
+            ["core.promo"] = {},
+            ["core.export"] = { config = { extensions = "all" } },
+            ["core.export.markdown"] = {},
+            ["core.presenter"] = {
+              config = {
+                zen_mode = "zen-mode",
+              },
+            },
+            ["core.ui"] = {},
+            ["core.ui.calendar"] = {},
+            ["core.tangle"] = {
+              config = {
+                tangle_on_write = true,
+                indent_errors = true,
+                report_on_empty = true,
+              },
+            },
+            ["external.context"] = {},
+            ["external.templates"] = {
+              config = {
+                keywords = {
+                  ["YESTERDAY_N_FILENAME"] = function()
+                    local r = require("r35.utils.norg")
+                    local ls = require("luasnip")
+                    return ls.text_node(r.journal_path_for(-1))
+                  end,
+                  ["TODAY_N_FILENAME"] = function()
+                    local r = require("r35.utils.norg")
+                    local ls = require("luasnip")
+                    return ls.text_node(r.journal_path_for(0))
+                  end,
+                  ["TOMORROW_N_FILENAME"] = function()
+                    local r = require("r35.utils.norg")
+                    local ls = require("luasnip")
+                    return ls.text_node(r.journal_path_for(1))
+                  end,
+                  ["WEEK_NUMBER"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%V", s.file_tree_date()))
+                  end,
+                  ["WEEKDAY_SHORT"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%a", s.file_tree_date()))
+                  end,
+                  ["DAY"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%d", s.file_tree_date()))
+                  end,
+                  ["MONTH"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%m", s.file_tree_date()))
+                  end,
+                  ["MONTH_SHORT"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%h", s.file_tree_date()))
+                  end,
+                  ["YEAR"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    return ls.text_node(os.date("%Y", s.file_tree_date()))
+                  end,
+                  ["DAY_ORDINAL"] = function()
+                    local ls = require("luasnip")
+                    local s = require("neorg.modules.external.templates.default_snippets")
+                    local r = require("r35.utils.norg")
+                    local dt = os.date("*t", s.file_tree_date())
+                    return ls.text_node(r.day_ordinal(dt.day))
+                  end,
+                  ["QUARTER"] = function()
+                    local ls = require("luasnip")
+                    local r = require("r35.utils.norg")
+                    return ls.text_node(string.format("%d", r.current_quarter()))
+                  end,
+                  ["PREVIOUS_QUARTER"] = function()
+                    local ls = require("luasnip")
+                    local r = require("r35.utils.norg")
+                    return ls.text_node(string.format("%d", r.previous_quarter()))
+                  end,
+                  ["NEXT_QUARTER"] = function()
+                    local ls = require("luasnip")
+                    local r = require("r35.utils.norg")
+                    return ls.text_node(string.format("%d", r.next_quarter()))
+                  end,
+                },
+                -- snippets_overwrite = {
+                --   date_format = [[%Y/%m/%d]],
+                -- },
+              },
+            },
+            ["core.integrations.treesitter"] = {
+              config = {
+                configure_parsers = true,
+              },
+            },
+            ["external.neorg-dew"] = {},
+            ["external.dew-crumb"] = {
+              config = {
+                enabled = true, -- Enable or disable the module on startup
+                separator = ">", -- The character to use as a separator
+              },
+            },
+            -- ["external.neorg-query"] = {},
+            ["external.dew-catngo"] = {
+              config = {
+                exclude_cat_prefix = "#", -- all categories prefixed by "#" will be ignored
+              },
+            },
+            ["external.dew-transclude"] = {
+              config = {
+                block_end_marker = "===", -- Marks the end of the level 1 heading block for content extraction
+                no_title = true, -- Set to `true` to disable the title extraction
+                colorify = false, -- Set to `true` to colorize the extracted content see `colors`
+              },
+            },
+            ["external.search"] = {
+              -- values shown are the default
+              config = {
+                -- Index the workspace when neovim launches. This process happens on a separate thread, so
+                -- it doesn't significantly contribute to startup time or block neovim
+                index_on_start = true,
+              },
+            },
+            ["external.interim-ls"] = {
+              config = {
+                completion_provider = {
                   enable = true,
-                  -- Path to the name file relative to the workspace root without the .norg extension.
-                  path = "people",
+                  documentation = true,
+                  -- Try to complete norg categories (provided by norg-query)
+                  categories = true,
+                  -- Suggesting heading completions from the given file for `{@x|}` where `|` is your cursor,
+                  -- and `x` is an alphanumeric character.
+                  --
+                  -- `{@name}` expands to `[name]{:$/people:# name}`
+                  people = {
+                    enable = true,
+                    -- Path to the name file relative to the workspace root without the .norg extension.
+                    path = "people",
+                  },
+                },
+              },
+            },
+            ["external.conceal-wrap"] = {},
+            ["core.esupports.metagen"] = {
+              config = {
+                type = "auto",
+              },
+            },
+            ["external.hopscotch"] = {
+              config = {
+                aliases = {
+                  -- Natively it supports the folllowing for links:
+                  -- GitHub URL: {&gh org/repo}
+                  -- NPM Package: {&npm packageName}
+                  -- Rust Package: {&crate packageName}
+                  -- Dart Package: {&pub packageName}
+                  -- Twitter User: {&tw username}
+                  gl = "https://gitlab.r35.dev/{}",
+                  glmr = {
+                    url = "https://gitlab.r35.dev/{}/-/merge_requests/{}",
+                    icon = "",
+                  },
+                  glwi = "https://gitlab.r35.dev/{}/-/work_items/{}",
                 },
               },
             },
           },
-          ["external.conceal-wrap"] = {},
-          ["core.esupports.metagen"] = {
-            config = {
-              type = "auto",
-            },
-          },
-        },
-      },
+        }
+
+        return opts
+      end,
     },
   }
 end
