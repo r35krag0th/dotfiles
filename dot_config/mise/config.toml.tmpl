@@ -5,7 +5,7 @@
 terraform = "1.12"
 ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
 dagger = "latest"
-infisical = { version = "latest", asset_pattern = "cli_{{ version }}_darwin_arm64.tar.gz" }
+infisical = { version = "latest", asset_pattern = "cli_{{ "{{" }} version {{ "}}" }}_darwin_arm64.tar.gz" }
 step = "latest"
 
 # Languages & Runtimes
