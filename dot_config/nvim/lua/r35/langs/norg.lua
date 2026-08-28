@@ -402,12 +402,28 @@ function M.plugins()
                 -- for hopscotch's own defaults would be its source, not this config.
                 icon_provider = icons.get,
                 aliases = {
-                  -- Natively it supports the folllowing for links:
-                  -- GitHub URL: {&gh org/repo}
-                  -- NPM Package: {&npm packageName}
-                  -- Rust Package: {&crate packageName}
-                  -- Dart Package: {&pub packageName}
-                  -- Twitter User: {&tw username}
+                  -- GitHub.com
+                  ghi = {
+                    url = "https://github.com/{}",
+                    url_formatter = function(args)
+                      return string.format("%s/issues/%s", args[1], args[2])
+                    end,
+                    icon = icons.cod_github_alt,
+                    display_formatter = function(args)
+                      return string.format("%s %s", args[1], args[2])
+                    end,
+                  },
+                  ghpr = {
+                    url = "https://github.com/{}",
+                    url_formatter = function(args)
+                      return string.format("%s/pull/%s", args[1], args[2])
+                    end,
+                    icon = icons.cod_github_alt,
+                    display_formatter = function(args)
+                      return string.format("%s %s%s", args[1], icons.cod_git_merge, args[2])
+                    end,
+                  },
+                  -- gitlab.r35.dev
                   gl = {
                     url = "https://gitlab.r35.dev/{}",
                     url_formatter = function(args)
