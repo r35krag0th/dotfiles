@@ -26,3 +26,6 @@ require("r35.lsp").setup()
 
 -- Finally, set the theme
 require("r35.themes").setTheme()
+
+local s = require("snacks")
+vim.ui.select = s.picker.select
