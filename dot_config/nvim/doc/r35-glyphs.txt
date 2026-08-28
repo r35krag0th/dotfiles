@@ -1,0 +1,336 @@
+*r35-glyphs.txt*  Nerd Font glyphs: names, widths, and fitting    *r35-glyphs*
+
+
+==============================================================================
+CONTENTS                                                 *r35-glyphs-contents*
+
+  1. Introduction ................................ |r35-glyphs-introduction|
+  2. Glyph names ................................. |r35-glyphs-names|
+  3. Block-scoped access ......................... |r35-glyphs-from|
+  4. Unknown names ............................... |r35-glyphs-unknown|
+  5. Widths ...................................... |r35-glyphs-widths|
+  6. Measuring and fitting ....................... |r35-glyphs-fit|
+  7. The picker .................................. |r35-glyphs-picker|
+  8. Auditing .................................... |r35-glyphs-audit|
+  9. Health ...................................... |r35-glyphs-health|
+  10. Regenerating ................................ |r35-glyphs-regenerate|
+  11. Rationale ................................... |r35-glyphs-rationale|
+  12. Credits ..................................... |r35-glyphs-credits|
+
+
+==============================================================================
+1. INTRODUCTION                                      *r35-glyphs-introduction*
+
+This module covers three questions about a Nerd Font glyph: what it is
+called, how wide it renders, and how to fit it into a constrained space.
+
+    r35.glyphs          facade -- setup, ranges, cells, width, fit, fit_sign
+    r35.glyphs.blocks   THE width declaration; mirrors the kitty conf
+    r35.glyphs.width    applying, measuring, fitting
+    r35.glyphs.icons    name lookup
+    r35.glyphs.data     GENERATED -- 10,751 names
+    r35.glyphs.types    GENERATED -- annotations only, never loaded
+    r35.glyphs.health   :checkhealth r35.glyphs
+    r35.glyphs.picker   :R35Icons
+
+blocks.lua and data.lua are leaves: pure data, no requires.
+
+
+==============================================================================
+2. GLYPH NAMES                                              *r35-glyphs-names*
+
+The interface is WezTerm's |r35-glyphs-credits|. Index the module with a
+glyph's symbolic name and get the string back.
+>lua
+    local icons = require("r35.glyphs.icons")
+
+    icons.fa_bug           -- the glyph, warns loudly if unknown
+    icons.get("fa_bug")    -- string|nil, never warns
+    icons.has("fa_bug")    -- boolean
+    icons.sign("fa_bug")   -- fitted to the two-cell sign column
+<
+Names are WezTerm's exactly -- 10,751 of them, each prefixed by its block
+(fa_, md_, cod_, ...). Completion shows the rendered glyph in the popup,
+because the generated types.lua declares every field with the icon as its
+description.
+
+To iterate, require("r35.glyphs.data") is a plain table.
+
+Use icons.sign() anywhere a glyph becomes sign_text: Neovim accepts at most
+two display cells there and rejects the whole extmark otherwise.
+
+
+==============================================================================
+3. BLOCK-SCOPED ACCESS                                       *r35-glyphs-from*
+
+>lua
+    local fa = require("r35.glyphs.icons").from("fa")
+    fa.bug          -- identical value to icons.fa_bug, a plain string
+<
+Sixteen block keys, each mapping to exactly one WezTerm prefix:
+
+    fa    -> fa_        wi     -> weather_     md     -> md_
+    fae   -> fae_       sui    -> seti_        cod    -> cod_
+    pl    -> pl_        custom -> custom_      dev    -> dev_
+    ple   -> ple_       oct    -> oct_         indent -> indent_
+    iec   -> iec_       logos  -> linux_       indentation -> indentation_
+    pom   -> pom_
+
+WezTerm's own prefixes work as keys too, so from("weather") and from("wi")
+are the same block.
+
+Four leaves need bracket syntax, being Lua keywords or digit-leading once
+the prefix is stripped:
+
+    from("fa")["500px"]      from("md")["function"]
+    from("fa")["repeat"]     from("md")["repeat"]
+
+Flat parity is unaffected -- icons.fa_repeat is a valid identifier.
+
+One level only. See |r35-glyphs-rationale|.
+
+
+==============================================================================
+4. UNKNOWN NAMES                                          *r35-glyphs-unknown*
+
+A typo does not return nil. A nil icon renders as nothing and reads as a
+font problem, which sends you hunting in entirely the wrong place.
+
+Instead the lookup:
+
+    - returns cod_question as a placeholder, which is two cells wide, so
+      the layout does not shift while you fix it
+    - publishes an ERROR diagnostic on the exact line where the bad name
+      was written, including inside a plugin `opts` table
+    - attaches that diagnostic when the file is opened, if it was not
+      loaded at the time
+    - records it once per call site, never per lookup -- a bad icon in a
+      statusline is re-evaluated on nearly every redraw
+
+The diagnostic message names the bad key and suggests the nearest match.
+>lua
+    require("r35.glyphs.icons").misses()
+<
+returns every miss recorded this session as { file, line, name, message }.
+:checkhealth r35.glyphs reports them too, which is the net for a miss in a
+file you never open.
+
+
+==============================================================================
+5. WIDTHS                                                  *r35-glyphs-widths*
+
+PragmataPro draws every Nerd Font glyph at 2048 units against its normal
+1024 -- exactly double width -- while wcwidth reports 1. Terminals either
+squash the glyph into one cell or draw it full width and clip it.
+
+blocks.lua declares the true widths; width.lua applies them.
+>lua
+    require("r35.glyphs").setup()   -- calls vim.fn.setcellwidths()
+<
+Call it from init.lua AFTER require("config.lazy"). setup() reads the
+'fillchars' and 'listchars' LazyVim sets during its own setup and carves
+those codepoints out of the declared ranges: setcellwidths() rejects the
+ENTIRE call with E835 if even one of their glyphs falls inside a two-cell
+range.
+
+blocks.lua MUST stay in sync with:
+
+    ~/.config/kitty/conf.d/nerd_font_widths.conf
+
+If they disagree, Neovim and the terminal compute different cursor columns
+for the same text and every line containing an icon drifts.
+|r35-glyphs-health| reports drift; |r35-glyphs-audit| checks both against
+the font itself.
+
+
+==============================================================================
+6. MEASURING AND FITTING                                      *r35-glyphs-fit*
+
+>lua
+    local g = require("r35.glyphs")
+
+    g.width(0xF057)     -- declared cells for one codepoint
+    g.cells(text)       -- declared cells for a string
+    g.fit(text, n)      -- clamp to n cells, warns on real truncation
+    g.fit_sign(text)    -- fit(text, 2)
+<
+These answer "how wide will this be once setup() has run", and give the
+SAME answer from either side of that call.
+
+That is the whole point of them. vim.fn.strdisplaywidth() reports the table
+currently installed, so it is order-dependent: plugin `opts` resolve while
+require("config.lazy") runs, long before setup() can be called. An icon
+measured in that window is still one cell wide and looks like it fits,
+right up until setup() widens it out from under the stored value.
+
+fit() sheds padding first, then drops whole codepoints so the result stays
+valid UTF-8, and notifies when it genuinely truncates -- a silently clipped
+icon reads as a font bug and misdirects the search.
+
+
+==============================================================================
+7. THE PICKER                                              *r35-glyphs-picker*
+
+    :R35Icons
+
+Fuzzy-search all 10,751 names with the glyph rendered beside each.
+
+    <CR>    insert the flat name          fa_bug
+    <C-b>   insert the block form         from("fa").bug
+    <C-y>   yank the glyph itself
+
+snacks ships Snacks.picker.icons(), which is good but different: it uses
+upstream nerd-fonts naming (nf-fa-bug), fetches glyphnames.json over the
+network, and its confirm action inserts the raw glyph character.
+
+Inserting the glyph is the trap this module exists to avoid. This picker
+inserts the NAME, offline, in the naming this config is keyed by.
+
+No keymap is bound: <leader>s* is dense in LazyVim and guessing a free one
+here would be a collision waiting to happen.
+
+
+==============================================================================
+8. AUDITING                                                 *r35-glyphs-audit*
+
+>bash
+    nvim -l scripts/gen_glyphs.lua --audit [--font PATH]
+<
+Measures a font's hmtx advance widths and reports where blocks.lua
+disagrees. Exit 0 clean, 1 on any unacknowledged disagreement.
+
+The font defaults to whatever kitty resolves on the machine it runs on,
+read from ~/.config/kitty/conf.d/**/*.conf, because blocks.lua is only
+correct for one font on one machine. --font overrides it.
+
+Two scan modes, both always run:
+
+    - every codepoint in data.lua
+    - every \u{...} escape and non-ASCII literal in lua/, colors/, init.lua
+
+The second exists because of U+23F2: a plain Unicode timer clock chosen by
+hand, documented as one cell, actually two, and invisible to any check
+limited to the Nerd Font set. The defect lived in the gap between "glyphs
+the generator knows about" and "glyphs the config actually uses".
+
+Deliberate disagreements live in an ACKNOWLEDGED table in the script, each
+with a written reason. An audit that reports a known-and-accepted finding
+on every run is an audit people stop reading.
+
+Requires python3 with fontTools. Dev-time only; it degrades with a message
+if absent, and nothing under lua/ ever touches it.
+
+
+==============================================================================
+9. HEALTH                                                  *r35-glyphs-health*
+
+    :checkhealth r35.glyphs
+
+Four sections:
+
+    widths          whether setup() ran, how many ranges installed, and
+                    which codepoints were carved out for 'fillchars' or
+                    'listchars'
+    kitty mirror    every codepoint where Neovim and kitty disagree,
+                    probed at every range boundary on BOTH sides
+    data            glyph count and provenance
+    unknown names   misses recorded this session |r35-glyphs-unknown|
+
+The kitty check is bidirectional on purpose. A one-directional scan over
+our own blocks cannot see the case where kitty declares MORE than we do.
+
+Font metrics are NOT checked here -- that needs python and takes seconds.
+|r35-glyphs-audit| owns it.
+
+
+==============================================================================
+10. REGENERATING                                       *r35-glyphs-regenerate*
+
+>bash
+    nvim -l scripts/gen_glyphs.lua
+<
+Fetches WezTerm's nerdfonts_data.rs, records the upstream commit SHA in the
+header, and writes BOTH generated files from the same parse:
+
+    lua/r35/glyphs/data.lua     name -> glyph
+    lua/r35/glyphs/types.lua    ---@field annotations, rendered glyph as
+                                the description
+
+Both come from one parse deliberately: regenerating one without the other
+would leave completion advertising glyphs that no longer exist.
+
+Six gates run before anything is written, and it REFUSES to write on
+failure rather than clobbering good data because upstream moved a file:
+count over 10,000, valid identifiers, codepoint round-trip, no duplicates,
+full alias coverage, and the bracket-syntax set unchanged.
+
+Both generated files are listed in .styluaignore -- the generator rewrites
+them from scratch, so any formatting pass is undone on the next run.
+
+Network access happens here and nowhere else.
+
+
+==============================================================================
+11. RATIONALE                                           *r35-glyphs-rationale*
+
+Powerline's exclusion is a measurement              *r35-glyphs-why-powerline*
+
+U+E0A0-U+E0D7 is absent from blocks.lua because the font measures it at
+1024 units. It was long documented as a deliberate choice; it never was.
+Anything derivable from the font should be measured, not remembered.
+
+U+26A1 is a font disagreement, not drift                 *r35-glyphs-why-26a1*
+
+The font draws it at one cell, but it is East Asian Wide, so Neovim AND
+kitty both reserve two. They agree with each other and merely disagree with
+the font: the glyph renders slightly small, and nothing misaligns. Forcing
+it to one cell in Neovim alone would turn a cosmetic quirk into real drift.
+Reconcile only when the two renderers disagree.
+
+Names, not codepoints                                   *r35-glyphs-why-names*
+
+Icons used to be written as \u{} escapes with a comment naming each one.
+The Nerd Fonts v2 to v3 renumbering moved glyphs between codepoints, so
+three of those comments became false while the escapes kept working:
+U+F43A stopped being oct_rocket, U+EA74 stopped being cod_note, and
+U+F0C8 became a FILLED square while still marking tasks undone.
+
+A name is an assertion the module can check. A comment is not.
+
+from() is one level deep                            *r35-glyphs-why-one-level*
+
+from("fa").square.outline cannot work coherently. 2,814 of the 10,751
+names are simultaneously a glyph AND the parent of other names, so the
+intermediate node would have to be both a string and a table -- and a proxy
+table breaks every consumer that assigns straight into a plugin's `opts`.
+It would also cost completion, which is what makes 10,751 names usable.
+
+Blocks are mapped 1:1, never merged                  *r35-glyphs-why-no-merge*
+
+seti_ and custom_ share 17 leaf names (folder, go, c, cpp, ruby, ...) and
+indent_/indentation_ share `line`. Merging them into one key would silently
+drop glyphs, so each keeps its own key.
+
+Do not restore lua/r35/glyphs.lua              *r35-glyphs-why-no-single-file*
+
+This module was once a single file. Lua resolves glyphs.lua BEFORE
+glyphs/init.lua, so a stray copy shadows the whole package and silently
+reverts it with no error. If a dotfile manager recreates it, use its
+forget/untrack command rather than deleting it again.
+
+
+==============================================================================
+12. CREDITS                                               *r35-glyphs-credits*
+
+The lookup interface and the naming scheme are Wez Furlong's design, from
+WezTerm's wezterm.nerdfonts:
+
+    https://wezterm.org/config/lua/wezterm/nerdfonts.html
+
+data.lua is a transform of WezTerm's own generated file,
+wezterm-char-props/src/nerdfonts_data.rs.
+
+Nerd Fonts itself: https://www.nerdfonts.com
+
+
+ vim:tw=78:ts=8:ft=help:norl:
