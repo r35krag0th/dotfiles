@@ -1,5 +1,34 @@
 local norg_icons = require("r35.utils.norg_icons")
 local icons = require("r35.glyphs.icons")
+
+---An ISO-8601 timestamp carrying the offset that is actually in effect.
+---
+---Replaces neorg's own `get_timestamp`, which is wrong for half the year. Its
+---`get_timezone_offset()` measures the offset at `os.date("*t", 0)` -- epoch 0,
+---i.e. 1970-01-01 -- and additionally forces `isdst = false`. Both lines are
+---lifted from a lua-users wiki snippet answering "what is this zone's STANDARD
+---offset?", which is a correct answer to a different question. For
+---America/Chicago the result is a fixed -0600: right in winter, an hour wrong
+---all summer, and silently so.
+---
+---`os.date("%z")` asks the C library for the offset in effect NOW, DST included.
+---That is POSIX strftime, so it holds on macOS and Linux. If it ever returns
+---something that is not [+-]HHMM the offset is omitted rather than guessed --
+---an absent offset is recoverable, a confidently wrong one is not.
+---
+---Wired in via `core.esupports.metagen`'s `template`, which is a supported
+---config surface: entries naming only a field fall back to neorg's default, so
+---this replaces `created`/`updated` and nothing else.
+---@return string
+local function timestamp()
+  local stamp = os.date("%Y-%m-%dT%H:%M:%S")
+  local offset = os.date("%z")
+  if type(offset) == "string" and offset:match("^[+-]%d%d%d%d$") then
+    return stamp .. offset
+  end
+  return stamp
+end
+
 local M = {}
 
 function M.plugins()
@@ -351,6 +380,18 @@ function M.plugins()
             ["core.esupports.metagen"] = {
               config = {
                 type = "auto",
+                -- Entries naming only a field keep neorg's default behaviour;
+                -- created/updated are overridden because neorg's own timestamp
+                -- reports a fixed -0600 here. See `timestamp` at the top.
+                template = {
+                  { "title" },
+                  { "description" },
+                  { "authors" },
+                  { "categories" },
+                  { "created", timestamp },
+                  { "updated", timestamp },
+                  { "version" },
+                },
               },
             },
             ["external.hopscotch"] = {
