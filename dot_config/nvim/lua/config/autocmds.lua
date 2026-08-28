@@ -19,3 +19,26 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
+
+-- Rebuild this config's own `doc/tags` whenever one of its help files is saved.
+--
+-- `:help r35-glyphs` resolves through doc/tags, which `:helptags` generates and
+-- which is deliberately not versioned (see .chezmoiignore). lazy.nvim rebuilds
+-- tags for every plugin it manages, but this config directory is not a managed
+-- plugin, so nothing rebuilds them here -- a doc edit would silently leave the
+-- tags stale and any new section unreachable until someone noticed E149.
+--
+-- The chezmoi `run_after_` script covers the other direction: a fresh apply
+-- lands doc/*.txt with no tags file at all. Neither covers both cases.
+local helpdir = vim.fs.joinpath(vim.fn.stdpath("config"), "doc")
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = vim.api.nvim_create_augroup("r35_helptags", { clear = true }),
+  pattern = vim.fs.joinpath(helpdir, "*.txt"),
+  desc = "Rebuild helptags for the config's own doc/ directory",
+  callback = function()
+    local ok, err = pcall(vim.cmd.helptags, helpdir)
+    if not ok then
+      vim.notify("r35: helptags failed -- " .. tostring(err), vim.log.levels.WARN)
+    end
+  end,
+})
