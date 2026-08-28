@@ -68,8 +68,12 @@ end
 -- The core claim: one mark spanning the whole `(x)`, concealing it to the icon.
 for state, row in pairs({ undone = 2, done = 3, urgent = 4 }) do
   local node = nodes[state]
-  local config = { icon = TWO_CELL, highlight = "@neorg.todo_items." .. state,
-                   render = icons.render, clear = icons.clear }
+  local config = {
+    icon = TWO_CELL,
+    highlight = "@neorg.todo_items." .. state,
+    render = icons.render,
+    clear = icons.clear,
+  }
   icons.clear(config, buf, node)
   icons.render(config, buf, node)
 
@@ -81,13 +85,14 @@ for state, row in pairs({ undone = 2, done = 3, urgent = 4 }) do
   check(("%s: exactly one mark"):format(state), #placed == 1, #placed)
   check(("%s: anchored at the opening paren"):format(state), m and line:sub(m[3] + 1, m[3] + 1) == "(", m and m[3])
   check(("%s: conceals with the icon"):format(state), d.conceal == TWO_CELL, vim.inspect(d.conceal))
-  check(("%s: spans the whole bracket group"):format(state),
+  check(
+    ("%s: spans the whole bracket group"):format(state),
     d.end_col == m[3] + 3 and line:sub(m[3] + 1, d.end_col):match("^%(.%)$") ~= nil,
-    m and line:sub(m[3] + 1, d.end_col or 0))
+    m and line:sub(m[3] + 1, d.end_col or 0)
+  )
   -- Without an explicit group a concealed char falls back to Normal, so every
   -- state would render the same colour.
-  check(("%s: carries its state highlight"):format(state),
-    d.hl_group == "@neorg.todo_items." .. state, d.hl_group)
+  check(("%s: carries its state highlight"):format(state), d.hl_group == "@neorg.todo_items." .. state, d.hl_group)
 end
 
 -- Rendering twice without a clear must not stack, because neorg's own pruning
@@ -106,9 +111,11 @@ icons.clear(cfg, buf, nodes.done)
 icons.render({ icon = "ab" }, buf, nodes.done)
 local fb = marks_on(3)[1]
 check("multi-char icon falls back to overlay", fb and fb[4].virt_text ~= nil and fb[4].conceal == nil)
-check("overlay fallback is padded to 3 cells",
+check(
+  "overlay fallback is padded to 3 cells",
   fb and vim.fn.strdisplaywidth(fb[4].virt_text[1][1]) == 3,
-  fb and vim.fn.strdisplaywidth(fb[4].virt_text[1][1]))
+  fb and vim.fn.strdisplaywidth(fb[4].virt_text[1][1])
+)
 
 -- Too wide to fit and not concealable: leave the literal text rather than eat
 -- into it. Overlaying anyway is precisely the bug this module exists to fix.

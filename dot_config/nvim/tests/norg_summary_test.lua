@@ -50,7 +50,10 @@ check("keeps the subcategory body", blk and blk[5] == "   - {:$/wisdom/d:}[D] - 
 check("first block works", (m.extract_category_block(generated, "** 1password", 2) or {})[1] == "** 1password")
 check("last block runs to the end", #(m.extract_category_block(generated, "** Zfs", 2) or {}) == 2)
 check("unknown heading -> nil", m.extract_category_block(generated, "** Nope", 2) == nil)
-check("tolerates surrounding whitespace", (m.extract_category_block(generated, "  ** Agents  ", 2) or {})[1] == "** Agents")
+check(
+  "tolerates surrounding whitespace",
+  (m.extract_category_block(generated, "  ** Agents  ", 2) or {})[1] == "** Agents"
+)
 
 print("== summary_target policy ==")
 local function entry(level)
@@ -133,8 +136,11 @@ check("cursor parked back on the heading", vim.api.nvim_win_get_cursor(0)[1] == 
 
 vim.api.nvim_win_set_cursor(0, { head_row, 0 })
 m.regenerate_summary()
-check("IDEMPOTENT: second run is byte-identical", buftext() == once,
-  ("run1=%d chars, run2=%d chars"):format(#once, #buftext()))
+check(
+  "IDEMPOTENT: second run is byte-identical",
+  buftext() == once,
+  ("run1=%d chars, run2=%d chars"):format(#once, #buftext())
+)
 check("still no duplicated heading after two runs", #duplicate_headings() == 0)
 
 print("== regenerate_summary: single category, in place ==")
@@ -150,8 +156,11 @@ check("found a category heading", cat_row ~= nil, cat_text)
 local before = buftext()
 vim.api.nvim_win_set_cursor(0, { cat_row, 0 })
 m.regenerate_summary()
-check("category regen leaves the buffer unchanged", buftext() == before,
-  ("before=%d chars, after=%d chars"):format(#before, #buftext()))
+check(
+  "category regen leaves the buffer unchanged",
+  buftext() == before,
+  ("before=%d chars, after=%d chars"):format(#before, #buftext())
+)
 check("heading survives in place", vim.api.nvim_buf_get_lines(0, cat_row - 1, cat_row, true)[1] == cat_text)
 check("no duplicated heading after category regen", #duplicate_headings() == 0)
 
@@ -160,8 +169,11 @@ check("no duplicated heading after category regen", #duplicate_headings() == 0)
 -- to EOF and this collapsed the document to a few hundred characters.
 vim.api.nvim_win_set_cursor(0, { cat_row, 0 })
 m.regenerate_summary()
-check("back-to-back category regen is stable", buftext() == before,
-  ("expected=%d chars, got=%d chars"):format(#before, #buftext()))
+check(
+  "back-to-back category regen is stable",
+  buftext() == before,
+  ("expected=%d chars, got=%d chars"):format(#before, #buftext())
+)
 check("document was not truncated", #buftext() > 100000, #buftext())
 
 vim.bo.modified = false -- never write the index
