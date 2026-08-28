@@ -3,9 +3,9 @@
 [tools]
 # Infrastructure
 terraform = "1.12"
-ansible = "latest"
+ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
 dagger = "latest"
-infisical = "latest"
+infisical = { version = "latest", asset_pattern = "cli_{{ version }}_darwin_arm64.tar.gz" }
 step = "latest"
 
 # Languages & Runtimes
