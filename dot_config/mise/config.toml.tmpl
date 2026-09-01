@@ -1,6 +1,10 @@
 # vim: filetype=toml.chezmoitmpl
+# NOTE: for `npm` backend, mise automatically passes --ignore-scripts
 
 [tools]
+# From JDX!
+aube = "latest"
+
 # Infrastructure
 terraform = "1.12"
 ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
@@ -11,6 +15,10 @@ step = "latest"
 # Languages & Runtimes
 go = "latest"
 uv = "latest"
+ruby = "3"
+python = "3.14"
+lua = "5.1"
+luajit = "latest"
 
 # Kubernetes
 argocd = "latest"
@@ -30,22 +38,22 @@ timoni = "latest"
 istioctl = "1.27"
 
 # Development
-golangci-lint = "latest"
-pre-commit = "latest"
 actionlint = "latest"
-terraform-docs = "latest"
-tflint = "latest"
+delta = "0.19.2"
 direnv = "latest"
+golangci-lint = "latest"
 lazygit = "latest"
 pipx = "latest"
+pre-commit = "latest"
 prettier = "latest"
 restish = "latest"
+terraform-docs = "latest"
+tflint = "latest"
 
 # CLI Tools
 # > Using native package managers for their lang
 "go:golang.org/x/tools/gopls" = "latest"
-"npm:task-master" = "latest"
-"npm:task-master-ai" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
 # > Using "whatever"
 bat = "latest"
 {{- if ne .chezmoi.os "darwin" }}
@@ -76,6 +84,7 @@ yt-dlp = "latest"
 "gem:neovim" = "latest"
 # NOTE: Use the native install of claude-code
 ast-grep = "latest"
+"gitlab:gitlab-org/cli" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["go"]
