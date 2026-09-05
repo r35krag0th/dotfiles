@@ -88,7 +88,6 @@ function M.plugins()
     {
       "nvim-neorg/neorg",
       dependencies = {
-        "luarocks.nvim",
         "nvim-neorg/tree-sitter-norg",
         "nvim-neorg/tree-sitter-norg-meta",
         "folke/zen-mode.nvim",
