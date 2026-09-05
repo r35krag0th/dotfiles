@@ -43,9 +43,5 @@ fish_add_path "$BUN_INSTALL/bin"
 # Initialize the Starship prompt -- https://starship.rs/
 starship init fish | source
 
-# bun
-set --export BUN_INSTALL "$HOME/.bun"
-set --export PATH $BUN_INSTALL/bin $PATH
-
 # Pi
-fish_add_path "/home/bobsaska/.local/share/mise/installs/node/26.6.0/bin"
+fish_add_path "/Users/bobsaska/.local/share/mise/installs/node/25.8.1/bin"
