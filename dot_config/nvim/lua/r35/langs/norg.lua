@@ -136,11 +136,13 @@ function M.plugins()
         { "<localleader>Nsf", "<cmd>Neorg search query fulltext<CR>", desc = "Full-Text Search this Workspace" },
       },
       opts = function(_, opts)
-        local di = require("nvim-web-devicons.icons-default")
         opts = {
           load = {
             ["core.defaults"] = {},
-            ["core.tempus"] = {},
+            ["core.itero"] = {},
+            ["core.tempus"] = {
+              -- dates! (also adds a couple commands)
+            },
             ["core.completion"] = {
               config = {
                 -- NOTE: you can hook nvim-cmp directly
@@ -222,10 +224,23 @@ function M.plugins()
                 strategy = "nested",
               },
             },
-            ["core.looking-glass"] = {},
-            ["core.qol.toc"] = {},
-            ["core.qol.todo_items"] = {},
+            ["core.looking-glass"] = {
+              -- ABOUT: adds ability to edit code blocks in dedicated buffer
+            },
+            ["core.qol.toc"] = {
+              -- ABOUT: adds `:Neorg toc` sidebar
+              config = {
+                open = true, -- Auto open the ToC sidebar in a norg buffer
+              },
+            },
+            ["core.todo-introspector"] = {
+              -- sums parent/child task progress
+            },
+            ["core.qol.todo_items"] = {
+              -- ABOUT: adds all the todo task toggles/state bindings
+            },
             ["core.summary"] = {
+              -- ABOUT: creates links and annotations to to all files in a given workspace
               config = {
                 strategy = "default",
               },
@@ -238,13 +253,67 @@ function M.plugins()
                 zen_mode = "zen-mode",
               },
             },
-            ["core.ui"] = {},
-            ["core.ui.calendar"] = {},
+            ["core.ui"] = {
+              -- for managing and displaying UI stuff
+            },
+            ["core.ui.calendar"] = {
+              -- a nice little calendar UI for date picking
+            },
             ["core.tangle"] = {
+              -- See: https://github.com/nvim-neorg/neorg/wiki/Tangling
+              --
+              -- allows writing code blocks to a dedicated file using a macro on the preceeding line:
+              -- `#tangle file.name`
+              -- BUG: due to a bug in the norg TS parser it's recommended that you specify the filename in
+              -- the document metadata instead of using the macro.
+              --
+              -- ```
+              -- @document.meta
+              -- tangle: my_file.lua
+              -- @end
+              -- ```
+              --
+              -- or for multiple files:
+              -- ```
+              -- @document.meta
+              -- tangle: [
+              --   ./my_file.lua
+              --   ./my_other_file.lua
+              --   ./a_directory/
+              -- ]
+              -- @end
+              -- ```
+              --
+              -- or with extra options:
+              -- ```
+              -- @document.meta
+              -- tangle: {
+              --   languages: {
+              --     lua: ./output.lua
+              --     python: ./output/
+              --   }
+              --   delimiter: heading
+              --   scope: all
+              -- }
+              -- @end
+              --
+              -- scope is either: all, tagged, or main.
+              -- > *all* means all are tangled except ones tagged with `#tangle.none`.
+              -- > *tagged* means only ones marked with `#tangle` are tangled.
+              -- > *main* means only ones tagged and include a filename are tangled to the value in document metadata.
+              -- ```
               config = {
                 tangle_on_write = true,
                 indent_errors = true,
                 report_on_empty = true,
+              },
+            },
+            ["core.clipboard.code-blocks"] = {},
+            ["core.esupports.indent"] = {
+              config = {
+                dedent_excess = true,
+                format_on_enter = true,
+                format_on_escape = true,
               },
             },
             ["external.context"] = {},
