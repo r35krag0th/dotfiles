@@ -2,89 +2,85 @@
 # NOTE: for `npm` backend, mise automatically passes --ignore-scripts
 
 [tools]
-# From JDX!
-aube = "latest"
-
-# Infrastructure
-terraform = "1.12"
-ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
-dagger = "latest"
-infisical = { version = "latest", asset_pattern = "cli_{{ "{{" }} version {{ "}}" }}_darwin_arm64.tar.gz" }
-step = "latest"
-
-# Languages & Runtimes
-go = "latest"
-uv = "latest"
-ruby = "3"
-python = "3.14"
-lua = "5.1"
-luajit = "latest"
-
-# Kubernetes
-argocd = "latest"
-colima = "latest"
-kubectl = "latest"
-kustomize = "latest"
-helm = "latest"
-helmfile = "latest"
-k9s = "latest"
-krew = "latest"
-kubecolor = "latest"
-kubeseal = "latest"
-minikube = "latest"
-stern = "latest"
-talosctl = "latest"
-timoni = "latest"
-istioctl = "1.27"
-
-# Development
-actionlint = "latest"
-delta = "0.19.2"
-direnv = "latest"
-golangci-lint = "latest"
-lazygit = "latest"
-pipx = "latest"
-pre-commit = "latest"
-prettier = "latest"
-restish = "latest"
-terraform-docs = "latest"
-tflint = "latest"
-
-# CLI Tools
-# > Using native package managers for their lang
-"go:golang.org/x/tools/gopls" = "latest"
-"npm:@earendil-works/pi-coding-agent" = "latest"
-# > Using "whatever"
-bat = "latest"
+# Conditional
 {{- if ne .chezmoi.os "darwin" }}
 chezmoi = "latest"
 {{- end }}
+
+actionlint = "latest"
+ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
+argocd = "latest"
+ast-grep = "latest"
+aube = "latest"
+bat = "latest"
+bob = "4"
+colima = "latest"
 copier = "latest"
 cosign = "latest"
+cue = "latest"
+dagger = "latest"
 dapr = "latest"
+delta = "0.19.2"
+direnv = "latest"
 eza = "latest"
 fd = "latest"
 fzf = "latest"
 gh = "latest"
 glab = { version = "latest", exe = "glab" }
+go = "latest"
+golangci-lint = "latest"
 granted = "latest"
+helm = "latest"
+helmfile = "latest"
+infisical = { version = "latest", asset_pattern = "cli_{{ "{{" }} version {{ "}}" }}_darwin_arm64.tar.gz" }
+istioctl = "1.27"
 jq = "latest"
+k9s = "latest"
+krew = "latest"
+kubecolor = "latest"
+kubectl = "latest"
+kubeseal = "latest"
+kustomize = "latest"
+lazygit = "latest"
 lnav = "latest"
+lua = "5.1"
+luajit = "latest"
+minikube = "latest"
 neovim = "0.12.5"
 node = "25"
-opentofu = "latest"
+pipx = "latest"
+pre-commit = "latest"
+prettier = "latest"
+python = "3.14"
+restish = "latest"
 ripgrep = "latest"
+ruby = "3"
+sqlite = "latest"
 starship = "latest"
+step = "latest"
+stern = "latest"
+talosctl = "latest"
+terraform = "1.12"
+terraform-docs = "latest"
 terragrunt = "1"
+tflint = "latest"
+timoni = "latest"
 usage = "latest"
+uv = "latest"
 viddy = "latest"
 yq = "latest"
 yt-dlp = "latest"
-"npm:neovim" = "latest"
-"gem:neovim" = "latest"
-# NOTE: Use the native install of claude-code
-ast-grep = "latest"
-"gitlab:gitlab-org/cli" = "latest"
 
-[settings]
-idiomatic_version_file_enable_tools = ["go"]
+# |> Using Special Backends
+# ==> golang backend
+"go:golang.org/x/tools/gopls" = "latest"
+
+# ==> npm backend
+"npm:neovim" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
+
+# ==> gem backend
+"gem:neovim" = "latest"
+
+# ==> gitlab release backend
+"gitlab:gitlab-org/cli" = "latest"
