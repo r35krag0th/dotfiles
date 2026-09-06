@@ -1,44 +1,7 @@
 {{/* vim: set ft=json.chezmoitmpl: */}}
+{{/* NOTE: The vast majority of MCP traffic is going through LiteLLM */}}
 {
   "mcpServers": {
-    "glab": {
-      "args": [
-        "mcp",
-        "serve"
-      ],
-      "command": "glab",
-      "type": "stdio"
-    },
-    "ha-unofficial": {
-      "args": [
-        "ha-mcp"
-      ],
-      "command": "uvx",
-      "env": {
-        "HOMEASSISTANT_TOKEN": "${cmd:op read op://k8s-production/vvaokd5xbnb4f6xaifv2gzuasy/password}",
-        "HOMEASSISTANT_URL": "https://home.r35.network"
-      }
-    },
-    "harbor": {
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "HARBOR_API_BASE",
-        "-e",
-        "HARBOR_AUTH_USER",
-        "-e",
-        "HARBOR_AUTH_PASS",
-        "bupd/harbor-mcp:latest"
-      ],
-      "command": "docker",
-      "env": {
-        "HARBOR_API_BASE": "https://${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/hostname}/api/v2.0",
-        "HARBOR_AUTH_PASS": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/username}",
-        "HARBOR_AUTH_USER": "${cmd:op read op://tbtdpo4plk3dnsmlo5j7zqzhoi/pcvcjgvck557xsdps2icpopoqa/credential}"
-      }
-    },
     "k8s-mcp": {
       "args": [
         "-y",
@@ -53,23 +16,8 @@
       ],
       "command": "npx"
     },
-    "radiant": {
-      "headers": {
-        "Authorization": "Bearer ${cmd: op read op://k8s-production/radiant-prod-bootstrap/credential}",
-        "CF-Access-Client-Id": "${cmd: op read op://Private/sa67kyw23jgpg3iiky5e7ncjqi/username}",
-        "CF-Access-Client-Secret": "${cmd: op read op://Private/sa67kyw23jgpg3iiky5e7ncjqi/credential}"
-      },
-      "url": "https://api.r35.dev/radiant/mcp"
-    },
     "litellm": {
       "url": "https://litellm.r35.dev/mcp/"
     },
-    "leyline": {
-      "diabled": true,
-      "url": "https://leyline.r35.dev/mcp",
-      "headers": {
-        "Authorization": "Bearer ${cmd: op read op://k8s-production/ucdecoiq7uapvlibigfjloofma/password}"
-      }
-    }
   }
 }
