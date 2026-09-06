@@ -11,7 +11,6 @@ actionlint = "latest"
 ansible = { version = "11.6", pipx_args = "--include-deps", uvx = false }
 argocd = "latest"
 ast-grep = "latest"
-aube = "latest"
 bat = "latest"
 bob = "4"
 colima = "latest"
@@ -88,6 +87,9 @@ yt-dlp = "latest"
 
 # ==> gitlab release backend
 "gitlab:gitlab-org/cli" = "latest"
+
+# ==> github release backend
+"github:aubepkg/aube" = "latest" # We can't use the aqua backend for Aube because it's failing on cert signing shenanigans
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
