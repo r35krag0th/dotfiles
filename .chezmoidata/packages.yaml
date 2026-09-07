@@ -2,6 +2,7 @@ packages:
   linux:
     apt:
       - libreadline-dev
+      - unzip
   darwin:
     brews:
       # Essential CLI tools (not in mise or better from brew)

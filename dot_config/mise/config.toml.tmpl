@@ -47,6 +47,7 @@ luajit = "latest"
 minikube = "latest"
 neovim = "0.12.5"
 node = "26"
+"op" = "latest"
 pipx = "latest"
 pre-commit = "latest"
 prettier = "latest"
@@ -54,6 +55,7 @@ python = "3.14"
 restish = "latest"
 ripgrep = "latest"
 ruby = "3"
+rust = "latest"
 sqlite = "latest"
 starship = "latest"
 step = "latest"
@@ -88,10 +90,12 @@ zoxide = "latest"
 
 # ==> gitlab release backend
 "gitlab:gitlab-org/cli" = "latest"
-"op" = "latest"
 
 # ==> github release backend
 "github:aubepkg/aube" = "latest" # We can't use the aqua backend for Aube because it's failing on cert signing shenanigans
+
+# ==> cargo backend
+"cargo:grip-grab" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
