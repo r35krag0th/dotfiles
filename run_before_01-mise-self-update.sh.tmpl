@@ -1,5 +1,5 @@
 {{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
-#!/bin/bash
+#!/bin/bash +x
 # Keep mise up to date
 
 MISE="${HOME}/.local/bin/mise"

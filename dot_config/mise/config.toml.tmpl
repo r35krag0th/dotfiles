@@ -88,9 +88,13 @@ zoxide = "latest"
 
 # ==> gitlab release backend
 "gitlab:gitlab-org/cli" = "latest"
+"op" = "latest"
 
 # ==> github release backend
 "github:aubepkg/aube" = "latest" # We can't use the aqua backend for Aube because it's failing on cert signing shenanigans
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
+
+[settings.github]
+oauth_client_id = "{{ onepasswordRead "op://Private/ir7fuzbfhh4773fzfxgmyvnvey/username" }}"

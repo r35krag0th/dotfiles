@@ -1,0 +1,23 @@
+#!/bin/bash
+
+SRC="$HOME/.envrc.1password"
+DST="$HOME/.envrc"
+
+if ! command -v op &>/dev/null; then
+  echo "⚠ op not found, skipping $DST regeneration"
+  exit 0
+fi
+
+if [ ! -f "$SRC" ]; then
+  exit 0
+fi
+
+# --clean so a broken plugin or a half-applied config cannot fail the apply.
+# :helptags takes an explicit path, so runtimepath is irrelevant here.
+if op inject -i "${SRC}" -o "${DST}" --force 2>/dev/null; then
+  echo "✓ rebuilt ${DST} from ${SRC}"
+else
+  # Never fail the apply over documentation.
+  echo "⚠ failed to regenerate ${DST} from ${SRC}"
+  direnv allow $(dirname $DST)
+fi

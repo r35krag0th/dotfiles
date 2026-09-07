@@ -1,4 +1,7 @@
 packages:
+  linux:
+    apt:
+      - libreadline-dev
   darwin:
     brews:
       # Essential CLI tools (not in mise or better from brew)

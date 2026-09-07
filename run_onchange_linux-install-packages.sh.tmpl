@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+
+echo -e "\033[1;32m>>> Installing packages...\033[0m"
+
+sudo apt update &&
+  sudo apt install -y {{ range .packages.linux.apt }}{{ . }} {{ end -}}
+{{ end -}}
