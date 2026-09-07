@@ -18,7 +18,6 @@ fi
 
 # Skip if nvim is running (bob can't update while in use)
 if pgrep -x nvim >/dev/null; then
-    echo -e "\033[1;31m \033[0m \033[1mnvim\033[0m is running.  Skipping bob update."
     r35_log_warn "\033[1mnvim\033[0m is running.  Skipping bob update."
     exit 0
 fi
