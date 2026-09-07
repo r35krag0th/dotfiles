@@ -14,7 +14,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
+---@type LazyConfig
+local lv_opts = {
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -35,6 +36,12 @@ require("lazy").setup({
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
   }, -- automatically check for plugin updates
+  git = {
+    timeout = 300,
+  },
+  rocks = {
+    enabled = true,
+  },
   performance = {
     rtp = {
       -- disable some rtp plugins
@@ -50,4 +57,5 @@ require("lazy").setup({
       },
     },
   },
-})
+}
+require("lazy").setup(lv_opts)

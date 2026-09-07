@@ -1,4 +1,7 @@
 packages:
+  luarocks:
+    - "nvim-nio"
+    - "luarocks-build-rust-mlua"
   linux:
     apt:
       - libreadline-dev
