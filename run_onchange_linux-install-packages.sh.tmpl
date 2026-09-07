@@ -1,7 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
-echo -e "\033[1;32m>>> Installing packages...\033[0m"
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
+r35_log_header "Installing \033[1mapt\033[0m packages..."
 
 sudo apt update &&
   sudo apt install -y {{ range .packages.linux.apt }}{{ . }} {{ end -}}

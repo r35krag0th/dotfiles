@@ -1,6 +1,7 @@
 {{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
 #!/bin/bash
 # Generate bob shell completions for fish
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 
 set -e
 
@@ -14,14 +15,14 @@ elif [ -x "/opt/homebrew/bin/bob" ]; then
 elif [ -x "${HOME}/.local/bin/bob" ]; then
     BOB="${HOME}/.local/bin/bob"
 else
-    echo "⚠ bob not found, skipping completions"
+    r35_log_warn "\033[1mbob\033[0m not found, skipping completions."
     exit 0
 fi
 
 mkdir -p "$FISH_COMPLETIONS_DIR"
 
-echo ">>> Generating bob fish completions..."
+r35_log_header "Generating bob fish completions..."
 "$BOB" complete fish > "${FISH_COMPLETIONS_DIR}/bob.fish"
 
-echo "✓ bob fish completions installed"
+r35_log_ok "\033[1mbob\033[0m fish completions installed"
 {{ end -}}

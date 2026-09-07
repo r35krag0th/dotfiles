@@ -1,31 +1,32 @@
 #!/usr/bin/env bash
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 SRC="$HOME/.envrc.1password"
 DST="$HOME/.envrc"
 
-echo -e "\033[1;32m===\033[0m Checking for 'op' CLI..."
+r35_log_header "Checking for \033[1mop\033[0m CLI..."
 if ! command -v op &>/dev/null; then
-  echo "⚠ op not found, skipping $DST regeneration"
+  r35_log_warn "\033[1mop\003[0m not found, skipping $DST regeneration"
   exit 0
 fi
 
 if [ ! -f "$SRC" ]; then
+  r35_log_info "source missing ($SRC)"
   exit 0
 fi
 
-echo -e "\033[1;32m===\033[0m Running 'op signin'..."
+r35_log_header "Running \033[1m;31mop signin\033[0m..."
 eval $(op signin)
 
 # --clean so a broken plugin or a half-applied config cannot fail the apply.
 # :helptags takes an explicit path, so runtimepath is irrelevant here.
-echo -e "\033[1;32m===\033[0m Running 'op inject'..."
+r35_log_header "Running \033[1mop inject\033[0m..."
 op inject -i "${SRC}" -o "${DST}" --force # 2>/dev/null
 RET=$?
-echo "Returned $RET"
 if [ $RET -eq 0 ]; then
-  echo "✓ rebuilt ${DST} from ${SRC}"
+  r35_log_ok "rebuilt ${DST} from ${SRC}"
   direnv allow $(dirname $DST)
 else
   # Never fail the apply over documentation.
-  echo "⚠ failed to regenerate ${DST} from ${SRC}"
+  r35_log_error "failed to regenerate ${DST} from ${SRC}"
 fi

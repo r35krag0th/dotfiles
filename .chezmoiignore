@@ -9,3 +9,4 @@
 .hammerspoon/icon-cache
 .config/nvim/doc/tags
 .config/nvim/docs
+.shlibs/bash/logging.sh

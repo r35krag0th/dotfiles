@@ -2,15 +2,17 @@
 #!/bin/bash
 # Upgrade bob via Homebrew if installed that way
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 # Check if bob is installed via Homebrew
 if ! brew list bob &>/dev/null; then
-    exit 0
+  r35_log_info "\033[1mbob\033[0m is not installed via homebrew"
+  exit 0
 fi
 
 # Check if upgrade is available
 if brew outdated bob &>/dev/null; then
-    echo ">>> Upgrading bob via Homebrew..."
-    brew upgrade bob
-    echo "✓ bob upgraded"
+  r35_log_header "Upgrading \033[1mbob\033[0m via Homebrew..."
+  brew upgrade bob
+  r35_log_ok "\033[1mbob\033[0m upgraded"
 fi
 {{ end -}}

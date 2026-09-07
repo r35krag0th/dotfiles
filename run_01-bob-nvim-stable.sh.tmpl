@@ -2,6 +2,14 @@
 #!/bin/bash
 # Ensure bob has the latest stable neovim installed and in use
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
+
+r35_log_debug "i am debug"
+r35_log_info "i am info"
+r35_log_warn "i am warn"
+r35_log_error "i am error"
+r35_log_critical "i am critical"
+
 # Find bob - check common locations
 if command -v bob &>/dev/null; then
     BOB="bob"
@@ -10,21 +18,24 @@ elif [ -x "/opt/homebrew/bin/bob" ]; then
 elif [ -x "${HOME}/.local/bin/bob" ]; then
     BOB="${HOME}/.local/bin/bob"
 else
-    echo "⚠ bob not found, skipping nvim setup"
+    r35_log_warn "\033[1mbob\033[0m not found, \033[1;33mskipping\033[0m nvim setup"
     exit 0
 fi
 
 # Skip if nvim is running (bob can't update while in use)
 if pgrep -x nvim >/dev/null; then
-    echo "⚠ nvim is running, skipping bob update"
+    echo -e "\033[1;31m \033[0m \033[1mnvim\033[0m is running.  Skipping bob update."
+    r35_log_warn "\033[1mnvim\033[0m is running.  Skipping bob update."
     exit 0
 fi
 
-echo ">>> Ensuring neovim stable is installed via bob..."
+r35_log_header "Ensuring neovim \033[1mstable\033[0m is installed via bob..."
 "$BOB" install stable || { echo "⚠ bob install failed"; exit 0; }
 
-echo ">>> Setting neovim stable as active version..."
+echo ""
+r35_log_header "Setting neovim \033[1mstable\033[0m as active version..."
 "$BOB" use stable || { echo "⚠ bob use failed"; exit 0; }
 
-echo "✓ neovim stable is ready"
+echo ""
+r35_log_ok "neovim \033[1mstable\033[0m is ready."
 {{ end -}}

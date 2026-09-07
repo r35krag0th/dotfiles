@@ -14,23 +14,25 @@
 # The BufWritePost autocmd in lua/config/autocmds.lua covers the other
 # direction -- editing a help file locally, where no apply ever happens.
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 DOC="${HOME}/.config/nvim/doc"
 
 if ! command -v nvim &>/dev/null; then
-    echo "⚠ nvim not found, skipping helptags"
+    r35_log_warn "\033[1mnvim\033[0m not found, skipping helptags"
     exit 0
 fi
 
 if [ ! -d "$DOC" ]; then
+    r35_log_info "\033[1m${DOC}\033[0m directory doesn't exist.  Skipping."
     exit 0
 fi
 
 # --clean so a broken plugin or a half-applied config cannot fail the apply.
 # :helptags takes an explicit path, so runtimepath is irrelevant here.
 if nvim --headless --clean -c "helptags ${DOC}" -c 'qa!' </dev/null 2>/dev/null; then
-    echo "✓ rebuilt nvim helptags in ${DOC}"
+    r35_log_ok "rebuilt nvim helptags in ${DOC}"
 else
     # Never fail the apply over documentation.
-    echo "⚠ helptags failed for ${DOC}"
+    r35_log_error "helptags failed for ${DOC}"
 fi
 {{ end -}}

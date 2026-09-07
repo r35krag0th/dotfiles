@@ -2,14 +2,16 @@
 #!/bin/bash
 # Ensure mise tools are installed
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 MISE="${HOME}/.local/bin/mise"
 
 if [ ! -x "$MISE" ]; then
+  r35_log_warn "\033[1mmise\033[0m not found ($MISE)"
     exit 0
 fi
 
-echo ">>> Installing mise tools..."
+r35_log_header "Installing \033[1mmise\033[0m tools..."
 "$MISE" install --yes
 
-echo "✓ mise tools ready"
+r35_log_ok "\033[1mmise\033[0m tools ready"
 {{ end -}}

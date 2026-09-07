@@ -2,12 +2,17 @@
 #!/bin/bash +x
 # Keep mise up to date
 
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 MISE="${HOME}/.local/bin/mise"
 
 if [ ! -x "$MISE" ]; then
+    r35_log_warn "\033[1mmise\033[0m not found ($MISE)"
     exit 0
 fi
 
-echo ">>> Updating mise..."
+r35_log_header "Updating mise..."
 "$MISE" self-update --yes
+
+echo ""
+r35_log_ok "Completed"
 {{ end -}}

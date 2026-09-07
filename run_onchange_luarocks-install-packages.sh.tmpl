@@ -1,7 +1,9 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
-echo -e "\033[1;32m>>> Installing packages...\033[0m"
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
+
+r35_log_header "Installing \033[1mluarocks\033[0m packages..."
 {{ range .packages.luarocks }}
 luarocks install --lua-version=5.1 {{ . }}
 {{ end -}}

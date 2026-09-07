@@ -1,7 +1,8 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
-echo -e "\033[1;32m>>> Installing packages...\033[0m"
+source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
+r35_log_header "Installing \033[1mbrew\033[0m packages..."
 
 brew bundle --file=/dev/stdin <<EOF
 {{ range .packages.darwin.brews -}}
