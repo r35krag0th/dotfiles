@@ -19,11 +19,21 @@ function r35_log_debug() {
 }
 
 function r35_log_header() {
-  echo -e "\033[1;36m󰓘 \033[0m ${1}"
+  local caller_origin="${BASH_SOURCE[1]:-}"
+  if [ -n "${caller_origin}" ]; then
+    caller_origin="\033[38;5;237m[\033[38;5;244m$caller_origin\033[38;5;237m]\033[0m "
+  fi
+
+  echo -e "${caller_origin}\033[1;36m󰓘 \033[0m ${1}"
 }
 
 function r35_log_ok() {
-  echo -e "\033[1;32m \033[0m ${1}"
+  local caller_origin="${BASH_SOURCE[1]:-}"
+  if [ -n "${caller_origin}" ]; then
+    caller_origin="\033[38;5;237m[\033[38;5;244m$caller_origin\033[38;5;237m]\033[0m "
+  fi
+
+  echo -e "${caller_origin}\033[1;32m \033[0m ${1}"
 }
 
 function __r35_log() {
@@ -38,7 +48,7 @@ function __r35_log() {
   # if target is 10 (error) and level is 30,
 
   case "${R35_LOG_LEVEL:-info}" in
-  critical) targeT_log_level_id=50 ;;
+  critical) target_log_level_id=50 ;;
   error) target_log_level_id=40 ;;
   warn) target_log_level_id=30 ;;
   info) target_log_level_id=20 ;;
@@ -81,5 +91,12 @@ function __r35_log() {
   if [ $target_log_level_id -gt $level_id ]; then
     return 1
   fi
-  echo -e "\033[1m\033[38;5;${level_color}m${level_icon} ${level_prefix}\033[0m ${1} ${2}"
+
+  # Origin
+  local caller_origin="${BASH_SOURCE[1]:-}"
+  if [ -n "${caller_origin}" ]; then
+    caller_origin="\033[38;5;237m[\033[38;5;244m$caller_origin\033[38;5;237m]\033[0m "
+  fi
+
+  echo -e "${caller_origin}\033[1m\033[38;5;${level_color}m${level_icon} ${level_prefix}\033[0m ${1} ${2}"
 }

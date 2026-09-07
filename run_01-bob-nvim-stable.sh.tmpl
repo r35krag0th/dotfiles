@@ -4,12 +4,6 @@
 
 source "${CHEZMOI_SOURCE_DIR}/.shlibs/sh/logging.sh"
 
-r35_log_debug "i am debug"
-r35_log_info "i am info"
-r35_log_warn "i am warn"
-r35_log_error "i am error"
-r35_log_critical "i am critical"
-
 # Find bob - check common locations
 if command -v bob &>/dev/null; then
     BOB="bob"

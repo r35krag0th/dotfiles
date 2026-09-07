@@ -15,7 +15,7 @@ if [ ! -f "$SRC" ]; then
   exit 0
 fi
 
-r35_log_header "Running \033[1m;31mop signin\033[0m..."
+r35_log_header "Running \033[1mop signin\033[0m..."
 eval $(op signin)
 
 # --clean so a broken plugin or a half-applied config cannot fail the apply.
