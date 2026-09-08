@@ -80,7 +80,9 @@ zoxide = "latest"
 
 # ==> npm backend
 "npm:neovim" = "latest"
-# "npm:@earendil-works/pi-coding-agent" = "latest" # This doesn't jive with `pi update`
+# NOTE: using mise doesn't play nice with `pi update`.  Use the package direct from `npm`.
+# npm install -g --allow-scripts=esbuild,@google/genai,protobufjs @earendil-works/pi-coding-agent@latest
+# "npm:@earendil-works/pi-coding-agent" = "latest"
 "npm:@rivolink/leaf" = "latest"
 "npm:mcp-hub" = "latest"
 "npm:npm" = "latest"
