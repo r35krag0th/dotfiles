@@ -1,0 +1,10 @@
+[Unit]
+Description=Herdr Background Multiplexer Server
+After=network.target
+
+[Service]
+Type=exec
+ExecStart=%h/.local/bin/herdr server
+
+[Install]
+WantedBy=default.target
