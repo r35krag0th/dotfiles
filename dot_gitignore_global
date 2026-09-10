@@ -57,3 +57,7 @@ Temporary Items
 /.claude/worktrees
 /.claude/settings*.json
 .pyre/pyre.stderr
+
+# fnox (https://fnox.jdx.dev)
+fnox.local.toml
+.fnox.local.toml
