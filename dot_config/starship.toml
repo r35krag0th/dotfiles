@@ -1,3 +1,10 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = "$custom$all"
+
+[username]
+disabled = true
+
 [aws]
 symbol = "  "
 
@@ -18,6 +25,8 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
+format = '[  $path]($style)[$read_only]($read_only_style) '
+
 
 [docker_context]
 symbol = " "
@@ -54,6 +63,9 @@ symbol = " "
 
 [hostname]
 ssh_symbol = " "
+detect_env_vars = ['!HERDR_WORKSPACE_ID']
+ssh_only = false
+disabled = false
 
 [java]
 symbol = " "
@@ -162,3 +174,8 @@ symbol = " "
 
 [zig]
 symbol = " "
+
+[custom.herdr]
+command = "$HOME/.local/bin/starship-herdr-widget"
+when = true
+ignore_timeout = true
