@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 # vim: ft=fish
 
-if test -n $HERDR_WORKSPACE_ID
+if test -n "$HERDR_WORKSPACE_ID"
     echo -en "\033[38;5;146m󰆚  \033[38;5;60m$HERDR_WORKSPACE_ID \033[38;5;237m/ \033[38;5;152m  \033[38;5;66m$HERDR_TAB_ID \033[38;5;237m/ \033[38;5;151m󰓩  \033[38;5;65m$HERDR_PANE_ID\033[0m \033[38;5;219m⏵\033[0m"
 end
