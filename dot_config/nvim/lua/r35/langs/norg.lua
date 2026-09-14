@@ -107,6 +107,10 @@ function M.plugins()
           dev = true,
           dir = "~/workspace/neorg-hopscotch.nvim/",
         },
+        {
+          "https://gitlab.r35.dev/r35krag0th/yeahnorg.nvim",
+          name = "yeahnorg",
+        },
       },
       lazy = false,
       version = "*",
@@ -521,6 +525,9 @@ function M.plugins()
                   },
                 },
               },
+            },
+            ["external.yeahnorg"] = {
+              config = {},
             },
           },
         }
