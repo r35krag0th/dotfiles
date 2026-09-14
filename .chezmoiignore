@@ -10,3 +10,7 @@
 .config/nvim/doc/tags
 .config/nvim/docs
 .shlibs/bash/logging.sh
+
+# Owned by mise bootstrap: holds every [dotfiles] track entry. Rendering the
+# chezmoi template over it would erase them. See kata#ez5d.
+.config/mise/config.toml
