@@ -4,51 +4,12 @@ M.setup = function()
   -- require('mason').install({})
 end
 
-M.create_binding = function()
-  vim.api.nvim_buf_set_keymap(0, "n", "<localleader>yss", "", {
-    desc = "SchemaCompanion :D",
-    callback = function()
-      require("schema-companion").select_schema()
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(0, "n", "<localleader>ysfm", "", {
-    desc = "From Matching",
-    callback = function()
-      require("schema-companion").select_from_matching_schema()
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(0, "n", "<localleader>ysrm", "", {
-    desc = "From Matching",
-    callback = function()
-      require("schema-companion").match()
-    end,
-  })
-end
-
-M.init = function()
-  vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "yaml", "helm" },
-    callback = function(ev)
-      M.create_binding()
-    end,
-  })
-end
+-- Required: r35.langs.init calls v:init() on every registered module.
+-- kube-schemas.nvim declares its own keys, so there is nothing to bind here.
+M.init = function() end
 
 M.plugins = function()
   return {
-    {
-      "cenk1cenk2/schema-companion.nvim",
-      dependencies = {
-        { "neovim/nvim-lspconfig" },
-        { "nvim-lua/plenary.nvim" },
-        { "redhat-developer/yaml-language-server" },
-        { "nvim-telescope/telescope.nvim" },
-        { "nvim-lualine/lualine.nvim" },
-      },
-      config = function()
-        require("schema-companion").setup({})
-      end,
-    },
     {
       "r35krag0th/kube-schemas.nvim",
       ft = { "yaml", "helm" },
